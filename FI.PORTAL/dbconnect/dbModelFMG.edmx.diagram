@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="9ef6fd5876034bd6beea8bce3c686e4e" Name="Diagram1" ZoomLevel="133">
+        <EntityTypeShape EntityType="FINANCE_MGR_SYSModel.CurrentStatusLvlMaster" Width="1.5" PointX="0.75" PointY="4.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="FINANCE_MGR_SYSModel.EnhancementTextMaster" Width="1.5" PointX="0.75" PointY="1.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="FINANCE_MGR_SYSModel.ReasonMaster" Width="1.5" PointX="3" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="FINANCE_MGR_SYSModel.RequestDetail" Width="1.5" PointX="8.25" PointY="1.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="FINANCE_MGR_SYSModel.RequestHeader" Width="1.5" PointX="4.875" PointY="4.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="FINANCE_MGR_SYSModel.RequestImage" Width="1.5" PointX="12" PointY="4" IsExpanded="true" />
+        <AssociationConnector Association="FINANCE_MGR_SYSModel.FK_RequestHeader_CurrentStatusLvlMaster" ManuallyRouted="false" />
+        <AssociationConnector Association="FINANCE_MGR_SYSModel.FK_RequestHeader_EnhancementTextMaster" ManuallyRouted="false" />
+        <AssociationConnector Association="FINANCE_MGR_SYSModel.FK_RequestDetail_ReasonMaster" ManuallyRouted="false" />
+        <AssociationConnector Association="FINANCE_MGR_SYSModel.FK_RequestDetail_RequestHeader" ManuallyRouted="false" />
+        <AssociationConnector Association="FINANCE_MGR_SYSModel.FK_RequestImages_RequestHeader" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="FINANCE_MGR_SYSModel.LoginDetail" Width="1.5" PointX="5.375" PointY="0.75" />
+        <AssociationConnector Association="FINANCE_MGR_SYSModel.FK_LoginDetail_CurrentStatusLvlMaster" />
+        <EntityTypeShape EntityType="FINANCE_MGR_SYSModel.vw_Requests" Width="1.5" PointX="0.75" PointY="7.75" />
+        <AssociationConnector Association="FINANCE_MGR_SYSModel.FK_RequestImages_RequestHeader1" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

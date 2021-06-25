@@ -1,0 +1,636 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="FINANCE_MGR_SYSModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="CurrentStatusLvlMaster">
+          <Key>
+            <PropertyRef Name="CurrStatusID" />
+          </Key>
+          <Property Name="CurrStatusID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="StatusText" Type="varchar" MaxLength="200" />
+        </EntityType>
+        <EntityType Name="EnhancementTextMaster">
+          <Key>
+            <PropertyRef Name="EnhancementID" />
+          </Key>
+          <Property Name="EnhancementID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="EnhancementText" Type="varchar" MaxLength="100" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'FINANCE_MGR_SYS.dbo.LoginDetail' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="LoginDetail">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserName" Type="varchar" MaxLength="50" />
+          <Property Name="Role" Type="int" />
+          <Property Name="Password" Type="varchar(max)" />
+        </EntityType>
+        <EntityType Name="ReasonMaster">
+          <Key>
+            <PropertyRef Name="ReasonID" />
+          </Key>
+          <Property Name="ReasonID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Reason" Type="varchar(max)" />
+        </EntityType>
+        <EntityType Name="RequestDetail">
+          <Key>
+            <PropertyRef Name="CommentID" />
+          </Key>
+          <Property Name="CommentID" Type="numeric" Precision="10" Scale="0" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ReqID" Type="numeric" Precision="10" Scale="0" />
+          <Property Name="CreatedBy" Type="varchar" MaxLength="50" />
+          <Property Name="CreatedByName" Type="varchar(max)" />
+          <Property Name="ReasonID" Type="int" />
+          <Property Name="Comment" Type="varchar(max)" />
+          <Property Name="CreditLimit" Type="numeric" Precision="10" Scale="2" />
+          <Property Name="CreatedDate" Type="datetime" />
+          <Property Name="UserAction" Type="varchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="RequestHeader">
+          <Key>
+            <PropertyRef Name="ReqID" />
+          </Key>
+          <Property Name="ReqID" Type="numeric" Precision="10" Scale="0" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CusCode" Type="numeric" Precision="10" Scale="0" />
+          <Property Name="SalesCode" Type="varchar" MaxLength="50" />
+          <Property Name="AllowCreditLimit" Type="numeric" Precision="10" Scale="2" />
+          <Property Name="InitialComment" Type="varchar(max)" />
+          <Property Name="EnhancementStatus" Type="int" />
+          <Property Name="CurrentStatusLevel" Type="int" />
+          <Property Name="ReqStatus" Type="varchar" MaxLength="50" />
+          <Property Name="CreatedBy" Type="varchar" MaxLength="50" />
+          <Property Name="CreatedDate" Type="datetime" />
+          <Property Name="FileName" Type="varchar(max)" />
+          <Property Name="RequestType" Type="varchar" MaxLength="5" />
+          <Property Name="RecentAction" Type="varchar" MaxLength="50" />
+          <Property Name="CreditExposure" Type="numeric" Precision="10" Scale="2" />
+          <Property Name="SAPupdateAmount" Type="numeric" Precision="10" Scale="2" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'FINANCE_MGR_SYS.dbo.RequestImages' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="RequestImages">
+          <Key>
+            <PropertyRef Name="ImageID" />
+          </Key>
+          <Property Name="ImageID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ReqID" Type="numeric" Precision="10" Scale="0" />
+          <Property Name="Image1" Type="image" />
+          <Property Name="Image2" Type="image" />
+          <Property Name="Image3" Type="image" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'FINANCE_MGR_SYS.dbo.vw_Requests' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="vw_Requests">
+          <Key>
+            <PropertyRef Name="ReqID" />
+          </Key>
+          <Property Name="ReqID" Type="numeric" Precision="10" Scale="0" Nullable="false" />
+          <Property Name="AllowCreditLimit" Type="numeric" Precision="10" Scale="2" />
+          <Property Name="CreatedBy" Type="varchar" MaxLength="50" />
+          <Property Name="CreatedDate" Type="datetime" />
+          <Property Name="CreditLimit" Type="varchar" MaxLength="50" />
+          <Property Name="SalesCode" Type="varchar" MaxLength="50" />
+          <Property Name="CusName" Type="varchar" MaxLength="50" />
+          <Property Name="CusCode" Type="numeric" Precision="10" Scale="0" />
+          <Property Name="year" Type="int" />
+          <Property Name="month" Type="int" />
+          <Property Name="InitialComment" Type="varchar(max)" />
+          <Property Name="StatusText" Type="varchar" MaxLength="200" />
+          <Property Name="size_" Type="int" />
+          <Property Name="CurrentStatusLevel" Type="int" />
+          <Property Name="ReqStatus" Type="varchar" MaxLength="50" />
+          <Property Name="FileName" Type="varchar(max)" />
+          <Property Name="RequestType" Type="varchar" MaxLength="5" />
+          <Property Name="CusSGDescription" Type="varchar" MaxLength="50" />
+          <Property Name="CreditExposure" Type="numeric" Precision="10" Scale="2" />
+          <Property Name="RecentAction" Type="varchar" MaxLength="50" />
+          <Property Name="SAPupdateAmount" Type="numeric" Precision="10" Scale="2" />
+        </EntityType>
+        <Association Name="FK_LoginDetail_CurrentStatusLvlMaster">
+          <End Role="CurrentStatusLvlMaster" Type="Self.CurrentStatusLvlMaster" Multiplicity="0..1" />
+          <End Role="LoginDetail" Type="Self.LoginDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CurrentStatusLvlMaster">
+              <PropertyRef Name="CurrStatusID" />
+            </Principal>
+            <Dependent Role="LoginDetail">
+              <PropertyRef Name="Role" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RequestDetail_ReasonMaster">
+          <End Role="ReasonMaster" Type="Self.ReasonMaster" Multiplicity="0..1" />
+          <End Role="RequestDetail" Type="Self.RequestDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ReasonMaster">
+              <PropertyRef Name="ReasonID" />
+            </Principal>
+            <Dependent Role="RequestDetail">
+              <PropertyRef Name="ReasonID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RequestDetail_RequestHeader">
+          <End Role="RequestHeader" Type="Self.RequestHeader" Multiplicity="0..1" />
+          <End Role="RequestDetail" Type="Self.RequestDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RequestHeader">
+              <PropertyRef Name="ReqID" />
+            </Principal>
+            <Dependent Role="RequestDetail">
+              <PropertyRef Name="ReqID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RequestHeader_CurrentStatusLvlMaster">
+          <End Role="CurrentStatusLvlMaster" Type="Self.CurrentStatusLvlMaster" Multiplicity="0..1" />
+          <End Role="RequestHeader" Type="Self.RequestHeader" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CurrentStatusLvlMaster">
+              <PropertyRef Name="CurrStatusID" />
+            </Principal>
+            <Dependent Role="RequestHeader">
+              <PropertyRef Name="CurrentStatusLevel" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RequestHeader_EnhancementTextMaster">
+          <End Role="EnhancementTextMaster" Type="Self.EnhancementTextMaster" Multiplicity="0..1" />
+          <End Role="RequestHeader" Type="Self.RequestHeader" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EnhancementTextMaster">
+              <PropertyRef Name="EnhancementID" />
+            </Principal>
+            <Dependent Role="RequestHeader">
+              <PropertyRef Name="EnhancementStatus" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RequestImages_RequestHeader">
+          <End Role="RequestDetail" Type="Self.RequestDetail" Multiplicity="0..1" />
+          <End Role="RequestImages" Type="Self.RequestImages" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RequestDetail">
+              <PropertyRef Name="CommentID" />
+            </Principal>
+            <Dependent Role="RequestImages">
+              <PropertyRef Name="ReqID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="FINANCE_MGR_SYSModelStoreContainer">
+          <EntitySet Name="CurrentStatusLvlMaster" EntityType="Self.CurrentStatusLvlMaster" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="EnhancementTextMaster" EntityType="Self.EnhancementTextMaster" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ReasonMaster" EntityType="Self.ReasonMaster" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="RequestDetail" EntityType="Self.RequestDetail" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="RequestHeader" EntityType="Self.RequestHeader" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="LoginDetail" EntityType="Self.LoginDetail" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [LoginDetail].[ID] AS [ID], 
+    [LoginDetail].[UserName] AS [UserName], 
+    [LoginDetail].[Role] AS [Role], 
+    [LoginDetail].[Password] AS [Password]
+    FROM [dbo].[LoginDetail] AS [LoginDetail]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="RequestImages" EntityType="Self.RequestImages" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [RequestImages].[ImageID] AS [ImageID], 
+    [RequestImages].[ReqID] AS [ReqID], 
+    [RequestImages].[Image1] AS [Image1], 
+    [RequestImages].[Image2] AS [Image2], 
+    [RequestImages].[Image3] AS [Image3]
+    FROM [dbo].[RequestImages] AS [RequestImages]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="vw_Requests" EntityType="Self.vw_Requests" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [vw_Requests].[ReqID] AS [ReqID], 
+    [vw_Requests].[AllowCreditLimit] AS [AllowCreditLimit], 
+    [vw_Requests].[CreatedBy] AS [CreatedBy], 
+    [vw_Requests].[CreatedDate] AS [CreatedDate], 
+    [vw_Requests].[CreditLimit] AS [CreditLimit], 
+    [vw_Requests].[SalesCode] AS [SalesCode], 
+    [vw_Requests].[CusName] AS [CusName], 
+    [vw_Requests].[CusCode] AS [CusCode], 
+    [vw_Requests].[year] AS [year], 
+    [vw_Requests].[month] AS [month], 
+    [vw_Requests].[InitialComment] AS [InitialComment], 
+    [vw_Requests].[StatusText] AS [StatusText], 
+    [vw_Requests].[size_] AS [size_], 
+    [vw_Requests].[CurrentStatusLevel] AS [CurrentStatusLevel], 
+    [vw_Requests].[ReqStatus] AS [ReqStatus], 
+    [vw_Requests].[FileName] AS [FileName], 
+    [vw_Requests].[RequestType] AS [RequestType], 
+    [vw_Requests].[CusSGDescription] AS [CusSGDescription], 
+    [vw_Requests].[CreditExposure] AS [CreditExposure], 
+    [vw_Requests].[RecentAction] AS [RecentAction], 
+    [vw_Requests].[SAPupdateAmount] AS [SAPupdateAmount]
+    FROM [dbo].[vw_Requests] AS [vw_Requests]</DefiningQuery>
+          </EntitySet>
+          <AssociationSet Name="FK_LoginDetail_CurrentStatusLvlMaster" Association="Self.FK_LoginDetail_CurrentStatusLvlMaster">
+            <End Role="CurrentStatusLvlMaster" EntitySet="CurrentStatusLvlMaster" />
+            <End Role="LoginDetail" EntitySet="LoginDetail" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RequestDetail_ReasonMaster" Association="Self.FK_RequestDetail_ReasonMaster">
+            <End Role="ReasonMaster" EntitySet="ReasonMaster" />
+            <End Role="RequestDetail" EntitySet="RequestDetail" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RequestDetail_RequestHeader" Association="Self.FK_RequestDetail_RequestHeader">
+            <End Role="RequestHeader" EntitySet="RequestHeader" />
+            <End Role="RequestDetail" EntitySet="RequestDetail" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RequestHeader_CurrentStatusLvlMaster" Association="Self.FK_RequestHeader_CurrentStatusLvlMaster">
+            <End Role="CurrentStatusLvlMaster" EntitySet="CurrentStatusLvlMaster" />
+            <End Role="RequestHeader" EntitySet="RequestHeader" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RequestHeader_EnhancementTextMaster" Association="Self.FK_RequestHeader_EnhancementTextMaster">
+            <End Role="EnhancementTextMaster" EntitySet="EnhancementTextMaster" />
+            <End Role="RequestHeader" EntitySet="RequestHeader" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RequestImages_RequestHeader" Association="Self.FK_RequestImages_RequestHeader">
+            <End Role="RequestDetail" EntitySet="RequestDetail" />
+            <End Role="RequestImages" EntitySet="RequestImages" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="FINANCE_MGR_SYSModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="CurrentStatusLvlMaster">
+          <Key>
+            <PropertyRef Name="CurrStatusID" />
+          </Key>
+          <Property Name="CurrStatusID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="StatusText" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="RequestHeaders" Relationship="Self.FK_RequestHeader_CurrentStatusLvlMaster" FromRole="CurrentStatusLvlMaster" ToRole="RequestHeader" />
+          <NavigationProperty Name="LoginDetails" Relationship="FINANCE_MGR_SYSModel.FK_LoginDetail_CurrentStatusLvlMaster" FromRole="CurrentStatusLvlMaster" ToRole="LoginDetail" />
+        </EntityType>
+        <EntityType Name="EnhancementTextMaster">
+          <Key>
+            <PropertyRef Name="EnhancementID" />
+          </Key>
+          <Property Name="EnhancementID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="EnhancementText" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="RequestHeaders" Relationship="Self.FK_RequestHeader_EnhancementTextMaster" FromRole="EnhancementTextMaster" ToRole="RequestHeader" />
+        </EntityType>
+        <EntityType Name="ReasonMaster">
+          <Key>
+            <PropertyRef Name="ReasonID" />
+          </Key>
+          <Property Name="ReasonID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Reason" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="RequestDetails" Relationship="Self.FK_RequestDetail_ReasonMaster" FromRole="ReasonMaster" ToRole="RequestDetail" />
+        </EntityType>
+        <EntityType Name="RequestDetail">
+          <Key>
+            <PropertyRef Name="CommentID" />
+          </Key>
+          <Property Name="CommentID" Type="Decimal" Precision="10" Scale="0" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ReqID" Type="Decimal" Precision="10" Scale="0" />
+          <Property Name="CreatedBy" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="CreatedByName" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="ReasonID" Type="Int32" />
+          <Property Name="Comment" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="CreditLimit" Type="Decimal" Precision="10" Scale="2" />
+          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="ReasonMaster" Relationship="Self.FK_RequestDetail_ReasonMaster" FromRole="RequestDetail" ToRole="ReasonMaster" />
+          <NavigationProperty Name="RequestHeader" Relationship="Self.FK_RequestDetail_RequestHeader" FromRole="RequestDetail" ToRole="RequestHeader" />
+          <Property Name="UserAction" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="RequestImages" Relationship="FINANCE_MGR_SYSModel.FK_RequestImages_RequestHeader1" FromRole="RequestDetail" ToRole="RequestImage" />
+        </EntityType>
+        <EntityType Name="RequestHeader">
+          <Key>
+            <PropertyRef Name="ReqID" />
+          </Key>
+          <Property Name="ReqID" Type="Decimal" Precision="10" Scale="0" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CusCode" Type="Decimal" Precision="10" Scale="0" />
+          <Property Name="SalesCode" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="AllowCreditLimit" Type="Decimal" Precision="10" Scale="2" />
+          <Property Name="InitialComment" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="EnhancementStatus" Type="Int32" />
+          <Property Name="CurrentStatusLevel" Type="Int32" />
+          <Property Name="ReqStatus" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="CreatedBy" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="CurrentStatusLvlMaster" Relationship="Self.FK_RequestHeader_CurrentStatusLvlMaster" FromRole="RequestHeader" ToRole="CurrentStatusLvlMaster" />
+          <NavigationProperty Name="EnhancementTextMaster" Relationship="Self.FK_RequestHeader_EnhancementTextMaster" FromRole="RequestHeader" ToRole="EnhancementTextMaster" />
+          <NavigationProperty Name="RequestDetails" Relationship="Self.FK_RequestDetail_RequestHeader" FromRole="RequestHeader" ToRole="RequestDetail" />
+          <NavigationProperty Name="RequestImages" Relationship="Self.FK_RequestImages_RequestHeader" FromRole="RequestHeader" ToRole="RequestImages" />
+          <Property Name="FileName" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="RequestType" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
+          <Property Name="RecentAction" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="CreditExposure" Type="Decimal" Precision="10" Scale="2" />
+          <Property Name="SAPupdateAmount" Type="Decimal" Precision="10" Scale="2" />
+        </EntityType>
+        <EntityType Name="RequestImage">
+          <Key>
+            <PropertyRef Name="ImageID" />
+          </Key>
+          <Property Name="ImageID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ReqID" Type="Decimal" Precision="10" Scale="0" />
+          <Property Name="Image1" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <Property Name="Image2" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <Property Name="Image3" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <NavigationProperty Name="RequestHeader" Relationship="Self.FK_RequestImages_RequestHeader" FromRole="RequestImages" ToRole="RequestHeader" />
+          <NavigationProperty Name="RequestDetail" Relationship="FINANCE_MGR_SYSModel.FK_RequestImages_RequestHeader1" FromRole="RequestImage" ToRole="RequestDetail" />
+        </EntityType>
+        <Association Name="FK_RequestHeader_CurrentStatusLvlMaster">
+          <End Role="CurrentStatusLvlMaster" Type="Self.CurrentStatusLvlMaster" Multiplicity="0..1" />
+          <End Role="RequestHeader" Type="Self.RequestHeader" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CurrentStatusLvlMaster">
+              <PropertyRef Name="CurrStatusID" />
+            </Principal>
+            <Dependent Role="RequestHeader">
+              <PropertyRef Name="CurrentStatusLevel" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RequestHeader_EnhancementTextMaster">
+          <End Role="EnhancementTextMaster" Type="Self.EnhancementTextMaster" Multiplicity="0..1" />
+          <End Role="RequestHeader" Type="Self.RequestHeader" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EnhancementTextMaster">
+              <PropertyRef Name="EnhancementID" />
+            </Principal>
+            <Dependent Role="RequestHeader">
+              <PropertyRef Name="EnhancementStatus" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RequestDetail_ReasonMaster">
+          <End Role="ReasonMaster" Type="Self.ReasonMaster" Multiplicity="0..1" />
+          <End Role="RequestDetail" Type="Self.RequestDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ReasonMaster">
+              <PropertyRef Name="ReasonID" />
+            </Principal>
+            <Dependent Role="RequestDetail">
+              <PropertyRef Name="ReasonID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RequestDetail_RequestHeader">
+          <End Role="RequestHeader" Type="Self.RequestHeader" Multiplicity="0..1" />
+          <End Role="RequestDetail" Type="Self.RequestDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RequestHeader">
+              <PropertyRef Name="ReqID" />
+            </Principal>
+            <Dependent Role="RequestDetail">
+              <PropertyRef Name="ReqID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RequestImages_RequestHeader">
+          <End Role="RequestHeader" Type="Self.RequestHeader" Multiplicity="0..1" />
+          <End Role="RequestImages" Type="Self.RequestImage" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RequestHeader">
+              <PropertyRef Name="ReqID" />
+            </Principal>
+            <Dependent Role="RequestImages">
+              <PropertyRef Name="ReqID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="FINANCE_MGR_SYSEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="CurrentStatusLvlMasters" EntityType="Self.CurrentStatusLvlMaster" />
+          <EntitySet Name="EnhancementTextMasters" EntityType="Self.EnhancementTextMaster" />
+          <EntitySet Name="ReasonMasters" EntityType="Self.ReasonMaster" />
+          <EntitySet Name="RequestDetails" EntityType="Self.RequestDetail" />
+          <EntitySet Name="RequestHeaders" EntityType="Self.RequestHeader" />
+          <EntitySet Name="RequestImages" EntityType="Self.RequestImage" />
+          <AssociationSet Name="FK_RequestHeader_CurrentStatusLvlMaster" Association="Self.FK_RequestHeader_CurrentStatusLvlMaster">
+            <End Role="CurrentStatusLvlMaster" EntitySet="CurrentStatusLvlMasters" />
+            <End Role="RequestHeader" EntitySet="RequestHeaders" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RequestHeader_EnhancementTextMaster" Association="Self.FK_RequestHeader_EnhancementTextMaster">
+            <End Role="EnhancementTextMaster" EntitySet="EnhancementTextMasters" />
+            <End Role="RequestHeader" EntitySet="RequestHeaders" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RequestDetail_ReasonMaster" Association="Self.FK_RequestDetail_ReasonMaster">
+            <End Role="ReasonMaster" EntitySet="ReasonMasters" />
+            <End Role="RequestDetail" EntitySet="RequestDetails" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RequestDetail_RequestHeader" Association="Self.FK_RequestDetail_RequestHeader">
+            <End Role="RequestHeader" EntitySet="RequestHeaders" />
+            <End Role="RequestDetail" EntitySet="RequestDetails" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RequestImages_RequestHeader" Association="Self.FK_RequestImages_RequestHeader">
+            <End Role="RequestHeader" EntitySet="RequestHeaders" />
+            <End Role="RequestImages" EntitySet="RequestImages" />
+          </AssociationSet>
+          <EntitySet Name="LoginDetails" EntityType="FINANCE_MGR_SYSModel.LoginDetail" />
+          <AssociationSet Name="FK_LoginDetail_CurrentStatusLvlMaster" Association="FINANCE_MGR_SYSModel.FK_LoginDetail_CurrentStatusLvlMaster">
+            <End Role="CurrentStatusLvlMaster" EntitySet="CurrentStatusLvlMasters" />
+            <End Role="LoginDetail" EntitySet="LoginDetails" />
+          </AssociationSet>
+          <EntitySet Name="vw_Requests" EntityType="FINANCE_MGR_SYSModel.vw_Requests" />
+          <AssociationSet Name="FK_RequestImages_RequestHeader1" Association="FINANCE_MGR_SYSModel.FK_RequestImages_RequestHeader1">
+            <End Role="RequestDetail" EntitySet="RequestDetails" />
+            <End Role="RequestImage" EntitySet="RequestImages" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="LoginDetail">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Role" Type="Int32" />
+          <Property Name="Password" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="CurrentStatusLvlMaster" Relationship="FINANCE_MGR_SYSModel.FK_LoginDetail_CurrentStatusLvlMaster" FromRole="LoginDetail" ToRole="CurrentStatusLvlMaster" />
+        </EntityType>
+        <Association Name="FK_LoginDetail_CurrentStatusLvlMaster">
+          <End Type="FINANCE_MGR_SYSModel.CurrentStatusLvlMaster" Role="CurrentStatusLvlMaster" Multiplicity="0..1" />
+          <End Type="FINANCE_MGR_SYSModel.LoginDetail" Role="LoginDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CurrentStatusLvlMaster">
+              <PropertyRef Name="CurrStatusID" />
+            </Principal>
+            <Dependent Role="LoginDetail">
+              <PropertyRef Name="Role" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="vw_Requests">
+          <Key>
+            <PropertyRef Name="ReqID" />
+          </Key>
+          <Property Name="ReqID" Type="Decimal" Nullable="false" Precision="10" Scale="0" />
+          <Property Name="AllowCreditLimit" Type="Decimal" Precision="10" Scale="2" />
+          <Property Name="CreatedBy" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
+          <Property Name="CreditLimit" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="SalesCode" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="CusName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="CusCode" Type="Decimal" Precision="10" Scale="0" />
+          <Property Name="year" Type="Int32" />
+          <Property Name="month" Type="Int32" />
+          <Property Name="InitialComment" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="StatusText" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="size_" Type="Int32" />
+          <Property Name="CurrentStatusLevel" Type="Int32" />
+          <Property Name="ReqStatus" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="FileName" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="RequestType" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
+          <Property Name="CusSGDescription" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="CreditExposure" Type="Decimal" Precision="10" Scale="2" />
+          <Property Name="RecentAction" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="SAPupdateAmount" Type="Decimal" Precision="10" Scale="2" />
+        </EntityType>
+        <Association Name="FK_RequestImages_RequestHeader1">
+          <End Type="FINANCE_MGR_SYSModel.RequestDetail" Role="RequestDetail" Multiplicity="0..1" />
+          <End Type="FINANCE_MGR_SYSModel.RequestImage" Role="RequestImage" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RequestDetail">
+              <PropertyRef Name="CommentID" />
+            </Principal>
+            <Dependent Role="RequestImage">
+              <PropertyRef Name="ReqID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="FINANCE_MGR_SYSModelStoreContainer" CdmEntityContainer="FINANCE_MGR_SYSEntities">
+          <EntitySetMapping Name="CurrentStatusLvlMasters">
+            <EntityTypeMapping TypeName="FINANCE_MGR_SYSModel.CurrentStatusLvlMaster">
+              <MappingFragment StoreEntitySet="CurrentStatusLvlMaster">
+                <ScalarProperty Name="CurrStatusID" ColumnName="CurrStatusID" />
+                <ScalarProperty Name="StatusText" ColumnName="StatusText" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="EnhancementTextMasters">
+            <EntityTypeMapping TypeName="FINANCE_MGR_SYSModel.EnhancementTextMaster">
+              <MappingFragment StoreEntitySet="EnhancementTextMaster">
+                <ScalarProperty Name="EnhancementID" ColumnName="EnhancementID" />
+                <ScalarProperty Name="EnhancementText" ColumnName="EnhancementText" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ReasonMasters">
+            <EntityTypeMapping TypeName="FINANCE_MGR_SYSModel.ReasonMaster">
+              <MappingFragment StoreEntitySet="ReasonMaster">
+                <ScalarProperty Name="ReasonID" ColumnName="ReasonID" />
+                <ScalarProperty Name="Reason" ColumnName="Reason" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RequestDetails">
+            <EntityTypeMapping TypeName="FINANCE_MGR_SYSModel.RequestDetail">
+              <MappingFragment StoreEntitySet="RequestDetail">
+                <ScalarProperty Name="UserAction" ColumnName="UserAction" />
+                <ScalarProperty Name="CommentID" ColumnName="CommentID" />
+                <ScalarProperty Name="ReqID" ColumnName="ReqID" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="CreatedByName" ColumnName="CreatedByName" />
+                <ScalarProperty Name="ReasonID" ColumnName="ReasonID" />
+                <ScalarProperty Name="Comment" ColumnName="Comment" />
+                <ScalarProperty Name="CreditLimit" ColumnName="CreditLimit" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RequestHeaders">
+            <EntityTypeMapping TypeName="FINANCE_MGR_SYSModel.RequestHeader">
+              <MappingFragment StoreEntitySet="RequestHeader">
+                <ScalarProperty Name="SAPupdateAmount" ColumnName="SAPupdateAmount" />
+                <ScalarProperty Name="CreditExposure" ColumnName="CreditExposure" />
+                <ScalarProperty Name="RecentAction" ColumnName="RecentAction" />
+                <ScalarProperty Name="RequestType" ColumnName="RequestType" />
+                <ScalarProperty Name="FileName" ColumnName="FileName" />
+                <ScalarProperty Name="ReqID" ColumnName="ReqID" />
+                <ScalarProperty Name="CusCode" ColumnName="CusCode" />
+                <ScalarProperty Name="SalesCode" ColumnName="SalesCode" />
+                <ScalarProperty Name="AllowCreditLimit" ColumnName="AllowCreditLimit" />
+                <ScalarProperty Name="InitialComment" ColumnName="InitialComment" />
+                <ScalarProperty Name="EnhancementStatus" ColumnName="EnhancementStatus" />
+                <ScalarProperty Name="CurrentStatusLevel" ColumnName="CurrentStatusLevel" />
+                <ScalarProperty Name="ReqStatus" ColumnName="ReqStatus" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RequestImages">
+            <EntityTypeMapping TypeName="FINANCE_MGR_SYSModel.RequestImage">
+              <MappingFragment StoreEntitySet="RequestImages">
+                <ScalarProperty Name="ImageID" ColumnName="ImageID" />
+                <ScalarProperty Name="ReqID" ColumnName="ReqID" />
+                <ScalarProperty Name="Image1" ColumnName="Image1" />
+                <ScalarProperty Name="Image2" ColumnName="Image2" />
+                <ScalarProperty Name="Image3" ColumnName="Image3" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="LoginDetails">
+            <EntityTypeMapping TypeName="FINANCE_MGR_SYSModel.LoginDetail">
+              <MappingFragment StoreEntitySet="LoginDetail">
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="Role" ColumnName="Role" />
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="vw_Requests">
+            <EntityTypeMapping TypeName="FINANCE_MGR_SYSModel.vw_Requests">
+              <MappingFragment StoreEntitySet="vw_Requests">
+                <ScalarProperty Name="SAPupdateAmount" ColumnName="SAPupdateAmount" />
+                <ScalarProperty Name="RecentAction" ColumnName="RecentAction" />
+                <ScalarProperty Name="CreditExposure" ColumnName="CreditExposure" />
+                <ScalarProperty Name="CusSGDescription" ColumnName="CusSGDescription" />
+                <ScalarProperty Name="RequestType" ColumnName="RequestType" />
+                <ScalarProperty Name="FileName" ColumnName="FileName" />
+                <ScalarProperty Name="ReqStatus" ColumnName="ReqStatus" />
+                <ScalarProperty Name="CurrentStatusLevel" ColumnName="CurrentStatusLevel" />
+                <ScalarProperty Name="size_" ColumnName="size_" />
+                <ScalarProperty Name="StatusText" ColumnName="StatusText" />
+                <ScalarProperty Name="InitialComment" ColumnName="InitialComment" />
+                <ScalarProperty Name="month" ColumnName="month" />
+                <ScalarProperty Name="year" ColumnName="year" />
+                <ScalarProperty Name="CusCode" ColumnName="CusCode" />
+                <ScalarProperty Name="CusName" ColumnName="CusName" />
+                <ScalarProperty Name="SalesCode" ColumnName="SalesCode" />
+                <ScalarProperty Name="CreditLimit" ColumnName="CreditLimit" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="AllowCreditLimit" ColumnName="AllowCreditLimit" />
+                <ScalarProperty Name="ReqID" ColumnName="ReqID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
