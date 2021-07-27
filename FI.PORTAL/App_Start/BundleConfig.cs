@@ -73,13 +73,13 @@ namespace FI.PORTAL
                       ));
 
             bundles.Add(new ScriptBundle("~/Scripts/Controller").Include(
-                    "~/Scripts/ControllerScripts/initiation.js",
-                    "~/Scripts/ControllerScripts/comments.js",            
-                    "~/Scripts/ControllerScripts/userlogin.js"               
-                              
-                                       
+                    //"~/Scripts/ControllerScripts/initiation.js",
+                    //"~/Scripts/ControllerScripts/comments.js",
+                    "~/Scripts/ControllerScripts/userlogin.js"
+
+
                 ));
-     
+
         }
     }
 }

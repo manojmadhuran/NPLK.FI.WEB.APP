@@ -1,10 +1,4 @@
-﻿$(document).ready(function () {
-
-    
-
-});
-
-$("#btnlogin").click(function () {
+﻿$("#btnlogin").click(function () {
     var username = $("#txtusername").val();
     var password = $("#txtpassword").val();
     
@@ -26,8 +20,9 @@ function userloginValidation(uname, pwd){
         contentType: "application/json; charset=utf-8",
         success: function (result) {
             var role = result;
-            if(role > 0){
-                window.location.replace("/Home/Index");
+            if (role > 0) {
+                toastr.error("Valid username or password.");
+                location.replace("/Home/Index");
             }else{
                 toastr.error("Invalid username or password.");
                 document.getElementById("lblLogstatus").innerHTML = "";
