@@ -56,7 +56,7 @@
                         </select>
                     </div>
                     <div id="divbtn" class="col-md-3">
-                        <input id="btnsearch" type="button" class="btn btn-info" value="Submit" onclick="clk()" />
+                        <input id="btnsearch" type="button" class="btn btn-info" value="Submit" />
                     </div>
                 </div>
 
@@ -89,6 +89,7 @@
         </div>
     </div>
 </div>
+@Scripts.Render("~/Content/scripts")
 <script src="/Content/plugins/jquery/jquery.min.js"></script>
 <script type="text/javascript">
     $(document).ready(function () {
@@ -98,7 +99,7 @@
         var year = date.getFullYear();
         $('#year').val(year);
         document.getElementById("month").options.selectedIndex = month;
-       
+
         var table = $('#tblrequest');
         table.DataTable({
             "serverSide": "true",
@@ -139,7 +140,7 @@
                 {
 
                     "data": "Crdlimit", "autoWidth": true, "orderable": false, "render": $.fn.dataTable.render.number(',', '.', 2)
-                },    
+                },
                 {
                     "data": "SAPlimit", "autoWidth": true, "orderable": false, "render": $.fn.dataTable.render.number(',', '.', 2)
                 },
@@ -161,7 +162,7 @@
                     "orderable": false,
                     "defaultContent": "<button class='btn btn-info'>View</button>"
                 },
-            ],  
+            ],
         });
 
         $("#btnsearch").click(function () {
@@ -178,11 +179,11 @@
         });
 
         $('#tblrequest tbody').on('click', 'img', function () {
-            var data = $('#tblrequest').DataTable().row($(this).parents('tr')).data();           
-            var file = data.FileName;  
-            window.open("/Content/uploaded/" + file + "", '_blank');             
+            var data = $('#tblrequest').DataTable().row($(this).parents('tr')).data();
+            var file = data.FileName;
+            window.open("/Content/uploaded/" + file + "", '_blank');
         });
-    
+
         $('#tblrequest tbody').on('click', 'button', function () {
             var data = $('#tblrequest').DataTable().row($(this).parents('tr')).data();
             var ReqID = data.Reqid;
@@ -191,7 +192,7 @@
 
             //window.open("/Home/ViewComments?reqID=" + ReqID + "&SID=" + statusID + "", '_blank');
             window.location.href = "/Home/ViewComments?reqID=" + ReqID + "&SID=" + statusID + "&TID=" + reqStatus;
-            
+
         });
 
 

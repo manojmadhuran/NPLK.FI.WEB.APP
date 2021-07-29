@@ -1,4 +1,4 @@
-﻿// T4 code generation is enabled for model 'C:\Users\manojm\source\repos\FI_Portal\FI.PORTAL\FI.PORTAL\dbconnect\dbModelFMG.edmx'. 
+﻿// T4 code generation is enabled for model 'C:\Users\manojm\source\repos\NPLK.FI.PROJECT\FI.WEB\NPLK.FI.WEB.APP\FI.PORTAL\dbconnect\dbModelFMG.edmx'. 
 // To enable legacy code generation, change the value of the 'Code Generation Strategy' designer
 // property to 'Legacy ObjectContext'. This property is available in the Properties Window when the model
 // is open in the designer.

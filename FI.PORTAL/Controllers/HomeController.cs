@@ -88,6 +88,7 @@ namespace FI.PORTAL.Controllers
             try
             {
                 string userx = Session["uname"].ToString();
+                //string userx = "admin";
                
                 requestinit_logic request = new requestinit_logic();
                 Int64 reqID = request.AddRequestComment(ReqID, allowlimit, comment, "1", userx, Uaction, Level);
@@ -119,6 +120,7 @@ namespace FI.PORTAL.Controllers
             try
             {
                 int role = Convert.ToInt16(Session["role"].ToString());
+                //int role = 1;
                 requestinit_logic logic = new requestinit_logic();
                 Level = logic.downloadReqLevel(role);
                 return Json(Level, JsonRequestBehavior.AllowGet);
@@ -137,7 +139,7 @@ namespace FI.PORTAL.Controllers
                 return Json(History, JsonRequestBehavior.AllowGet);
             }catch(Exception ex)
             {
-                return null;
+                return Json("",JsonRequestBehavior.AllowGet);
             }
         }
 
@@ -161,6 +163,7 @@ namespace FI.PORTAL.Controllers
             try
             {
                 string user = Session["uname"].ToString();
+                //string user = "admin";
                 requestinit_logic request = new requestinit_logic();
                 Int64 reqID = request.InitiateRequest(cuscode, filename, salescode, allowlimit, comment, user,Rtype, crdExpo, existing);
                 Session["reqID_"] = reqID.ToString();
@@ -182,6 +185,8 @@ namespace FI.PORTAL.Controllers
                
                 int role_ = Convert.ToInt16(Session["role"].ToString());
                 string user_ = Session["uname"].ToString();
+                //int role_ = 1;
+                //string user_ = "admin";
 
                 //Server Side Parameter
                 int start = Convert.ToInt32(Request["start"]);
@@ -246,8 +251,8 @@ namespace FI.PORTAL.Controllers
                 else
                 {
                     string _FileName = filename + Path.GetExtension(file.FileName);
-                    string _path = Path.Combine(Server.MapPath("~/Content/uploaded"), _FileName);
-                    //string _path = Path.Combine("//192.168.101.131/cmp/upload", _FileName);
+                    //string _path = Path.Combine(Server.MapPath("~/Content/uploaded"), _FileName);
+                    string _path = Path.Combine("//192.168.101.131/cmp/content/uploaded/", _FileName);
                     file.SaveAs(_path);
                     requestinit_logic logic = new requestinit_logic();
                     logic.saveFile(Convert.ToInt64(filename), _FileName);

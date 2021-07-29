@@ -14,7 +14,7 @@
                 <h4>Initiate Request</h4>
             </div>
             <div class="card-body">
-                
+
                 <div class="row">
                     <div class="col-md-4">
                         <div class="form-group">
@@ -33,51 +33,51 @@
                 <hr />
 
                 @*@using (Html.BeginForm("uploadfile",
-                        "Home",
-                        FormMethod.Post,
-                        new { enctype = "multipart/form-data" }))
-                {*@
+                            "Home",
+                            FormMethod.Post,
+                            new { enctype = "multipart/form-data" }))
+                    {*@
 
-                    <div class="row">
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                Customer Name                                
-                                <input id="txtcusname" type="text" class="form-control" readonly="readonly" placeholder="Customer Name" />
-                            </div>
-                            <div class="form-group">
-                                Sales Code
-                                <input id="txtsalescode" type="text" class="form-control" readonly="readonly" placeholder="Sales Code" />
-                            </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            Customer Name
+                            <input id="txtcusname" type="text" class="form-control" readonly="readonly" placeholder="Customer Name" />
                         </div>
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                Existing Credit Limit
-                                <input id="txtcrdlimit" type="text" class="form-control" readonly="readonly" placeholder="Credit Limit"  />
-                            </div>
-
-                            <div class="form-group">
-                                @*Reason
-                                    <select id="reasonlist" class="form-control"></select>*@
-
-                                Sales Area
-                                <input id="txtsalesArea" type="text" class="form-control" readonly="readonly" placeholder="Sales Area" />
-                            </div>
-
-                        </div>
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                Credit Exposure
-                                <input id="txtcrdExposure" type="text" class="form-control" placeholder="Credit Exposure" />
-                            </div>
-                            <div class="form-group">
-                                Entitled Credit Limit
-                                <input id="txtEntitlecrdlimit" type="text" class="form-control" placeholder="Allow Credit Limit" />
-                            </div>
-                            
+                        <div class="form-group">
+                            Sales Code
+                            <input id="txtsalescode" type="text" class="form-control" readonly="readonly" placeholder="Sales Code" />
                         </div>
                     </div>
-                    <div class="row">
-                        @*<div class="col-md-4">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            Existing Credit Limit
+                            <input id="txtcrdlimit" type="text" class="form-control" readonly="readonly" placeholder="Credit Limit" />
+                        </div>
+
+                        <div class="form-group">
+                            @*Reason
+                                <select id="reasonlist" class="form-control"></select>*@
+
+                            Sales Area
+                            <input id="txtsalesArea" type="text" class="form-control" readonly="readonly" placeholder="Sales Area" />
+                        </div>
+
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            Credit Exposure
+                            <input id="txtcrdExposure" type="text" class="form-control" placeholder="Credit Exposure" />
+                        </div>
+                        <div class="form-group">
+                            Entitled Credit Limit
+                            <input id="txtEntitlecrdlimit" type="text" class="form-control" placeholder="Allow Credit Limit" />
+                        </div>
+
+                    </div>
+                </div>
+                <div class="row">
+                    @*<div class="col-md-4">
                             Evaluation Form
 
                             <div class="form-group">
@@ -90,26 +90,26 @@
                             </div>
 
                         </div>*@
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                Comment
-                                <textarea id="txtcomment" class="form-control" spellcheck="true" style="min-height:120px;height:120px;max-height:120px;" maxlength="500"></textarea>
-                            </div>
-                        </div>
-                        <div class="col-md-2">
-                            <div>
-                                <br />                                
-                                <input id="btninitiate" type="button" class="btn btn-info" value="Initiate Request" />
-                            </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            Comment
+                            <textarea id="txtcomment" class="form-control" spellcheck="true" style="min-height:120px;height:120px;max-height:120px;" maxlength="500"></textarea>
                         </div>
                     </div>
-               
+                    <div class="col-md-2">
+                        <div>
+                            <br />
+                            <input id="btninitiate" type="button" class="btn btn-info" value="Initiate Request" />
+                        </div>
+                    </div>
                 </div>
+
+            </div>
         </div>
     </div>
 </div>
 
-<div id="divupload" style="visibility:hidden;" >
+<div id="divupload" style="visibility:hidden;">
     <div class="card">
         <div class="card-header">
             Upload evaluation form
@@ -123,36 +123,39 @@
                 </div>
             }
         </div>
-    </div>   
+    </div>
 </div>
+@Scripts.Render("~/Content/scripts")
+
+<script type="text/javascript" src="~/Scripts/ControllerScripts/initiation.js"></script>
 
 <!-- commented -->
 @*<div class="row">
-    <div class="col-md-12">
-        <div class="card">
-            <div class="card-header">
-                Customer History
-            </div>
-            <div class="card-body">
-                <table id="tblordhistory" class="table table-head-fixed table-bordered">
-                    <thead>
-                        <tr>
-                            <th>Order Number</th>
-                            <th>Order Value</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>1234567890</td>
-                            <td>121,000.00</td>
-                        </tr>
-                        <tr>
-                            <td>1234567890</td>
-                            <td>123,000.00</td>
-                        </tr>
-                    </tbody>
-                </table>
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    Customer History
+                </div>
+                <div class="card-body">
+                    <table id="tblordhistory" class="table table-head-fixed table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Order Number</th>
+                                <th>Order Value</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1234567890</td>
+                                <td>121,000.00</td>
+                            </tr>
+                            <tr>
+                                <td>1234567890</td>
+                                <td>123,000.00</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
-    </div>
-</div>*@
+    </div>*@
