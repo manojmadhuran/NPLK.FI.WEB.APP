@@ -29,14 +29,15 @@ namespace FI.PORTAL.Controllers
             {
                 requestinit_logic logic = new requestinit_logic();
                 int role = logic.UserLogin(uname, password);
-                if(role > 0)
+                if (role > 0)
                 {
                     Session["role"] = role.ToString();
                     Session["uname"] = uname.ToUpper();
                     return role;
                 }
                 return 0;
-            }catch(Exception ex) { return 0; }
+            }
+            catch (Exception ex) { return 0; }
         }
 
     }

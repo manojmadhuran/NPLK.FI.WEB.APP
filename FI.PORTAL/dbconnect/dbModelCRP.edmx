@@ -1,0 +1,393 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="CRP_SYSModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="NEW_CUS_COMPANIES">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CusReqID" Type="numeric" Precision="10" Scale="0" />
+          <Property Name="Company" Type="varchar" MaxLength="100" />
+          <Property Name="CreditLimit" Type="varchar" MaxLength="100" />
+          <Property Name="CreditPeriod" Type="varchar" MaxLength="100" />
+          <Property Name="Discount" Type="varchar" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="NEW_CUS_EVAL">
+          <Key>
+            <PropertyRef Name="EvalID" />
+          </Key>
+          <Property Name="EvalID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CusReqID" Type="numeric" Precision="10" Scale="0" />
+          <Property Name="RecLimit" Type="numeric" Precision="10" Scale="0" />
+          <Property Name="RecPeriod" Type="varchar" MaxLength="100" />
+          <Property Name="RecDiscount" Type="varchar" MaxLength="100" />
+          <Property Name="Remarks" Type="varchar" MaxLength="500" />
+          <Property Name="Role" Type="varchar" MaxLength="10" />
+          <Property Name="SalesCode" Type="varchar" MaxLength="20" />
+          <Property Name="CreatedDate" Type="smalldatetime" />
+          <Property Name="Status" Type="varchar" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="NEW_CUS_FINAL_APPROVAL">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CompletenessCustomerRegForm" Type="bit" Nullable="false" />
+          <Property Name="AllRelevantDocCopies" Type="bit" Nullable="false" />
+          <Property Name="FormA" Type="bit" Nullable="false" />
+          <Property Name="FormB" Type="bit" Nullable="false" />
+          <Property Name="DateofVerification" Type="smalldatetime" />
+          <Property Name="PersonContacted" Type="varchar" MaxLength="300" />
+          <Property Name="MethodOfVerification" Type="varchar" MaxLength="500" />
+          <Property Name="Comments" Type="varchar" MaxLength="2000" />
+          <Property Name="CusReqID" Type="numeric" Precision="10" Scale="0" />
+          <Property Name="RecLimit" Type="numeric" Precision="10" Scale="0" />
+          <Property Name="RecPeriod" Type="varchar" MaxLength="100" />
+          <Property Name="RecDiscount" Type="varchar" MaxLength="100" />
+          <Property Name="Remarks" Type="varchar" MaxLength="500" />
+          <Property Name="Role" Type="varchar" MaxLength="10" />
+          <Property Name="SalesCode" Type="varchar" MaxLength="20" />
+          <Property Name="CreatedDate" Type="smalldatetime" />
+        </EntityType>
+        <EntityType Name="NEW_CUS_HEADER">
+          <Key>
+            <PropertyRef Name="CusReqID" />
+          </Key>
+          <Property Name="CusReqID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CurrentStat" Type="varchar" MaxLength="50" />
+          <Property Name="CreatedDate" Type="smalldatetime" />
+          <Property Name="CusName" Type="varchar" MaxLength="200" />
+          <Property Name="CusAddress" Type="varchar" MaxLength="500" />
+          <Property Name="CusTel" Type="varchar" MaxLength="15" />
+          <Property Name="CusFax" Type="varchar" MaxLength="15" />
+          <Property Name="CusEmail" Type="varchar" MaxLength="100" />
+          <Property Name="DelAddress" Type="varchar" MaxLength="500" />
+          <Property Name="DelTel" Type="varchar" MaxLength="15" />
+          <Property Name="DelFax" Type="varchar" MaxLength="15" />
+          <Property Name="DelEmail" Type="varchar" MaxLength="100" />
+          <Property Name="SalesCode" Type="varchar" MaxLength="10" />
+          <Property Name="SalesAreaName" Type="varchar" MaxLength="225" />
+          <Property Name="VatRegNo" Type="varchar" MaxLength="20" />
+          <Property Name="DateofInitialCusVisit" Type="smalldatetime" />
+          <Property Name="PersonDealWith" Type="varchar" MaxLength="200" />
+          <Property Name="DateQuotationSent" Type="smalldatetime" />
+          <Property Name="BusinessNature" Type="varchar" MaxLength="50" />
+          <Property Name="OtherDesc" Type="varchar" MaxLength="100" />
+          <Property Name="BusinessDuration" Type="varchar" MaxLength="100" />
+          <Property Name="PaintStockValue" Type="numeric" Precision="10" Scale="2" />
+          <Property Name="PaintMonthlyTakeOff" Type="numeric" Precision="10" Scale="2" />
+          <Property Name="OtherStockValue" Type="numeric" Precision="10" Scale="2" />
+          <Property Name="OtherMonthlyTakeOff" Type="numeric" Precision="10" Scale="2" />
+          <Property Name="CusFinanceStability" Type="varchar" MaxLength="50" />
+          <Property Name="CusPayStrength" Type="varchar" MaxLength="50" />
+          <Property Name="InitialOrder" Type="numeric" Precision="10" Scale="2" />
+          <Property Name="FirstAvgSales" Type="numeric" Precision="10" Scale="2" />
+          <Property Name="NextAvgSales" Type="numeric" Precision="10" Scale="2" />
+          <Property Name="EstiPurchase" Type="numeric" Precision="10" Scale="2" />
+          <Property Name="BusinessRegCert" Type="bit" Nullable="false" />
+          <Property Name="VatRegCert" Type="bit" Nullable="false" />
+          <Property Name="IDofOwner" Type="bit" Nullable="false" />
+          <Property Name="Form20" Type="bit" Nullable="false" />
+          <Property Name="BankStatments" Type="bit" Nullable="false" />
+          <Property Name="Business_Place" Type="bit" Nullable="false" />
+          <Property Name="Application_Form" Type="bit" Nullable="false" />
+          <Property Name="Level" Type="int" />
+        </EntityType>
+        <EntityType Name="NEW_CUS_IMAGE">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CusReqID" Type="numeric" Precision="10" Scale="0" />
+          <Property Name="Image" Type="varchar(max)" />
+        </EntityType>
+        <EntityType Name="NEW_CUS_PAINT_BRANDS">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CusReqID" Type="numeric" Precision="10" Scale="0" />
+          <Property Name="PaintBrand" Type="varchar" MaxLength="100" />
+          <Property Name="StockVal" Type="numeric" Precision="10" Scale="2" />
+          <Property Name="MonthlyTOVal" Type="numeric" Precision="10" Scale="2" />
+        </EntityType>
+        <EntityContainer Name="CRP_SYSModelStoreContainer">
+          <EntitySet Name="NEW_CUS_COMPANIES" EntityType="Self.NEW_CUS_COMPANIES" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="NEW_CUS_EVAL" EntityType="Self.NEW_CUS_EVAL" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="NEW_CUS_FINAL_APPROVAL" EntityType="Self.NEW_CUS_FINAL_APPROVAL" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="NEW_CUS_HEADER" EntityType="Self.NEW_CUS_HEADER" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="NEW_CUS_IMAGE" EntityType="Self.NEW_CUS_IMAGE" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="NEW_CUS_PAINT_BRANDS" EntityType="Self.NEW_CUS_PAINT_BRANDS" Schema="dbo" store:Type="Tables" />
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="CRP_SYSModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="NEW_CUS_COMPANIES">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CusReqID" Type="Decimal" Precision="10" Scale="0" />
+          <Property Name="Company" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="CreditLimit" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="CreditPeriod" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Discount" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="NEW_CUS_EVAL">
+          <Key>
+            <PropertyRef Name="EvalID" />
+          </Key>
+          <Property Name="EvalID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CusReqID" Type="Decimal" Precision="10" Scale="0" />
+          <Property Name="RecLimit" Type="Decimal" Precision="10" Scale="0" />
+          <Property Name="RecPeriod" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="RecDiscount" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Remarks" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="Role" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="SalesCode" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="CreatedDate" Type="DateTime" Precision="0" />
+          <Property Name="Status" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="NEW_CUS_HEADER">
+          <Key>
+            <PropertyRef Name="CusReqID" />
+          </Key>
+          <Property Name="CusReqID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CurrentStat" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="CreatedDate" Type="DateTime" Precision="0" />
+          <Property Name="CusName" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="CusAddress" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="CusTel" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="CusFax" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="CusEmail" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="DelAddress" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="DelTel" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="DelFax" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="DelEmail" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="SalesCode" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="VatRegNo" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="DateofInitialCusVisit" Type="DateTime" Precision="0" />
+          <Property Name="PersonDealWith" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="DateQuotationSent" Type="DateTime" Precision="0" />
+          <Property Name="BusinessNature" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="OtherDesc" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="BusinessDuration" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="PaintStockValue" Type="Decimal" Precision="10" Scale="2" />
+          <Property Name="PaintMonthlyTakeOff" Type="Decimal" Precision="10" Scale="2" />
+          <Property Name="OtherStockValue" Type="Decimal" Precision="10" Scale="2" />
+          <Property Name="OtherMonthlyTakeOff" Type="Decimal" Precision="10" Scale="2" />
+          <Property Name="CusFinanceStability" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="CusPayStrength" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="InitialOrder" Type="Decimal" Precision="10" Scale="2" />
+          <Property Name="FirstAvgSales" Type="Decimal" Precision="10" Scale="2" />
+          <Property Name="NextAvgSales" Type="Decimal" Precision="10" Scale="2" />
+          <Property Name="EstiPurchase" Type="Decimal" Precision="10" Scale="2" />
+          <Property Name="BusinessRegCert" Type="Boolean" Nullable="false" />
+          <Property Name="VatRegCert" Type="Boolean" Nullable="false" />
+          <Property Name="IDofOwner" Type="Boolean" Nullable="false" />
+          <Property Name="Form20" Type="Boolean" Nullable="false" />
+          <Property Name="BankStatments" Type="Boolean" Nullable="false" />
+          <Property Name="Business_Place" Type="Boolean" Nullable="false" />
+          <Property Name="Application_Form" Type="Boolean" Nullable="false" />
+          <Property Name="SalesAreaName" Type="String" MaxLength="225" FixedLength="false" Unicode="false" />
+          <Property Name="Level" Type="Int32" />
+        </EntityType>
+        <EntityType Name="NEW_CUS_IMAGE">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CusReqID" Type="Decimal" Precision="10" Scale="0" />
+          <Property Name="Image" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="NEW_CUS_PAINT_BRANDS">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CusReqID" Type="Decimal" Precision="10" Scale="0" />
+          <Property Name="PaintBrand" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="StockVal" Type="Decimal" Precision="10" Scale="2" />
+          <Property Name="MonthlyTOVal" Type="Decimal" Precision="10" Scale="2" />
+        </EntityType>
+        <EntityContainer Name="CRP_SYSEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="NEW_CUS_COMPANIES" EntityType="Self.NEW_CUS_COMPANIES" />
+          <EntitySet Name="NEW_CUS_EVAL" EntityType="Self.NEW_CUS_EVAL" />
+          <EntitySet Name="NEW_CUS_HEADER" EntityType="Self.NEW_CUS_HEADER" />
+          <EntitySet Name="NEW_CUS_IMAGE" EntityType="Self.NEW_CUS_IMAGE" />
+          <EntitySet Name="NEW_CUS_PAINT_BRANDS" EntityType="Self.NEW_CUS_PAINT_BRANDS" />
+          <EntitySet Name="NEW_CUS_FINAL_APPROVAL" EntityType="CRP_SYSModel.NEW_CUS_FINAL_APPROVAL" />
+        </EntityContainer>
+        <EntityType Name="NEW_CUS_FINAL_APPROVAL">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CompletenessCustomerRegForm" Type="Boolean" Nullable="false" />
+          <Property Name="AllRelevantDocCopies" Type="Boolean" Nullable="false" />
+          <Property Name="FormA" Type="Boolean" Nullable="false" />
+          <Property Name="FormB" Type="Boolean" Nullable="false" />
+          <Property Name="DateofVerification" Type="DateTime" Precision="0" />
+          <Property Name="PersonContacted" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
+          <Property Name="MethodOfVerification" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="Comments" Type="String" MaxLength="2000" FixedLength="false" Unicode="false" />
+          <Property Name="CusReqID" Type="Decimal" Precision="10" Scale="0" />
+          <Property Name="RecLimit" Type="Decimal" Precision="10" Scale="0" />
+          <Property Name="RecPeriod" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="RecDiscount" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Remarks" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="Role" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="SalesCode" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="CreatedDate" Type="DateTime" Precision="0" />
+        </EntityType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="CRP_SYSModelStoreContainer" CdmEntityContainer="CRP_SYSEntities">
+          <EntitySetMapping Name="NEW_CUS_COMPANIES">
+            <EntityTypeMapping TypeName="CRP_SYSModel.NEW_CUS_COMPANIES">
+              <MappingFragment StoreEntitySet="NEW_CUS_COMPANIES">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="CusReqID" ColumnName="CusReqID" />
+                <ScalarProperty Name="Company" ColumnName="Company" />
+                <ScalarProperty Name="CreditLimit" ColumnName="CreditLimit" />
+                <ScalarProperty Name="CreditPeriod" ColumnName="CreditPeriod" />
+                <ScalarProperty Name="Discount" ColumnName="Discount" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="NEW_CUS_EVAL">
+            <EntityTypeMapping TypeName="CRP_SYSModel.NEW_CUS_EVAL">
+              <MappingFragment StoreEntitySet="NEW_CUS_EVAL">
+                <ScalarProperty Name="EvalID" ColumnName="EvalID" />
+                <ScalarProperty Name="CusReqID" ColumnName="CusReqID" />
+                <ScalarProperty Name="RecLimit" ColumnName="RecLimit" />
+                <ScalarProperty Name="RecPeriod" ColumnName="RecPeriod" />
+                <ScalarProperty Name="RecDiscount" ColumnName="RecDiscount" />
+                <ScalarProperty Name="Remarks" ColumnName="Remarks" />
+                <ScalarProperty Name="Role" ColumnName="Role" />
+                <ScalarProperty Name="SalesCode" ColumnName="SalesCode" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="NEW_CUS_HEADER">
+            <EntityTypeMapping TypeName="CRP_SYSModel.NEW_CUS_HEADER">
+              <MappingFragment StoreEntitySet="NEW_CUS_HEADER">
+                <ScalarProperty Name="Level" ColumnName="Level" />
+                <ScalarProperty Name="SalesAreaName" ColumnName="SalesAreaName" />
+                <ScalarProperty Name="CusReqID" ColumnName="CusReqID" />
+                <ScalarProperty Name="CurrentStat" ColumnName="CurrentStat" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="CusName" ColumnName="CusName" />
+                <ScalarProperty Name="CusAddress" ColumnName="CusAddress" />
+                <ScalarProperty Name="CusTel" ColumnName="CusTel" />
+                <ScalarProperty Name="CusFax" ColumnName="CusFax" />
+                <ScalarProperty Name="CusEmail" ColumnName="CusEmail" />
+                <ScalarProperty Name="DelAddress" ColumnName="DelAddress" />
+                <ScalarProperty Name="DelTel" ColumnName="DelTel" />
+                <ScalarProperty Name="DelFax" ColumnName="DelFax" />
+                <ScalarProperty Name="DelEmail" ColumnName="DelEmail" />
+                <ScalarProperty Name="SalesCode" ColumnName="SalesCode" />
+                <ScalarProperty Name="VatRegNo" ColumnName="VatRegNo" />
+                <ScalarProperty Name="DateofInitialCusVisit" ColumnName="DateofInitialCusVisit" />
+                <ScalarProperty Name="PersonDealWith" ColumnName="PersonDealWith" />
+                <ScalarProperty Name="DateQuotationSent" ColumnName="DateQuotationSent" />
+                <ScalarProperty Name="BusinessNature" ColumnName="BusinessNature" />
+                <ScalarProperty Name="OtherDesc" ColumnName="OtherDesc" />
+                <ScalarProperty Name="BusinessDuration" ColumnName="BusinessDuration" />
+                <ScalarProperty Name="PaintStockValue" ColumnName="PaintStockValue" />
+                <ScalarProperty Name="PaintMonthlyTakeOff" ColumnName="PaintMonthlyTakeOff" />
+                <ScalarProperty Name="OtherStockValue" ColumnName="OtherStockValue" />
+                <ScalarProperty Name="OtherMonthlyTakeOff" ColumnName="OtherMonthlyTakeOff" />
+                <ScalarProperty Name="CusFinanceStability" ColumnName="CusFinanceStability" />
+                <ScalarProperty Name="CusPayStrength" ColumnName="CusPayStrength" />
+                <ScalarProperty Name="InitialOrder" ColumnName="InitialOrder" />
+                <ScalarProperty Name="FirstAvgSales" ColumnName="FirstAvgSales" />
+                <ScalarProperty Name="NextAvgSales" ColumnName="NextAvgSales" />
+                <ScalarProperty Name="EstiPurchase" ColumnName="EstiPurchase" />
+                <ScalarProperty Name="BusinessRegCert" ColumnName="BusinessRegCert" />
+                <ScalarProperty Name="VatRegCert" ColumnName="VatRegCert" />
+                <ScalarProperty Name="IDofOwner" ColumnName="IDofOwner" />
+                <ScalarProperty Name="Form20" ColumnName="Form20" />
+                <ScalarProperty Name="BankStatments" ColumnName="BankStatments" />
+                <ScalarProperty Name="Business_Place" ColumnName="Business_Place" />
+                <ScalarProperty Name="Application_Form" ColumnName="Application_Form" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="NEW_CUS_IMAGE">
+            <EntityTypeMapping TypeName="CRP_SYSModel.NEW_CUS_IMAGE">
+              <MappingFragment StoreEntitySet="NEW_CUS_IMAGE">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="CusReqID" ColumnName="CusReqID" />
+                <ScalarProperty Name="Image" ColumnName="Image" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="NEW_CUS_PAINT_BRANDS">
+            <EntityTypeMapping TypeName="CRP_SYSModel.NEW_CUS_PAINT_BRANDS">
+              <MappingFragment StoreEntitySet="NEW_CUS_PAINT_BRANDS">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="CusReqID" ColumnName="CusReqID" />
+                <ScalarProperty Name="PaintBrand" ColumnName="PaintBrand" />
+                <ScalarProperty Name="StockVal" ColumnName="StockVal" />
+                <ScalarProperty Name="MonthlyTOVal" ColumnName="MonthlyTOVal" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="NEW_CUS_FINAL_APPROVAL">
+            <EntityTypeMapping TypeName="CRP_SYSModel.NEW_CUS_FINAL_APPROVAL">
+              <MappingFragment StoreEntitySet="NEW_CUS_FINAL_APPROVAL">
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="SalesCode" ColumnName="SalesCode" />
+                <ScalarProperty Name="Role" ColumnName="Role" />
+                <ScalarProperty Name="Remarks" ColumnName="Remarks" />
+                <ScalarProperty Name="RecDiscount" ColumnName="RecDiscount" />
+                <ScalarProperty Name="RecPeriod" ColumnName="RecPeriod" />
+                <ScalarProperty Name="RecLimit" ColumnName="RecLimit" />
+                <ScalarProperty Name="CusReqID" ColumnName="CusReqID" />
+                <ScalarProperty Name="Comments" ColumnName="Comments" />
+                <ScalarProperty Name="MethodOfVerification" ColumnName="MethodOfVerification" />
+                <ScalarProperty Name="PersonContacted" ColumnName="PersonContacted" />
+                <ScalarProperty Name="DateofVerification" ColumnName="DateofVerification" />
+                <ScalarProperty Name="FormB" ColumnName="FormB" />
+                <ScalarProperty Name="FormA" ColumnName="FormA" />
+                <ScalarProperty Name="AllRelevantDocCopies" ColumnName="AllRelevantDocCopies" />
+                <ScalarProperty Name="CompletenessCustomerRegForm" ColumnName="CompletenessCustomerRegForm" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

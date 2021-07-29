@@ -132,8 +132,13 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\CollectionController.cs" />
+    <Compile Include="Controllers\CustomerRegistrationController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
+    <Compile Include="dbconnect\COLLECTION.cs">
+      <DependentUpon>dbModelCOL.tt</DependentUpon>
+    </Compile>
     <Compile Include="dbconnect\CurrentStatusLvlMaster.cs">
       <DependentUpon>dbModelFMG.tt</DependentUpon>
     </Compile>
@@ -158,6 +163,36 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>dbModel.edmx</DependentUpon>
     </Compile>
+    <Compile Include="dbconnect\dbModelCOL.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>dbModelCOL.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="dbconnect\dbModelCOL.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>dbModelCOL.tt</DependentUpon>
+    </Compile>
+    <Compile Include="dbconnect\dbModelCOL.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>dbModelCOL.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="dbconnect\dbModelCRP.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>dbModelCRP.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="dbconnect\dbModelCRP.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>dbModelCRP.tt</DependentUpon>
+    </Compile>
+    <Compile Include="dbconnect\dbModelCRP.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>dbModelCRP.edmx</DependentUpon>
+    </Compile>
     <Compile Include="dbconnect\dbModelFMG.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -176,8 +211,29 @@
     <Compile Include="dbconnect\EnhancementTextMaster.cs">
       <DependentUpon>dbModelFMG.tt</DependentUpon>
     </Compile>
+    <Compile Include="dbconnect\FullCollectionData_Result.cs">
+      <DependentUpon>dbModelCOL.tt</DependentUpon>
+    </Compile>
     <Compile Include="dbconnect\LoginDetail.cs">
       <DependentUpon>dbModelFMG.tt</DependentUpon>
+    </Compile>
+    <Compile Include="dbconnect\NEW_CUS_COMPANIES.cs">
+      <DependentUpon>dbModelCRP.tt</DependentUpon>
+    </Compile>
+    <Compile Include="dbconnect\NEW_CUS_EVAL.cs">
+      <DependentUpon>dbModelCRP.tt</DependentUpon>
+    </Compile>
+    <Compile Include="dbconnect\NEW_CUS_FINAL_APPROVAL.cs">
+      <DependentUpon>dbModelCRP.tt</DependentUpon>
+    </Compile>
+    <Compile Include="dbconnect\NEW_CUS_HEADER.cs">
+      <DependentUpon>dbModelCRP.tt</DependentUpon>
+    </Compile>
+    <Compile Include="dbconnect\NEW_CUS_IMAGE.cs">
+      <DependentUpon>dbModelCRP.tt</DependentUpon>
+    </Compile>
+    <Compile Include="dbconnect\NEW_CUS_PAINT_BRANDS.cs">
+      <DependentUpon>dbModelCRP.tt</DependentUpon>
     </Compile>
     <Compile Include="dbconnect\ReasonMaster.cs">
       <DependentUpon>dbModelFMG.tt</DependentUpon>
@@ -213,6 +269,8 @@
     <Compile Include="Models\orderModel.cs" />
     <Compile Include="Models\requestModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ViewModels\CollectionData.cs" />
+    <Compile Include="ViewModels\CustomerRegistrationRequestData.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap-theme.css" />
@@ -1840,6 +1898,26 @@
     <Content Include="Content\plugins\toastr\toastr.css" />
     <Content Include="Content\plugins\toastr\toastr.min.css" />
     <Content Include="Content\plugins\toastr\toastr.min.js" />
+    <Content Include="dbconnect\dbModelCOL.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>dbModelCOL.edmx</DependentUpon>
+      <LastGenOutput>dbModelCOL.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="dbconnect\dbModelCOL.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>dbModelCOL.edmx</DependentUpon>
+      <LastGenOutput>dbModelCOL.cs</LastGenOutput>
+    </Content>
+    <Content Include="dbconnect\dbModelCRP.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>dbModelCRP.edmx</DependentUpon>
+      <LastGenOutput>dbModelCRP.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="dbconnect\dbModelCRP.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>dbModelCRP.edmx</DependentUpon>
+      <LastGenOutput>dbModelCRP.cs</LastGenOutput>
+    </Content>
     <Content Include="ImageView\images.aspx" />
     <Content Include="Scripts\ControllerScripts\comments.js" />
     <Content Include="Scripts\ControllerScripts\validatity.js" />
@@ -1961,6 +2039,20 @@
     <Content Include="dbconnect\dbModelFMG.edmx.diagram">
       <DependentUpon>dbModelFMG.edmx</DependentUpon>
     </Content>
+    <EntityDeploy Include="dbconnect\dbModelCRP.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>dbModelCRP.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <Content Include="dbconnect\dbModelCRP.edmx.diagram">
+      <DependentUpon>dbModelCRP.edmx</DependentUpon>
+    </Content>
+    <EntityDeploy Include="dbconnect\dbModelCOL.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>dbModelCOL.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <Content Include="dbconnect\dbModelCOL.edmx.diagram">
+      <DependentUpon>dbModelCOL.edmx</DependentUpon>
+    </Content>
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\ControllerScripts\initiation.js" />
@@ -1999,6 +2091,10 @@
     <Content Include="Views\Login\Login.cshtml" />
     <Content Include="Views\Login\UserLogin.cshtml" />
     <Content Include="Views\Login\LogOut.cshtml" />
+    <Content Include="Views\CustomerRegistration\Index.cshtml" />
+    <Content Include="Views\CustomerRegistration\CustomerRequestFormView.cshtml" />
+    <Content Include="Views\Collection\CollectionHome.cshtml" />
+    <Content Include="Views\Collection\CollectionView.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

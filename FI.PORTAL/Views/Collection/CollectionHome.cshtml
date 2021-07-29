@@ -1,0 +1,131 @@
+﻿@model List<FI.PORTAL.dbconnect.COLLECTION>
+
+@{
+    ViewBag.Title = "Collection Home";
+    String currentSort = ViewBag.sortString;
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <div class="row">
+
+                    <div style="padding:1%">
+                        <form action="@Url.Action("CollectionHome", "Collection")" method="get">
+                            <div class="form-row align-items-center">
+                                <div class="col-auto my-1">
+                                    <label for="sort_menu">Sort By:</label>
+                                </div>
+                                <div class="col-auto my-1">
+                                    <select id="sort_menu" class="custom-select mr-sm-2" name="sortby">
+                                        @if (currentSort == "All")
+                                        {
+                                            <option value="All" selected>All</option>
+                                            <option value="Pending">Pending</option>
+                                            <option value="Acknowledged">Acknowledged</option>
+                                        }
+                                        else if (currentSort == "Pending")
+                                        {
+                                            <option value="All">All</option>
+                                            <option value="Pending" selected>Pending</option>
+                                            <option value="Acknowledged">Acknowledged</option>
+                                        }
+                                        else if (currentSort == "Acknowledged")
+                                        {
+                                            <option value="All">All</option>
+                                            <option value="Pending">Pending</option>
+                                            <option value="Acknowledged" selected>Acknowledged</option>
+                                        }
+
+                                    </select>
+                                </div>
+                                <div class="col-auto my-1">
+                                    <button type="submit" class="btn btn-primary">Sort By</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div style="padding:1%">
+                        <form action="@Url.Action("SearchCollection", "Collection")" method="get">
+                            <div class="form-row align-items-center">
+                                <div class="col-auto my-1">
+                                    <label for="sort_menu">Search: </label>
+                                </div>
+                                <div class="col-auto my-1">
+                                    <input type="text" class="form-control" name="search_query" placeholder="Collection ID"/>
+                                </div>
+                                <div class="col-auto my-1">
+                                    <button type="submit" class="btn btn-primary">Search</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h4>Collection Requests</h4>
+            </div>
+            <div class="card-body">
+
+                <div id="secposts" class="row">
+                    <div class="col-md-12">
+                        <table class="table table-bordered small" style="width:100%">
+                            <thead>
+                                <tr>
+                                    <th>Collection ID</th>
+                                    <th>Created Date</th>
+                                    <th>Sales Code</th>
+                                    <th>Acknowledge</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model.Count == 0)
+                                {
+                                    <tr>
+                                        <td colspan="7">No Records Found!</td>
+                                    </tr>
+                                }
+                                else
+                                {
+                                    foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td>@item.collection_no</td>
+                                            <td>@item.collection_date</td>
+                                            <td>@item.sales_code</td>
+                                            <td>
+                                                @if (item.acknowledge == true)
+                                                {<h6><span class="badge badge-success">Acknowledged</span></h6>}
+                                                else
+                                                { <h6><span class="badge badge-warning">Pending</span></h6>}
+                                            </td>
+                                            <td>
+                                                <a href="@Url.Action("CollectionView", new { item.collection_no})" class="btn btn-success btn-sm">View</a>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+</div>
