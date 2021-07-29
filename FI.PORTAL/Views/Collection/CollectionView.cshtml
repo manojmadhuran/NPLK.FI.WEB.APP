@@ -1,0 +1,281 @@
+﻿@model FI.PORTAL.ViewModels.CollectionData
+@{
+    ViewBag.Title = "Collection View";
+    string CollectionNo = Model.FullCollectionData.First().collection_no;
+
+    TimeSpan? TimeDifference = DateTime.Now - Model.FullCollectionData.First().acknowledged_date;
+
+    int same = 0;
+    string currentCustomerCode = "none";
+    string paymentKey = "none";
+    decimal amountTotal = 0;
+    decimal unallocatedAmountTotal = 0;
+    decimal invoiceAmountTotal = 0;
+    decimal osBalanceTotal = 0;
+    decimal settledTotal = 0;
+    string uname = (Session["uname"].ToString());
+
+}
+
+<style>
+    .fix-width {
+        width: auto;
+        overflow-y: hidden;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .table {
+        width: auto;
+        margin-bottom: 0;
+        max-width: none;
+    }
+
+    td, th {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+</style>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h4>Collection Requests</h4>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <div class="row">
+                    <div class="col-md-6">
+                        Collection ID: @CollectionNo
+                    </div>
+                    <div class="col-md-6">
+                        Collection Created Date: @Model.FullCollectionData.First().collection_date
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        Status: @if (Model.FullCollectionData.First().acknowledge == true)
+                        {<span class="badge badge-success">Acknowledged</span>}
+                        else
+                        { <span class="badge badge-warning">Pending</span>}
+                    </div>
+                    @if (Model.FullCollectionData.First().acknowledge == true)
+                    {
+                        <div class="col-md-6">
+                            Acknowledged By: @Model.FullCollectionData.First().acknowledge_by
+                        </div>
+                    }
+                </div>
+
+                <div class="row">
+                    @if (Model.FullCollectionData.First().acknowledge == true)
+                    {
+                        <div class="col-md-6">
+                            Acknowledged Date: @Model.FullCollectionData.First().acknowledged_date
+                        </div>
+
+                    }
+                </div>
+
+                @using (Html.BeginForm("AcknowledgeCollection", "Collection", FormMethod.Post))
+                {
+                    <div style="float:right;">
+                        @Html.HiddenFor(c => c.Collection.collection_no, new { Value = CollectionNo })
+                        @Html.HiddenFor(c => c.Collection.id, new { Value = Model.FullCollectionData.First().id })
+                        @Html.HiddenFor(c => c.Collection.collection_date, new { Value = Model.FullCollectionData.First().collection_date })
+                        @Html.HiddenFor(c => c.Collection.sales_code, new { Value = Model.FullCollectionData.First().sales_code })
+
+                        @if (Model.FullCollectionData.First().acknowledge == true)
+                        {
+                            @Html.HiddenFor(c => c.Collection.acknowledge, new { Value = false })
+                        }
+                        else
+                        {
+                            @Html.HiddenFor(c => c.Collection.acknowledge, new { Value = true })
+                        }
+
+                        @Html.HiddenFor(c => c.Collection.acknowledge_by, new { Value = uname })
+                        @Html.HiddenFor(c => c.Collection.acknowledged_date, new { Value = Model.FullCollectionData.First().acknowledged_date })
+
+                        @if (Model.FullCollectionData.First().acknowledge == false)
+                        {
+                            <button class="btn badge-success btn-sm" type="submit">Acknowledge</button>
+                        }
+                        else
+                        {
+                            if (TimeDifference.Value.Days > 3)
+                            {
+                                <button class="btn badge-warning btn-sm"  disabled>Reverse Acknowledge</button>
+                            }
+                            else
+                            {
+                                <button class="btn badge-warning btn-sm" type="submit">Reverse Acknowledge</button>
+                            }
+                        }
+
+
+                        <button class="btn btn-info btn-sm" type="button" onclick="fnExcelReport();">Export to Excel</button>
+                        <iframe id="txtArea1" style="display:none"></iframe>
+                    </div>
+                }
+
+
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="center-block fix-width scroll-inner">
+
+                            <table id="collection_tbl" class="table table-bordered small table-hover" style="width:auto">
+                                <thead>
+                                    <tr>
+                                        <th>Sales Code</th>
+                                        <th>Dealer Code</th>
+                                        <th>Dealer Name</th>
+                                        <th>Payment Method</th>
+                                        <th>Cheque No</th>
+                                        <th>Bank</th>
+                                        <th>Branch</th>
+                                        <th>Banking Date</th>
+                                        <th>Deposited Bank</th>
+                                        <th>Deposited Branch</th>
+                                        <th>Reciept No</th>
+                                        <th>Amount</th>
+                                        <th>Unallocated Amount</th>
+                                        <th>Invoice Date</th>
+                                        <th>Invoice No</th>
+                                        <th>Payment Term</th>
+                                        <th>Amount</th>
+                                        <th>OS Balance</th>
+                                        <th>Settled Amount</th>
+                                        <th>NOD</th>
+                                        <th>Remarks</th>
+
+                                    </tr>
+                                </thead>
+                                <tbody style="overflow:auto"
+                                       @foreach (var item in Model.FullCollectionData) { invoiceAmountTotal = invoiceAmountTotal + (decimal)item.invoice_amount; osBalanceTotal = osBalanceTotal + (decimal)item.os_balance; settledTotal = settledTotal + (decimal)item.invoice_allocated; if (currentCustomerCode.Equals(item.customer_code) && paymentKey.Equals(item.payment_key)) { same = 1; } else { same = 0; } currentCustomerCode = item.customer_code; paymentKey = item.payment_key;<tr>
+                                                @if (same == 1)
+                                                {
+
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td>@item.invoice_date</td>
+                                                    <td>@item.invoice_no</td>
+                                                    <td>@item.payment_term</td>
+                                                    <td>@item.invoice_amount</td>
+                                                    <td>@item.os_balance</td>
+                                                    <td>@item.invoice_allocated</td>
+                                                    <td>@item.nod</td>
+                                                    <td>@item.remarks</td>
+
+                                                }
+                                                else
+                                                {
+                                                    amountTotal = amountTotal + (decimal)item.payment_amount;
+                                                    unallocatedAmountTotal = unallocatedAmountTotal + (decimal)item.unallocated_amount;
+                                                    <td>@item.sales_code</td>
+                                                    <td>@item.customer_code</td>
+                                                    <td>@item.CusName</td>
+                                                    <td>@item.payment_type</td>
+                                                    <td>@item.cheque_no</td>
+                                                    <td>@item.issued_bank</td>
+                                                    <td>@item.issued_branch</td>
+                                                    <td>@item.banking_date</td>
+                                                    <td>@item.deposited_bank</td>
+                                                    <td>@item.deposited_branch</td>
+                                                    <td>@item.receipt_no</td>
+                                                    <td>@item.payment_amount</td>
+                                                    <td>@item.unallocated_amount</td>
+                                                    <td>@item.invoice_date</td>
+                                                    <td>@item.invoice_no</td>
+                                                    <td>@item.payment_term</td>
+                                                    <td>@item.invoice_amount</td>
+                                                    <td>@item.os_balance</td>
+                                                    <td>@item.invoice_allocated</td>
+                                                    <td>@item.nod</td>
+                                                    <td>@item.remarks</td>
+                                                }
+
+                                            </tr>
+                                        }
+                                        <tr style="background:beige; font-weight:700; font-size:15px;">
+                                            <td colspan="3">Total</td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td>@amountTotal</td>
+                                            <td>@unallocatedAmountTotal</td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td>@invoiceAmountTotal</td>
+                                            <td>@osBalanceTotal</td>
+                                            <td>@settledTotal</td>
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function fnExcelReport() {
+        var tab_text = "<table border='2px'><tr bgcolor='#87AFC6'>";
+        var textRange; var j = 0;
+        tab = document.getElementById('collection_tbl'); // id of table
+
+        for (j = 0; j < tab.rows.length; j++) {
+            tab_text = tab_text + tab.rows[j].innerHTML + "</tr>";
+            //tab_text=tab_text+"</tr>";
+        }
+
+        tab_text = tab_text + "</table>";
+        tab_text = tab_text.replace(/<A[^>]*>|<\/A>/g, "");//remove if u want links in your table
+        tab_text = tab_text.replace(/<img[^>]*>/gi, ""); // remove if u want images in your table
+        tab_text = tab_text.replace(/<input[^>]*>|<\/input>/gi, ""); // reomves input params
+
+        var ua = window.navigator.userAgent;
+        var msie = ua.indexOf("MSIE ");
+
+        if (msie > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./))      // If Internet Explorer
+        {
+            txtArea1.document.open("txt/html", "replace");
+            txtArea1.document.write(tab_text);
+            txtArea1.document.close();
+            txtArea1.focus();
+            sa = txtArea1.document.execCommand("SaveAs", true, "Say Thanks to Sumit.xls");
+        }
+        else                 //other browser not tested on IE 11
+            sa = window.open('data:application/vnd.ms-excel,' + encodeURIComponent(tab_text));
+
+        return (sa);
+    }
+
+</script>

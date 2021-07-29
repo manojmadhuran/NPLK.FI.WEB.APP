@@ -258,10 +258,5 @@ namespace FI.PORTAL.Controllers
             catch(Exception ex) { }
         }
 
-
-
-
-       
-
     }
 }
