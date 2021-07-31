@@ -181,7 +181,7 @@
         $('#tblrequest tbody').on('click', 'img', function () {
             var data = $('#tblrequest').DataTable().row($(this).parents('tr')).data();
             var file = data.FileName;
-            window.open("/Content/uploaded/" + file + "", '_blank');
+            window.open("//192.168.101.131/CMP/Content/uploaded/" + file + "", '_blank');
         });
 
         $('#tblrequest tbody').on('click', 'button', function () {
