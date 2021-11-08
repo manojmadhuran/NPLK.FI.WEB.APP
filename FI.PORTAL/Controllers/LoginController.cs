@@ -32,6 +32,8 @@ namespace FI.PORTAL.Controllers
                 if (role > 0)
                 {
                     Session["role"] = role.ToString();
+                    //Session["role"] = "1";
+
                     Session["uname"] = uname.ToUpper();
                     return role;
                 }

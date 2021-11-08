@@ -27,9 +27,10 @@ namespace FI.PORTAL.dbconnect
     
         public virtual DbSet<NEW_CUS_COMPANIES> NEW_CUS_COMPANIES { get; set; }
         public virtual DbSet<NEW_CUS_EVAL> NEW_CUS_EVAL { get; set; }
-        public virtual DbSet<NEW_CUS_HEADER> NEW_CUS_HEADER { get; set; }
         public virtual DbSet<NEW_CUS_IMAGE> NEW_CUS_IMAGE { get; set; }
         public virtual DbSet<NEW_CUS_PAINT_BRANDS> NEW_CUS_PAINT_BRANDS { get; set; }
         public virtual DbSet<NEW_CUS_FINAL_APPROVAL> NEW_CUS_FINAL_APPROVAL { get; set; }
+        public virtual DbSet<NEW_CUS_OWNERS> NEW_CUS_OWNERS { get; set; }
+        public virtual DbSet<NEW_CUS_HEADER> NEW_CUS_HEADER { get; set; }
     }
 }

@@ -27,17 +27,17 @@ namespace FI.PORTAL.dbconnect
         public string DelFax { get; set; }
         public string DelEmail { get; set; }
         public string SalesCode { get; set; }
+        public string SalesAreaName { get; set; }
         public string VatRegNo { get; set; }
         public Nullable<System.DateTime> DateofInitialCusVisit { get; set; }
         public string PersonDealWith { get; set; }
-        public Nullable<System.DateTime> DateQuotationSent { get; set; }
         public string BusinessNature { get; set; }
-        public string OtherDesc { get; set; }
         public string BusinessDuration { get; set; }
-        public Nullable<decimal> PaintStockValue { get; set; }
-        public Nullable<decimal> PaintMonthlyTakeOff { get; set; }
-        public Nullable<decimal> OtherStockValue { get; set; }
-        public Nullable<decimal> OtherMonthlyTakeOff { get; set; }
+        public string Nature { get; set; }
+        public string ContactNoPersonDealWith { get; set; }
+        public string DesignationPersonDealWith { get; set; }
+        public string BusinessArea { get; set; }
+        public string BusinessPremises { get; set; }
         public string CusFinanceStability { get; set; }
         public string CusPayStrength { get; set; }
         public Nullable<decimal> InitialOrder { get; set; }
@@ -51,7 +51,8 @@ namespace FI.PORTAL.dbconnect
         public bool BankStatments { get; set; }
         public bool Business_Place { get; set; }
         public bool Application_Form { get; set; }
-        public string SalesAreaName { get; set; }
+        public bool SVAT_Customer { get; set; }
+        public bool SVAT_Validation { get; set; }
         public Nullable<int> Level { get; set; }
     }
 }
