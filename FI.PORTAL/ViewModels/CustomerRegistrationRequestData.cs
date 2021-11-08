@@ -18,6 +18,8 @@ namespace FI.PORTAL.ViewModels
 
         public IEnumerable<NEW_CUS_EVAL> RequestEvaluations { get; set; }
 
+        public IEnumerable<NEW_CUS_OWNERS> RequestOwners { get; set; }
+
         public IEnumerable<NEW_CUS_FINAL_APPROVAL> RequestFinalApproval { get; set; }
 
         public NEW_CUS_EVAL Evaluation { get; set; }

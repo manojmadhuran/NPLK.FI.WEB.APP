@@ -36,6 +36,7 @@ namespace FI.PORTAL.dbconnect
         public Nullable<System.DateTime> receipt_date { get; set; }
         public string deposited_bank { get; set; }
         public string deposited_branch { get; set; }
+        public Nullable<int> primary_key { get; set; }
         public string invoice_collection_no { get; set; }
         public string invoice_payment_key { get; set; }
         public string invoice_no { get; set; }
@@ -49,5 +50,6 @@ namespace FI.PORTAL.dbconnect
         public Nullable<System.DateTime> invoice_date { get; set; }
         public string remarks { get; set; }
         public string CusName { get; set; }
+        public Nullable<bool> invoice_acknowledge { get; set; }
     }
 }

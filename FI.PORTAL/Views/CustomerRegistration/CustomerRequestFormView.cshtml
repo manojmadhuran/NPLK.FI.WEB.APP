@@ -5,9 +5,6 @@
     ViewBag.Title = "Req:" + title;
 }
 
-@{
-    int role = Convert.ToInt16(Session["role"].ToString());
-}
 
 @if ((role == 1 && Model.RequestHeader.CurrentStat.Equals("pendingCO")) || (role == 5 && Model.RequestHeader.CurrentStat.Equals("pendingCM")) || (role == 6 && Model.RequestHeader.CurrentStat.Equals("pendingFM")) || (role == 7 && Model.RequestHeader.CurrentStat.Equals("pendingGM")))
 {<div class="card">
@@ -29,12 +26,32 @@
 
                 @if (role != 7)
                 {
+                    if (role != 1)
+                    {
+                        <div class="col-sm text-sm-center">
+                            <button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#forwardModal">
+                                Forward
+                            </button>
+                        </div>
+                    }
+
+                }
+                @if (role == 1)
+                {
                     <div class="col-sm text-sm-center">
-                        <button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#forwardModal">
+                        <button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#forwardModalCO">
                             Forward
                         </button>
                     </div>
                 }
+
+                <div class="col-sm text-sm-center">
+                    <a id="dlink" style="display:none;"></a>
+                    <button type="button" class="btn btn-primary btn-sm" onclick="tablesToExcel(array1, array2, array3, array4, 'myfile.xls')" value="Export to Excel">
+                        Export to Excel
+                    </button>
+                </div>
+
 
             </div>
         </div>
@@ -52,13 +69,26 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-
-            @using (Html.BeginForm("ApproveRequest", "CustomerRegistration", FormMethod.Post))
+            @using (Html.BeginForm("ReverseOrApproveRequest", "CustomerRegistration", FormMethod.Post))
             {
                 <div class="modal-body">
                     <div class="form-group">
-                        @Html.HiddenFor(s => s.FinalApprove.CusReqID, new { Value = Model.RequestHeader.CusReqID })
-                        @Html.HiddenFor(s => s.FinalApprove.SalesCode, new { Value = Model.RequestHeader.SalesCode })
+                        @if (role == 5)
+                        {
+                            @Html.HiddenFor(s => s.RequestHeader.CurrentStat, new { Value = "approvedByCM" })
+                            @Html.HiddenFor(s => s.Evaluation.Role, new { Value = "CM" })
+                        }
+                        else if (role == 6)
+                        {
+                            @Html.HiddenFor(s => s.RequestHeader.CurrentStat, new { Value = "approvedByFM" })
+                            @Html.HiddenFor(s => s.Evaluation.Role, new { Value = "FM" })
+                        }
+                        else if (role == 7)
+                        {
+                            @Html.HiddenFor(s => s.RequestHeader.CurrentStat, new { Value = "approvedByGM" })
+                            @Html.HiddenFor(s => s.Evaluation.Role, new { Value = "FM" })
+                        }
+
 
                         @Html.HiddenFor(s => s.RequestHeader.CusReqID)
                         @Html.HiddenFor(s => s.RequestHeader.CreatedDate)
@@ -76,14 +106,15 @@
                         @Html.HiddenFor(s => s.RequestHeader.VatRegNo)
                         @Html.HiddenFor(s => s.RequestHeader.DateofInitialCusVisit)
                         @Html.HiddenFor(s => s.RequestHeader.PersonDealWith)
-                        @Html.HiddenFor(s => s.RequestHeader.DateQuotationSent)
                         @Html.HiddenFor(s => s.RequestHeader.BusinessNature)
-                        @Html.HiddenFor(s => s.RequestHeader.OtherDesc)
                         @Html.HiddenFor(s => s.RequestHeader.BusinessDuration)
-                        @Html.HiddenFor(s => s.RequestHeader.PaintStockValue)
-                        @Html.HiddenFor(s => s.RequestHeader.PaintMonthlyTakeOff)
-                        @Html.HiddenFor(s => s.RequestHeader.OtherStockValue)
-                        @Html.HiddenFor(s => s.RequestHeader.OtherMonthlyTakeOff)
+
+                        @Html.HiddenFor(s => s.RequestHeader.Nature)
+                        @Html.HiddenFor(s => s.RequestHeader.ContactNoPersonDealWith)
+                        @Html.HiddenFor(s => s.RequestHeader.DesignationPersonDealWith)
+                        @Html.HiddenFor(s => s.RequestHeader.BusinessArea)
+                        @Html.HiddenFor(s => s.RequestHeader.BusinessPremises)
+
                         @Html.HiddenFor(s => s.RequestHeader.CusFinanceStability)
                         @Html.HiddenFor(s => s.RequestHeader.CusPayStrength)
                         @Html.HiddenFor(s => s.RequestHeader.InitialOrder)
@@ -97,75 +128,30 @@
                         @Html.HiddenFor(s => s.RequestHeader.BankStatments)
                         @Html.HiddenFor(s => s.RequestHeader.Business_Place)
                         @Html.HiddenFor(s => s.RequestHeader.Application_Form)
+
+                        @Html.HiddenFor(s => s.RequestHeader.SVAT_Customer)
+                        @Html.HiddenFor(s => s.RequestHeader.SVAT_Validation)
+
                         @Html.HiddenFor(s => s.RequestHeader.Level)
 
+                        @Html.HiddenFor(s => s.Evaluation.CusReqID, new { Value = Model.RequestHeader.CusReqID })
+                        @Html.HiddenFor(s => s.Evaluation.SalesCode, new { Value = Model.RequestHeader.SalesCode })
+                        @Html.HiddenFor(s => s.Evaluation.Status, new { Value = "Approved" })
 
-                        @if (role == 5)
-                        {
-                            @Html.HiddenFor(s => s.RequestHeader.CurrentStat, new { Value = "approvedByCM" })
-                            @Html.HiddenFor(s => s.FinalApprove.Role, new { Value = "CM" })
-                        }
-                        else if (role == 6)
-                        {
-                            @Html.HiddenFor(s => s.RequestHeader.CurrentStat, new { Value = "approvedByFM" })
-                            @Html.HiddenFor(s => s.FinalApprove.Role, new { Value = "FM" })
-                        }
-                        else if (role == 7)
-                        {
-                            @Html.HiddenFor(s => s.RequestHeader.CurrentStat, new { Value = "approvedByGM" })
-                            @Html.HiddenFor(s => s.FinalApprove.Role, new { Value = "GM" })
-                        }
-
-
-                        <label>01. Completeness of Credit Customer Registration Application Form</label>
-                        @Html.CheckBoxFor(s => s.FinalApprove.CompletenessCustomerRegForm)
+                        <label>Credit Limit</label>
+                        @Html.TextBoxFor(s => s.Evaluation.RecLimit, new { @class = "form-control" })
                     </div>
-
                     <div class="form-group">
-                        <label>02. Receiving / Attaching All Relevant Copies of Documents</label>
-                        @Html.CheckBoxFor(s => s.FinalApprove.AllRelevantDocCopies)
+                        <label>Credit Period</label>
+                        @Html.TextBoxFor(s => s.Evaluation.RecPeriod, new { @class = "form-control" })
                     </div>
-
                     <div class="form-group">
-                        <label>03. Completeness of Credit Customer Evaluation Form - A</label>
-                        @Html.CheckBoxFor(s => s.FinalApprove.FormA)
+                        <label>Discount</label>
+                        @Html.TextBoxFor(s => s.Evaluation.RecDiscount, new { @class = "form-control" })
                     </div>
-
                     <div class="form-group">
-                        <label>04. Completeness of Credit Customer Evaluation Form - B</label>
-                        @Html.CheckBoxFor(s => s.FinalApprove.FormB)
-                    </div>
-
-                    <div class="row">
-                        <div class="col-sm-8">
-                            <label>05. Customer Verification Made by Credit Control Division</label>
-                        </div>
-                    </div>
-                    <ul>
-                        <li><label>Date of Verfication: </label> @Html.TextBoxFor(s => s.FinalApprove.DateofVerification, new { @class = "form-control" })</li>
-                        <li><label>Person Contacted: </label> @Html.TextBoxFor(s => s.FinalApprove.PersonContacted, new { @class = "form-control" })</li>
-                        <li><label>Method of Verfication: </label> @Html.TextBoxFor(s => s.FinalApprove.MethodOfVerification, new { @class = "form-control" })</li>
-                        <li><label>Comments: </label> @Html.TextBoxFor(s => s.FinalApprove.Comments, new { @class = "form-control" })</li>
-                    </ul>
-
-                    <div class="form-group">
-                        <label>Credit Limit: </label>
-                        @Html.TextBoxFor(s => s.FinalApprove.RecLimit)
-                    </div>
-
-                    <div class="form-group">
-                        <label>Credit Period: </label>
-                        @Html.TextBoxFor(s => s.FinalApprove.RecPeriod)
-                    </div>
-
-                    <div class="form-group">
-                        <label>Discount: </label>
-                        @Html.TextBoxFor(s => s.FinalApprove.RecDiscount)
-                    </div>
-
-                    <div class="form-group">
-                        <label>Remarks: </label>
-                        @Html.TextBoxFor(s => s.FinalApprove.Remarks)
+                        <label>Remarks</label>
+                        @Html.TextBoxFor(s => s.Evaluation.Remarks, new { @class = "form-control" })
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -230,14 +216,15 @@
                         @Html.HiddenFor(s => s.RequestHeader.VatRegNo)
                         @Html.HiddenFor(s => s.RequestHeader.DateofInitialCusVisit)
                         @Html.HiddenFor(s => s.RequestHeader.PersonDealWith)
-                        @Html.HiddenFor(s => s.RequestHeader.DateQuotationSent)
                         @Html.HiddenFor(s => s.RequestHeader.BusinessNature)
-                        @Html.HiddenFor(s => s.RequestHeader.OtherDesc)
                         @Html.HiddenFor(s => s.RequestHeader.BusinessDuration)
-                        @Html.HiddenFor(s => s.RequestHeader.PaintStockValue)
-                        @Html.HiddenFor(s => s.RequestHeader.PaintMonthlyTakeOff)
-                        @Html.HiddenFor(s => s.RequestHeader.OtherStockValue)
-                        @Html.HiddenFor(s => s.RequestHeader.OtherMonthlyTakeOff)
+
+                        @Html.HiddenFor(s => s.RequestHeader.Nature)
+                        @Html.HiddenFor(s => s.RequestHeader.ContactNoPersonDealWith)
+                        @Html.HiddenFor(s => s.RequestHeader.DesignationPersonDealWith)
+                        @Html.HiddenFor(s => s.RequestHeader.BusinessArea)
+                        @Html.HiddenFor(s => s.RequestHeader.BusinessPremises)
+
                         @Html.HiddenFor(s => s.RequestHeader.CusFinanceStability)
                         @Html.HiddenFor(s => s.RequestHeader.CusPayStrength)
                         @Html.HiddenFor(s => s.RequestHeader.InitialOrder)
@@ -251,34 +238,30 @@
                         @Html.HiddenFor(s => s.RequestHeader.BankStatments)
                         @Html.HiddenFor(s => s.RequestHeader.Business_Place)
                         @Html.HiddenFor(s => s.RequestHeader.Application_Form)
+
+                        @Html.HiddenFor(s => s.RequestHeader.SVAT_Customer)
+                        @Html.HiddenFor(s => s.RequestHeader.SVAT_Validation)
+
                         @Html.HiddenFor(s => s.RequestHeader.Level)
 
                         @Html.HiddenFor(s => s.Evaluation.CusReqID, new { Value = Model.RequestHeader.CusReqID })
                         @Html.HiddenFor(s => s.Evaluation.SalesCode, new { Value = Model.RequestHeader.SalesCode })
-                        @Html.HiddenFor(s => s.Evaluation.Status, new { Value = "Decline" })
+                        @Html.HiddenFor(s => s.Evaluation.Status, new { Value = "Declined" })
+                        @Html.HiddenFor(s => s.Evaluation.RecLimit, new { Value = "" })
+                        @Html.HiddenFor(s => s.Evaluation.RecPeriod, new { Value = "" })
+                        @Html.HiddenFor(s => s.Evaluation.RecDiscount, new { Value = "" })
 
-                        <label>Credit Limit</label>
-                        @Html.TextBoxFor(s => s.Evaluation.RecLimit, new { @class = "form-control" })
+                        <div class="form-group">
+                            <label>Remarks</label>
+                            @Html.TextBoxFor(s => s.Evaluation.Remarks, new { @class = "form-control" })
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label>Credit Period</label>
-                        @Html.TextBoxFor(s => s.Evaluation.RecPeriod, new { @class = "form-control" })
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save changes</button>
                     </div>
-                    <div class="form-group">
-                        <label>Discount</label>
-                        @Html.TextBoxFor(s => s.Evaluation.RecDiscount, new { @class = "form-control" })
-                    </div>
-                    <div class="form-group">
-                        <label>Remarks</label>
-                        @Html.TextBoxFor(s => s.Evaluation.Remarks, new { @class = "form-control" })
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Save changes</button>
                 </div>
             }
-
         </div>
     </div>
 </div>
@@ -298,13 +281,7 @@
             {
                 <div class="modal-body">
                     <div class="form-group">
-                        @if (role == 1)
-                        {
-                            @Html.HiddenFor(s => s.RequestHeader.CurrentStat, new { Value = "pendingCM" })
-                            @Html.HiddenFor(s => s.Evaluation.Role, new { Value = "CO" })
-                            @Html.HiddenFor(s => s.RequestHeader.Level, new { Value = 6 })
-                        }
-                        else if (role == 5)
+                        @if (role == 5)
                         {
                             @Html.HiddenFor(s => s.RequestHeader.CurrentStat, new { Value = "pendingFM" })
                             @Html.HiddenFor(s => s.Evaluation.Role, new { Value = "CM" })
@@ -334,14 +311,16 @@
                         @Html.HiddenFor(s => s.RequestHeader.VatRegNo)
                         @Html.HiddenFor(s => s.RequestHeader.DateofInitialCusVisit)
                         @Html.HiddenFor(s => s.RequestHeader.PersonDealWith)
-                        @Html.HiddenFor(s => s.RequestHeader.DateQuotationSent)
                         @Html.HiddenFor(s => s.RequestHeader.BusinessNature)
-                        @Html.HiddenFor(s => s.RequestHeader.OtherDesc)
                         @Html.HiddenFor(s => s.RequestHeader.BusinessDuration)
-                        @Html.HiddenFor(s => s.RequestHeader.PaintStockValue)
-                        @Html.HiddenFor(s => s.RequestHeader.PaintMonthlyTakeOff)
-                        @Html.HiddenFor(s => s.RequestHeader.OtherStockValue)
-                        @Html.HiddenFor(s => s.RequestHeader.OtherMonthlyTakeOff)
+
+
+                        @Html.HiddenFor(s => s.RequestHeader.Nature)
+                        @Html.HiddenFor(s => s.RequestHeader.ContactNoPersonDealWith)
+                        @Html.HiddenFor(s => s.RequestHeader.DesignationPersonDealWith)
+                        @Html.HiddenFor(s => s.RequestHeader.BusinessArea)
+                        @Html.HiddenFor(s => s.RequestHeader.BusinessPremises)
+
                         @Html.HiddenFor(s => s.RequestHeader.CusFinanceStability)
                         @Html.HiddenFor(s => s.RequestHeader.CusPayStrength)
                         @Html.HiddenFor(s => s.RequestHeader.InitialOrder)
@@ -355,6 +334,9 @@
                         @Html.HiddenFor(s => s.RequestHeader.BankStatments)
                         @Html.HiddenFor(s => s.RequestHeader.Business_Place)
                         @Html.HiddenFor(s => s.RequestHeader.Application_Form)
+
+                        @Html.HiddenFor(s => s.RequestHeader.SVAT_Customer)
+                        @Html.HiddenFor(s => s.RequestHeader.SVAT_Validation)
 
                         @Html.HiddenFor(s => s.Evaluation.CusReqID, new { Value = Model.RequestHeader.CusReqID })
                         @Html.HiddenFor(s => s.Evaluation.SalesCode, new { Value = Model.RequestHeader.SalesCode })
@@ -386,23 +368,161 @@
     </div>
 </div>
 
+<!-- Forward Modal for CO-->
+<div class="modal fade" id="forwardModalCO" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Forward Request</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            @using (Html.BeginForm("ForwardRequestCO", "CustomerRegistration", FormMethod.Post))
+            {
+                <div class="modal-body">
+                    <div class="form-group">
+
+                        @if (role == 1)
+                        {
+                            @Html.HiddenFor(s => s.RequestHeader.CurrentStat, new { Value = "pendingCM" })
+                            @Html.HiddenFor(s => s.Evaluation.Role, new { Value = "CO" })
+                            @Html.HiddenFor(s => s.RequestHeader.Level, new { Value = 6 })
+                        }
+
+                        @Html.HiddenFor(s => s.FinalApprove.CusReqID, new { Value = Model.RequestHeader.CusReqID })
+                        @Html.HiddenFor(s => s.FinalApprove.SalesCode, new { Value = Model.RequestHeader.SalesCode })
+
+                        @Html.HiddenFor(s => s.RequestHeader.CusReqID)
+                        @Html.HiddenFor(s => s.RequestHeader.CreatedDate)
+                        @Html.HiddenFor(s => s.RequestHeader.CusName)
+                        @Html.HiddenFor(s => s.RequestHeader.CusAddress)
+                        @Html.HiddenFor(s => s.RequestHeader.CusTel)
+                        @Html.HiddenFor(s => s.RequestHeader.CusFax)
+                        @Html.HiddenFor(s => s.RequestHeader.CusEmail)
+                        @Html.HiddenFor(s => s.RequestHeader.DelAddress)
+                        @Html.HiddenFor(s => s.RequestHeader.DelTel)
+                        @Html.HiddenFor(s => s.RequestHeader.DelFax)
+                        @Html.HiddenFor(s => s.RequestHeader.DelEmail)
+                        @Html.HiddenFor(s => s.RequestHeader.SalesCode)
+                        @Html.HiddenFor(s => s.RequestHeader.SalesAreaName)
+                        @Html.HiddenFor(s => s.RequestHeader.VatRegNo)
+                        @Html.HiddenFor(s => s.RequestHeader.DateofInitialCusVisit)
+                        @Html.HiddenFor(s => s.RequestHeader.PersonDealWith)
+                        @Html.HiddenFor(s => s.RequestHeader.BusinessNature)
+                        @Html.HiddenFor(s => s.RequestHeader.BusinessDuration)
+
+                        @Html.HiddenFor(s => s.RequestHeader.Nature)
+                        @Html.HiddenFor(s => s.RequestHeader.ContactNoPersonDealWith)
+                        @Html.HiddenFor(s => s.RequestHeader.DesignationPersonDealWith)
+                        @Html.HiddenFor(s => s.RequestHeader.BusinessArea)
+                        @Html.HiddenFor(s => s.RequestHeader.BusinessPremises)
+
+                        @Html.HiddenFor(s => s.RequestHeader.CusFinanceStability)
+                        @Html.HiddenFor(s => s.RequestHeader.CusPayStrength)
+                        @Html.HiddenFor(s => s.RequestHeader.InitialOrder)
+                        @Html.HiddenFor(s => s.RequestHeader.FirstAvgSales)
+                        @Html.HiddenFor(s => s.RequestHeader.NextAvgSales)
+                        @Html.HiddenFor(s => s.RequestHeader.EstiPurchase)
+                        @Html.HiddenFor(s => s.RequestHeader.BusinessRegCert)
+                        @Html.HiddenFor(s => s.RequestHeader.VatRegCert)
+                        @Html.HiddenFor(s => s.RequestHeader.IDofOwner)
+                        @Html.HiddenFor(s => s.RequestHeader.Form20)
+                        @Html.HiddenFor(s => s.RequestHeader.BankStatments)
+                        @Html.HiddenFor(s => s.RequestHeader.Business_Place)
+                        @Html.HiddenFor(s => s.RequestHeader.Application_Form)
+
+                        @Html.HiddenFor(s => s.RequestHeader.SVAT_Customer)
+                        @Html.HiddenFor(s => s.RequestHeader.SVAT_Validation)
+
+                        @Html.HiddenFor(s => s.RequestHeader.Level)
+
+
+                        @Html.HiddenFor(s => s.RequestHeader.CurrentStat, new { Value = "pendingCO" })
+                        @Html.HiddenFor(s => s.FinalApprove.Role, new { Value = "CO" })
+
+                        @Html.HiddenFor(s => s.Evaluation.Status, new { Value = "Approved" })
+                        @Html.HiddenFor(s => s.Evaluation.CusReqID, new { Value = Model.RequestHeader.CusReqID })
+
+                        <label>01. Completeness of Credit Customer Registration Application Form</label>
+                        @Html.CheckBoxFor(s => s.FinalApprove.CompletenessCustomerRegForm)
+                    </div>
+
+                    <div class="form-group">
+                        <label>02. Receiving / Attaching All Relevant Copies of Documents</label>
+                        @Html.CheckBoxFor(s => s.FinalApprove.AllRelevantDocCopies)
+                    </div>
+
+                    <div class="form-group">
+                        <label>03. Completeness of Credit Customer Evaluation Form - A</label>
+                        @Html.CheckBoxFor(s => s.FinalApprove.FormA)
+                    </div>
+
+                    <div class="form-group">
+                        <label>04. Completeness of Credit Customer Evaluation Form - B</label>
+                        @Html.CheckBoxFor(s => s.FinalApprove.FormB)
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-8">
+                            <label>05. Customer Verification Made by Credit Control Division</label>
+                        </div>
+                    </div>
+                    <ul>
+                        <li><label>Date of Verfication: </label> @Html.TextBoxFor(s => s.FinalApprove.DateofVerification, new { @type = "date", @class = "form-control" })</li>
+                        <li><label>Person Contacted: </label> @Html.TextBoxFor(s => s.FinalApprove.PersonContacted, new { @class = "form-control" })</li>
+                        <li><label>Method of Verfication: </label> @Html.TextBoxFor(s => s.FinalApprove.MethodOfVerification, new { @class = "form-control" })</li>
+                        <li><label>Comments: </label> @Html.TextBoxFor(s => s.FinalApprove.Comments, new { @class = "form-control" })</li>
+                    </ul>
+
+                    <div class="form-group">
+                        <label>Credit Limit: </label>
+                        @Html.TextBoxFor(s => s.FinalApprove.RecLimit)
+                    </div>
+
+                    <div class="form-group">
+                        <label>Credit Period: </label>
+                        @Html.TextBoxFor(s => s.FinalApprove.RecPeriod)
+                    </div>
+
+                    <div class="form-group">
+                        <label>Discount: </label>
+                        @Html.TextBoxFor(s => s.FinalApprove.RecDiscount)
+                    </div>
+
+                    <div class="form-group">
+                        <label>Remarks: </label>
+                        @Html.TextBoxFor(s => s.FinalApprove.Remarks)
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                </div>
+            }
+
+        </div>
+    </div>
+</div>
+
 
 @if (Model.RequestFinalApproval.Any())
 {
     <div class="row">
         <div class="col-sm-12">
             <div class="card">
-                <div class="card-header">
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <span class="badge bg-success">Approved</span>
+                @*<div class="card-header">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <span class="badge bg-success">Approved</span>
+                            </div>
+                            <div class="col-sm-6">
+                                <b>Approved By: </b>@Model.RequestFinalApproval.First().Role
+                            </div>
                         </div>
-                        <div class="col-sm-6">
-                            <b>Approved By: </b>@Model.RequestFinalApproval.First().Role
-                        </div>
-                    </div>
 
-                </div>
+                    </div>*@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-sm-6">
@@ -442,31 +562,31 @@
                     <div class="dropdown-divider"></div>
 
 
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <p class="card-text">
-                                <b>Credit Limit: </b> @Model.RequestFinalApproval.First().RecLimit
-                            </p>
+                    @*<div class="row">
+                            <div class="col-sm-6">
+                                <p class="card-text">
+                                    <b>Credit Limit: </b> @Model.RequestFinalApproval.First().RecLimit
+                                </p>
+                            </div>
+                            <div class="col-sm-6">
+                                <p class="card-text">
+                                    <b>Credit Period: </b> @Model.RequestFinalApproval.First().RecPeriod
+                                </p>
+                            </div>
                         </div>
-                        <div class="col-sm-6">
-                            <p class="card-text">
-                                <b>Credit Period: </b> @Model.RequestFinalApproval.First().RecPeriod
-                            </p>
-                        </div>
-                    </div>
 
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <p class="card-text">
-                                <b>Discount: </b> @Model.RequestFinalApproval.First().RecDiscount
-                            </p>
-                        </div>
-                        <div class="col-sm-6">
-                            <p class="card-text">
-                                <b>Remarks: </b> @Model.RequestFinalApproval.First().Remarks
-                            </p>
-                        </div>
-                    </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <p class="card-text">
+                                    <b>Discount: </b> @Model.RequestFinalApproval.First().RecDiscount
+                                </p>
+                            </div>
+                            <div class="col-sm-6">
+                                <p class="card-text">
+                                    <b>Remarks: </b> @Model.RequestFinalApproval.First().Remarks
+                                </p>
+                            </div>
+                        </div>*@
 
 
                     <div class="dropdown-divider"></div>
@@ -520,12 +640,147 @@
     </div>
 }
 
+@*This Table for Excel sheet*@
+<table id="1" style="display:none">
+    <caption><b>Main Details</b></caption>
+    <tr>
+        <td><b>Request ID:</b></td>
+        <td style="text-align:left"> @Model.RequestHeader.CusReqID</td>
+    </tr>
+    <tr>
+        <td><b>Customer Name:</b>
+        <td>  @Model.RequestHeader.CusName</td>
+    </tr>
+    <tr>
+        <td><b>Customer Address:</b>
+        <td>  @Model.RequestHeader.CusAddress</td>
+    </tr>
+    <tr>
+        <td><b>Customer Telephone:</b>
+        <td style="text-align:left">  @Model.RequestHeader.CusTel</td>
+    </tr>
+    <tr>
+        <td><b>Customer Fax:</b>
+        <td style="text-align:left"> @Model.RequestHeader.CusFax</td>
+    </tr>
+    <tr>
+        <td><b>Customer Email:</b>
+        <td>  @Model.RequestHeader.CusEmail</td>
+    </tr>
+    <tr>
+        <td><b>Factory Address:</b>
+        <td>  @Model.RequestHeader.DelAddress</td>
+    </tr>
+    <tr>
+        <td><b>Factory Telephone:</b>
+        <td style="text-align:left">  @Model.RequestHeader.DelTel</td>
+    </tr>
+    <tr>
+        <td><b>Factory Fax:</b>
+        <td style="text-align:left">  @Model.RequestHeader.DelFax</td>
+    </tr>
+    <tr>
+        <td><b>Factory Email:</b>
+        <td>  @Model.RequestHeader.DelEmail</td>
+    </tr>
+
+    <tr>
+        <td><b>Sales Area:</b>
+        <td>  @Model.RequestHeader.SalesAreaName</td>
+    </tr>
+    <tr>
+        <td><b>Sales Area Code:</b>
+        <td style="text-align:left">  @Model.RequestHeader.SalesCode</td>
+    </tr>
+    <tr>
+        <td><b>VAT Registraion No:</b>
+        <td style="text-align:left">  @Model.RequestHeader.VatRegNo</td>
+    </tr>
+
+    <tr>
+        <td><b>Date of Initial customer Visit:</b>
+        <td style="text-align:left">  @Model.RequestHeader.DateofInitialCusVisit</td>
+    </tr>
+    <tr>
+        <td><b>Name of the Person Deal with:</b>
+        <td>  @Model.RequestHeader.PersonDealWith</td>
+    </tr>
+    <tr>
+        <td><b>Designation of the Person Deal with:</b>
+        <td>  @Model.RequestHeader.DesignationPersonDealWith</td>
+    </tr>
+    <tr>
+        <td><b>Contact No. of the Person Deal with:</b>
+        <td>  @Model.RequestHeader.ContactNoPersonDealWith</td>
+    </tr>
+    <tr>
+        <td><b>Nature of the Business:</b></td>
+        <td>
+            @Model.RequestHeader.BusinessNature
+        </td>
+    </tr>
+    <tr>
+        <td><b>Nature:</b></td>
+        <td>
+            @Model.RequestHeader.Nature
+        </td>
+    </tr>
+    <tr>
+        <td><b>How Long Business Operates:</b></td>
+        <td>@Model.RequestHeader.BusinessDuration</td>
+    </tr>
+    <tr>
+        <td><b>Area of the business premises (SF):</b></td>
+        <td>@Model.RequestHeader.BusinessArea</td>
+    </tr>
+    <tr>
+        <td><b>Ownership of the business premises:</b></td>
+        <td>@Model.RequestHeader.BusinessPremises</td>
+    </tr>
+    <tr>
+        <td><b>SVAT Customer</b></td>
+        <td>@if (Model.RequestHeader.SVAT_Customer)
+        {<text>Yes</text> }
+    else
+    {<text>No</text>}</td>
+    </tr>
+    <tr>
+        <td><b>Customer Financial/Wealth Stability:</b></td>
+        <td>@Model.RequestHeader.CusFinanceStability</td>
+    </tr>
+    <tr>
+        <td><b>Customer Payment Strength:</b></td>
+        <td>@Model.RequestHeader.CusPayStrength</td>
+    </tr>
+    <tr>
+        <td><b>Initial Order:</b></td>
+        <td>@Model.RequestHeader.InitialOrder</td>
+    </tr>
+    <tr>
+        <td><b>First 6 Months(Avg. Monthly Sale) Rs:</b></td>
+        <td>@Model.RequestHeader.FirstAvgSales</td>
+    </tr>
+    <tr>
+        <td><b>Next 6 Months(Avg. Monthly Sale) Rs:</b></td>
+        <td>@Model.RequestHeader.NextAvgSales</td>
+    </tr>
+    <tr>
+        <td><b>Estimated Monthly Nippon Paint Purchase Rs:</b></td>
+        <td>@Model.RequestHeader.EstiPurchase</td>
+    </tr>
+    <tr></tr>
+    <tr></tr>
+    <tr></tr>
+</table>
+
 
 <div class="row">
     <div class="col-sm-6">
         <div class="card">
             <div class="card-body">
                 <p class="card-text"><b>Request ID:</b> @Model.RequestHeader.CusReqID</p>
+                <p class="card-text"><b>Sales Area:</b> @Model.RequestHeader.SalesCode</p>
+                <p class="card-text"><b>Sales Area Name:</b> @Model.RequestHeader.SalesAreaName</p>
                 <p class="card-text"><b>Customer Name:</b> @Model.RequestHeader.CusName</p>
                 <p class="card-text"><b>Customer Address:</b> @Model.RequestHeader.CusAddress</p>
                 <p class="card-text"><b>Customer Telephone:</b> @Model.RequestHeader.CusTel</p>
@@ -535,7 +790,7 @@
                 <p class="card-text"><b>Factory Telephone:</b> @Model.RequestHeader.DelTel</p>
                 <p class="card-text"><b>Factory Fax:</b> @Model.RequestHeader.DelFax</p>
                 <p class="card-text"><b>Factory Email:</b> @Model.RequestHeader.DelEmail</p>
-                <p class="card-text"><b>Sales Area:</b> @Model.RequestHeader.SalesCode</p>
+
             </div>
         </div>
     </div>
@@ -545,33 +800,20 @@
                 <p class="card-text"><b>VAT Registraion No:</b> @Model.RequestHeader.VatRegNo</p>
                 <p class="card-text"><b>Date of Initial customer Visit:</b> @Model.RequestHeader.DateofInitialCusVisit</p>
                 <p class="card-text"><b>Name of the Person Deal with:</b> @Model.RequestHeader.PersonDealWith</p>
-                <p class="card-text"><b>Date of Quotation Sent</b> @Model.RequestHeader.DateQuotationSent</p>
-                <p class="card-text">
-                    <b>Nature of the Business:</b> @if (Model.RequestHeader.BusinessNature.Equals("Other"))
-                    {@Model.RequestHeader.OtherDesc }
-                else
-                { @Model.RequestHeader.BusinessNature}
-                </p>
+                <p class="card-text"><b>Contact No. of the Person Deal with:</b> @Model.RequestHeader.ContactNoPersonDealWith</p>
+                <p class="card-text"><b>Designation of the Person Deal with:</b> @Model.RequestHeader.DesignationPersonDealWith</p>
+                <p class="card-text"><b>Nature of the Business: </b> @Model.RequestHeader.BusinessNature </p>
+                <p class="card-text"><b>Nature: </b> @Model.RequestHeader.Nature </p>
                 <p class="card-text"><b>How Long Business Operates:</b> @Model.RequestHeader.BusinessDuration</p>
-                <p class="card-text"><b>Size of the Business:</b></p>
-                <ul>
-                    <li>
-                        Paints:
-                        <ul>
-                            <li>Stock Value Rs: @Model.RequestHeader.PaintStockValue</li>
-                            <li>Monthly Off Take Value Rs: @Model.RequestHeader.PaintMonthlyTakeOff</li>
-                        </ul>
+                <p class="card-text"><b>Area of the business premises (SF):</b> @Model.RequestHeader.BusinessArea</p>
+                <p class="card-text"><b>Ownership of the business premises:</b> @Model.RequestHeader.BusinessPremises</p>
+                <p class="card-text">
+                    <b>SVAT Customer:</b> @if (Model.RequestHeader.SVAT_Customer)
+                    {<text>YES</text> }
+                else
+                { <text>NO</text>}
+                </p>
 
-                    </li>
-
-                    <li>
-                        Others:
-                        <ul>
-                            <li>Stock Value Rs: @Model.RequestHeader.OtherStockValue</li>
-                            <li>Monthly Off Take Value Rs: @Model.RequestHeader.OtherMonthlyTakeOff</li>
-                        </ul>
-                    </li>
-                </ul>
 
             </div>
 
@@ -579,12 +821,61 @@
     </div>
 </div>
 
+
 <div class="row">
     <div class="col-sm-6">
         <div class="card">
             <div class="card-body">
-                <p class="card-text"><b>Main Paint Brands Available</b></p>
-                <table class="table table-bordered small">
+                <p class="card-text"><b>Owners/Partners/Directors</b></p>
+                <table id="2" class="table table-bordered small">
+                    <caption style="display:none"><b>Owners/Partners/Directors</b></caption>
+                    <tr>
+                        <th>Name</th>
+                        <th>Contact No.</th>
+                        <th>ID No.</th>
+                    </tr>
+                    @foreach (var item in Model.RequestOwners)
+                    {
+                        <tr>
+                            <td>@item.Owner_name</td>
+                            <td>@item.Contact_no</td>
+                            <td>@item.ID</td>
+                        </tr>
+                    }
+                    <tr></tr>
+                    <tr></tr>
+                    <tr></tr>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-6">
+        <div class="card">
+            <div class="card-body">
+                <p class="card-text"><b>Customer Financial/Wealth Stability:</b> @Model.RequestHeader.CusFinanceStability</p>
+                <p class="card-text"><b>Customer Payment Strength:</b> @Model.RequestHeader.CusPayStrength</p>
+                <p>
+                    <ul>
+                        <li><b>Initial Order:</b> @Model.RequestHeader.InitialOrder</li>
+                        <li><b>First 6 Months(Avg. Monthly Sale) Rs:</b> @Model.RequestHeader.FirstAvgSales</li>
+                        <li><b>Next 6 Months(Avg. Monthly Sale) Rs:</b> @Model.RequestHeader.NextAvgSales</li>
+                    </ul>
+                </p>
+                <p><b>Estimated Monthly Nippon Paint Purchase Rs:</b> @Model.RequestHeader.EstiPurchase</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col-sm-6">
+        <div class="card">
+            <div class="card-body">
+                <p class="card-text"><b>Available Main Paint Brands</b></p>
+                <table id="3" class="table table-bordered small">
+                    <caption style="display:none"><b>Available Main Paint Brands</b></caption>
                     <tr>
                         <th>Brand</th>
                         <th>Stock Value (Rs.)</th>
@@ -598,15 +889,20 @@
                             <td>@item.MonthlyTOVal</td>
                         </tr>
                     }
+                    <tr></tr>
+                    <tr></tr>
+                    <tr></tr>
                 </table>
             </div>
         </div>
     </div>
+
     <div class="col-sm-6">
         <div class="card">
             <div class="card-body">
                 <p class="card-text"><b>Credit Offered by Other Companies</b></p>
-                <table class="table table-bordered small">
+                <table id="4" class="table table-bordered small">
+                    <caption style="display:none"><b>Credit Offered by Other Companies</b></caption>
                     <tr>
                         <th>Company</th>
                         <th>Credit Limit (Rs.)</th>
@@ -622,6 +918,9 @@
                             <td>@item.Discount</td>
                         </tr>
                     }
+                    <tr></tr>
+                    <tr></tr>
+                    <tr></tr>
                 </table>
             </div>
         </div>
@@ -633,7 +932,8 @@
         <div class="card">
             <div class="card-body">
                 <p class="card-text"><b>Evaluations History</b></p>
-                <table class="table table-bordered small">
+                <table id="5" class="table table-bordered small">
+                    <caption style="display:none;"><b>Evaluation History</b></caption>
                     <tr>
                         <th>Evaluation ID</th>
                         <th>Requested Credit Limit (Rs.)</th>
@@ -643,7 +943,7 @@
                         <th>By</th>
                         <th>Created Date</th>
                         <th>Status</th>
-                    </tr>Model
+                    </tr>
                     @foreach (var item in Model.RequestEvaluations)
                     {
                         <tr>
@@ -657,6 +957,9 @@
                             <td>@item.Status</td>
                         </tr>
                     }
+                    <tr></tr>
+                    <tr></tr>
+                    <tr></tr>
                 </table>
             </div>
         </div>
@@ -664,25 +967,91 @@
 
 </div>
 
-<div class="row">
-    <div class="col-sm-6">
-        <div class="card">
-            <div class="card-body">
-                <p class="card-text"><b>Customer Financial/Wealth Stability:</b> @Model.RequestHeader.CusFinanceStability</p>
-                <p class="card-text"><b>Customer Payment Strength:</b> @Model.RequestHeader.CusPayStrength</p>
-                <p>
-                    <ul>
-                        <li><b>Initial Order:</b> @Model.RequestHeader.InitialOrder</li>
-                        <li><b>First 6 Months(Avg. Monthly Sale) Rs:</b> @Model.RequestHeader.FirstAvgSales</li>
-                        <li><b>Next 6 Months(Avg. Monthly Sale) Rs:</b> @Model.RequestHeader.NextAvgSales</li>
-                    </ul>
-                </p>
-                <p><b>Estimated Monthly Nippon Paint Purchase Rs:</b> @Model.RequestHeader.EstiPurchase</p>
+@*This table for Excel Sheet*@
+<table id="6" style="display:none;">
+    <caption><b>Attached Documents</b></caption>
+    <tr>
+        <th>Document Type</th>
+        <th>Attached or Not</th>
+    </tr>
+    <tr>
+        <td>Copy of Business Reg. Certificates</td>
+        <td>
+            @if (Model.RequestHeader.BusinessRegCert == true)
+            {<text>Yes</text> }
+        else
+        {<text>No</text>}
+        </td>
+    </tr>
+    <tr>
+        <td>Copy of VAT Reg. Certificates</td>
+        <td>
+            @if (Model.RequestHeader.VatRegCert == true)
+            {<text>Yes</text> }
+        else
+        {<text>No</text>}
+        </td>
+    </tr>
+    <tr>
+        <td>Copy of ID of Owners of the Business</td>
+        <td>
+            @if (Model.RequestHeader.IDofOwner == true)
+            {<text>Yes</text> }
+        else
+        {<text>No</text>}
+        </td>
+    </tr>
+    <tr>
+        <td>Form 20</td>
+        <td>
+            @if (Model.RequestHeader.Form20 == true)
+            {<text>Yes</text> }
+        else
+        {<text>No</text>}
+        </td>
+    </tr>
+    <tr>
+        <td>Copies of Last 2 Months Bank Statements</td>
+        <td>
+            @if (Model.RequestHeader.BankStatments == true)
+            {<text>Yes</text> }
+        else
+        {<text>No</text>}
+        </td>
+    </tr>
+    <tr>
+        <td>Pictures of Business Place</td>
+        <td>
+            @if (Model.RequestHeader.Business_Place == true)
+            {<text>Yes</text> }
+        else
+        {<text>No</text>}
+        </td>
+    </tr>
+    <tr>
+        <td>Fully Completed Application Form by the Customer</td>
+        <td>
+            @if (Model.RequestHeader.Application_Form == true)
+            {<text>Yes</text> }
+        else
+        {<text>No</text>}
+        </td>
+    </tr>
+    <tr>
+        <td>SVAT Validation letter issued by IRD</td>
+        <td>
+            @if (Model.RequestHeader.SVAT_Validation == true)
+            {<text>Yes</text> }
+        else
+        {<text>No</text>}
+        </td>
+    </tr>
 
-            </div>
-        </div>
-    </div>
-    <div class="col-sm-6">
+
+</table>
+
+<div class="row">
+    <div class="col-sm-12">
         <div class="card">
             <div class="card-body">
                 <p class="card-text"><b>Documents Attached:</b></p>
@@ -742,6 +1111,13 @@
                         {<span class="badge badge-danger">✘</span>}
                         Fully Completed Application Form by the Customer
                     </div>
+                    <div class="col-sm">
+                        @if (Model.RequestHeader.SVAT_Validation == true)
+                        {<span class="badge badge-success">✓</span> }
+                        else
+                        {<span class="badge badge-danger">✘</span>}
+                        SVAT Validation letter issued by IRD
+                    </div>
                 </div>
             </div>
         </div>
@@ -774,7 +1150,7 @@
 
                     <div class="modal fade  bd-example-modal-lg" id=@modalID tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered modal-lg">
-                            <div class="modal-content" id=@imageRotate >
+                            <div class="modal-content" id=@imageRotate>
                                 <div class="modal-body">
                                     <img onclick="rotate('@imageRotatePass')" style="max-width:100%; max-height:100%;" src="data:image/jpg;base64,@item.Image" />
                                 </div>
@@ -783,11 +1159,11 @@
                     </div>
                 }
 
-                
             </div>
         </div>
     </div>
 </div>
+
 
 <script>
     let rotation = 0;
@@ -799,4 +1175,73 @@
         }
         document.querySelector(id).style.transform = `rotate(${rotation}deg)`;
     }
+</script>
+
+<script>
+
+    var array1 = new Array();
+    var array2 = new Array();
+    var array3 = new Array();
+    var array4 = new Array();
+    var array5 = new Array();
+    var array6 = new Array();
+    var n = 6; //Total table
+    for (var x = 1; x <= n; x++) {
+        array1[x - 1] = x;
+        array2[x - 1] = x + 'th';
+        array3[x - 1] = x + 'th';
+        array4[x - 1] = x + 'th';
+        array5[x - 1] = x + 'th';
+        array6[x - 1] = x + 'th';
+    }
+
+    var tablesToExcel = (function () {
+        var uri = 'data:application/vnd.ms-excel;base64,'
+            , template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns=""><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets>'
+            , templateend = '</x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head>'
+            , body = '<body>'
+            , tablevar = '<table>{table'
+            , tablevarend = '}</table>'
+            , bodyend = '</body></html>'
+            , worksheet = '<x:ExcelWorksheet><x:Name>'
+            , worksheetend = '</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet>'
+            , worksheetvar = '{worksheet'
+            , worksheetvarend = '}'
+            , base64 = function (s) { return window.btoa(unescape(encodeURIComponent(s))) }
+            , format = function (s, c) { return s.replace(/{(\w+)}/g, function (m, p) { return c[p]; }) }
+            , wstemplate = ''
+            , tabletemplate = '';
+
+        return function (table, name, filename) {
+            var tables = table;
+
+            for (var i = 0; i < tables.length; ++i) {
+                wstemplate += worksheet + worksheetvar + i + worksheetvarend + worksheetend;
+                tabletemplate += tablevar + i + tablevarend;
+            }
+
+            var allTemplate = template + wstemplate + templateend;
+            var allWorksheet = body + tabletemplate + bodyend;
+            var allOfIt = allTemplate + allWorksheet;
+
+            var ctx = {};
+            for (var j = 0; j < tables.length; ++j) {
+                ctx['worksheet' + j] = name[j];
+            }
+
+            for (var k = 0; k < tables.length; ++k) {
+                var exceltable;
+                if (!tables[k].nodeType) exceltable = document.getElementById(tables[k]);
+                ctx['table' + k] = exceltable.innerHTML;
+            }
+
+            //document.getElementById("dlink").href = uri + base64(format(template, ctx));
+            //document.getElementById("dlink").download = filename;
+            //document.getElementById("dlink").click();
+
+            window.location.href = uri + base64(format(allOfIt, ctx));
+
+        }
+    })();
+
 </script>

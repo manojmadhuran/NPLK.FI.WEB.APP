@@ -16,6 +16,7 @@ namespace FI.PORTAL.Controllers
         {
             try
             {
+                
                 int role = Convert.ToInt16(Session["role"].ToString());
                 if (role > 0)
                 {

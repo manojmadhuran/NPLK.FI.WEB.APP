@@ -14,27 +14,27 @@ namespace FI.PORTAL.Controllers
         CRP_SYSEntities CRP_dbObj = new CRP_SYSEntities();
 
 
-        public ActionResult Index(string sortby)
+        public ActionResult Index(string findby)
         {
-            if (sortby == null)
+            if (findby == null)
             {
-                ViewBag.sortString = "All";
+                ViewBag.findString = "All";
             }
-            else if (sortby.Equals("Forwarded"))
+            else if (findby.Equals("Approved"))
             {
-                ViewBag.sortString = "Forward/Reverse";
+                ViewBag.findString = "Approved";
             }
-            else if (sortby.Equals("Pending"))
+            else if (findby.Equals("Pending"))
             {
-                ViewBag.sortString = "Pending";
+                ViewBag.findString = "Pending";
             }
-            else if (sortby.Equals("All"))
+            else if (findby.Equals("All"))
             {
-                ViewBag.sortString = "All";
+                ViewBag.findString = "All";
             }
             else
             {
-                ViewBag.sortString = "Invalid";
+                ViewBag.findString = "Invalid";
             }
 
 
@@ -42,21 +42,21 @@ namespace FI.PORTAL.Controllers
 
             if (role == 1)
             {
-                if (sortby != null)
+                if (findby != null)
                 {
-                    if (sortby.Equals("All"))
+                    if (findby.Equals("All"))
                     {
                         var res = CRP_dbObj.NEW_CUS_HEADER.Where(r => r.Level >= 5).ToList();
                         return View(res);
                     }
-                    else if (sortby.Equals("Pending"))
+                    else if (findby.Equals("Pending"))
                     {
-                        var res = CRP_dbObj.NEW_CUS_HEADER.Where(r => r.Level >= 5 && r.CurrentStat == "pendingCO").ToList();
+                        var res = CRP_dbObj.NEW_CUS_HEADER.Where(r => r.Level >= 5 && r.CurrentStat != "approvedByGM" && r.CurrentStat != "approvedByFM" && r.CurrentStat != "approvedByCM").ToList();
                         return View(res);
                     }
-                    else if (sortby.Equals("Forwarded"))
+                    else if (findby.Equals("Approved"))
                     {
-                        var res = CRP_dbObj.NEW_CUS_HEADER.Where(r => r.Level >= 5 && r.CurrentStat != "pendingCO" && r.CurrentStat != "declineCO").ToList();
+                        var res = CRP_dbObj.NEW_CUS_HEADER.Where(r => (r.Level >= 5 && r.CurrentStat == "approvedByGM") || (r.Level >= 5  && r.CurrentStat == "approvedByFM") || (r.Level >= 5 && r.CurrentStat == "approvedByCM")).ToList();
                         return View(res);
                     }
                     else
@@ -76,21 +76,21 @@ namespace FI.PORTAL.Controllers
             }
             else if (role == 5)
             {
-                if (sortby != null)
+                if (findby != null)
                 {
-                    if (sortby.Equals("All"))
+                    if (findby.Equals("All"))
                     {
                         var res = CRP_dbObj.NEW_CUS_HEADER.Where(r => r.Level >= 6).ToList();
                         return View(res);
                     }
-                    else if (sortby.Equals("Pending"))
+                    else if (findby.Equals("Pending"))
                     {
-                        var res = CRP_dbObj.NEW_CUS_HEADER.Where(r => r.Level >= 6 && r.CurrentStat == "pendingCM").ToList();
+                        var res = CRP_dbObj.NEW_CUS_HEADER.Where(r => r.Level >= 6 && r.CurrentStat != "approvedByGM" && r.CurrentStat != "approvedByFM" && r.CurrentStat != "approvedByCM").ToList();
                         return View(res);
                     }
-                    else if (sortby.Equals("Forwarded"))
+                    else if (findby.Equals("Approved"))
                     {
-                        var res = CRP_dbObj.NEW_CUS_HEADER.Where(r => r.Level >= 6 && r.CurrentStat != "pendingCM").ToList();
+                        var res = CRP_dbObj.NEW_CUS_HEADER.Where(r => (r.Level >= 6 && r.CurrentStat == "approvedByGM") || (r.Level >= 5 && r.CurrentStat == "approvedByFM") || (r.Level >= 5 && r.CurrentStat == "approvedByCM")).ToList();
                         return View(res);
                     }
                     else
@@ -108,26 +108,27 @@ namespace FI.PORTAL.Controllers
             }
             else if (role == 6)
             {
-                if (sortby != null)
+                if (findby != null)
                 {
-                    if (sortby.Equals("All"))
+                    if (findby.Equals("All"))
                     {
                         var res = CRP_dbObj.NEW_CUS_HEADER.Where(r => r.Level >= 7).ToList();
                         return View(res);
                     }
-                    else if (sortby.Equals("Pending"))
+                    else if (findby.Equals("Pending"))
                     {
-                        var res = CRP_dbObj.NEW_CUS_HEADER.Where(r => r.Level >= 7 && r.CurrentStat == "pendingFM").ToList();
+                        var res = CRP_dbObj.NEW_CUS_HEADER.Where(r => r.Level >= 7 && r.CurrentStat != "approvedByGM" && r.CurrentStat != "approvedByFM" && r.CurrentStat != "approvedByCM").ToList();
                         return View(res);
                     }
-                    else if (sortby.Equals("Forwarded"))
+                    else if (findby.Equals("Approved"))
                     {
-                        var res = CRP_dbObj.NEW_CUS_HEADER.Where(r => r.Level >= 7 && r.CurrentStat != "pendingFM").ToList();
+                        var res = CRP_dbObj.NEW_CUS_HEADER.Where(r => (r.Level >= 7 && r.CurrentStat == "approvedByGM") || (r.Level >= 5 && r.CurrentStat == "approvedByFM") || (r.Level >= 5 && r.CurrentStat == "approvedByCM")).ToList();
                         return View(res);
                     }
                     else
                     {
                         var res = CRP_dbObj.NEW_CUS_HEADER.Where(r => r.Level >= 7).ToList();
+                        return View(res);
                         return View(res);
                     }
                 }
@@ -140,21 +141,21 @@ namespace FI.PORTAL.Controllers
             }
             else if (role == 7)
             {
-                if (sortby != null)
+                if (findby != null)
                 {
-                    if (sortby.Equals("All"))
+                    if (findby.Equals("All"))
                     {
                         var res = CRP_dbObj.NEW_CUS_HEADER.Where(r => r.Level >= 8).ToList();
                         return View(res);
                     }
-                    else if (sortby.Equals("Pending"))
+                    else if (findby.Equals("Pending"))
                     {
-                        var res = CRP_dbObj.NEW_CUS_HEADER.Where(r => r.Level >= 8 && r.CurrentStat == "pendingGM").ToList();
+                        var res = CRP_dbObj.NEW_CUS_HEADER.Where(r => r.Level >= 8 && r.CurrentStat != "approvedByGM" && r.CurrentStat != "approvedByFM" && r.CurrentStat != "approvedByCM").ToList();
                         return View(res);
                     }
-                    else if (sortby.Equals("Forwarded"))
+                    else if (findby.Equals("Approved"))
                     {
-                        var res = CRP_dbObj.NEW_CUS_HEADER.Where(r => r.Level >= 8 && r.CurrentStat != "pendgingGM").ToList();
+                        var res = CRP_dbObj.NEW_CUS_HEADER.Where(r => (r.Level >= 8 && r.CurrentStat == "approvedByGM") || (r.Level >= 5 && r.CurrentStat == "approvedByFM") || (r.Level >= 5 && r.CurrentStat == "approvedByCM")).ToList();
                         return View(res);
                     }
                     else
@@ -181,6 +182,7 @@ namespace FI.PORTAL.Controllers
             var PaintBrands = CRP_dbObj.NEW_CUS_PAINT_BRANDS.Where(r => r.CusReqID == CusReqID).ToList();
             var Images = CRP_dbObj.NEW_CUS_IMAGE.Where(r => r.CusReqID == CusReqID).ToList();
             var Evaluations = CRP_dbObj.NEW_CUS_EVAL.Where(r => r.CusReqID == CusReqID).ToList();
+            var Owners = CRP_dbObj.NEW_CUS_OWNERS.Where(r => r.CusReqID == CusReqID).ToList();
             var FinalApproval = CRP_dbObj.NEW_CUS_FINAL_APPROVAL.Where(r => r.CusReqID == CusReqID).ToList();
 
 
@@ -191,6 +193,7 @@ namespace FI.PORTAL.Controllers
                 RequestPaintBrands = PaintBrands,
                 RequestImages = Images,
                 RequestEvaluations = Evaluations,
+                RequestOwners = Owners,
                 RequestFinalApproval = FinalApproval
             };
             return View(viewModel);
@@ -245,7 +248,7 @@ namespace FI.PORTAL.Controllers
 
 
         [HttpPost]
-        public ActionResult ApproveRequest(CustomerRegistrationRequestData model)
+        public ActionResult ForwardRequestCO(CustomerRegistrationRequestData model)
         {
 
             NEW_CUS_FINAL_APPROVAL finalApprovalObj = new NEW_CUS_FINAL_APPROVAL();
@@ -267,8 +270,21 @@ namespace FI.PORTAL.Controllers
             finalApprovalObj.SalesCode = model.FinalApprove.SalesCode;
             finalApprovalObj.CreatedDate = DateTime.Now;
 
+            NEW_CUS_EVAL newEvalObj = new NEW_CUS_EVAL();
+            newEvalObj.EvalID = model.Evaluation.EvalID;
+            newEvalObj.CusReqID = model.Evaluation.CusReqID;
+            newEvalObj.RecLimit = model.FinalApprove.RecLimit;
+            newEvalObj.RecPeriod = model.FinalApprove.RecPeriod;
+            newEvalObj.RecDiscount = model.FinalApprove.RecDiscount;
+            newEvalObj.Remarks = model.FinalApprove.Remarks;
+            newEvalObj.Role = model.FinalApprove.Role;
+            newEvalObj.SalesCode = model.FinalApprove.SalesCode;
+            newEvalObj.Status = model.Evaluation.Status;
+            newEvalObj.CreatedDate = DateTime.Now;
+
             CRP_dbObj.Entry(model.RequestHeader).State = System.Data.Entity.EntityState.Modified;
             CRP_dbObj.NEW_CUS_FINAL_APPROVAL.Add(finalApprovalObj);
+            CRP_dbObj.NEW_CUS_EVAL.Add(newEvalObj);
 
             CRP_dbObj.SaveChanges();
 

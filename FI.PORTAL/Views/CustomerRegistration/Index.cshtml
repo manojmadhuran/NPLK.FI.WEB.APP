@@ -2,7 +2,7 @@
 
 @{
     ViewBag.Title = "Index";
-    String currentSort = ViewBag.sortString;
+    String currentFind = ViewBag.findString;
 }
 
 <div class="row">
@@ -13,36 +13,37 @@
                 <form action="@Url.Action("", "CustomerRegistration")" method="get">
                     <div class="form-row align-items-center">
                         <div class="col-auto my-1">
-                            <select class="custom-select mr-sm-2" name="sortby">
-                                @if (currentSort == "All")
+                            <select class="custom-select mr-sm-2" name="findby">
+                                @if (currentFind == "All")
                                 {
                                     <option value="All" selected>All</option>
                                     <option value="Pending">Pending</option>
-                                    <option value="Forwarded">Forwarded/Reversed</option>
+                                    <option value="Approved">Approved</option>
                                 }
-                                else if (currentSort == "Pending")
+                                else if (currentFind == "Pending")
                                 {
                                     <option value="All">All</option>
                                     <option value="Pending" selected>Pending</option>
-                                    <option value="Forwarded">Forwarded/Reversed</option>
+                                    <option value="Approved">Approved</option>
                                 }
-                                else if (currentSort == "Forward/Reverse")
+                                else if (currentFind == "Approved")
                                 {
                                     <option value="All">All</option>
                                     <option value="Pending">Pending</option>
-                                    <option value="Forwarded" selected>Forwarded/Reversed</option>
+                                    <option value="Approved" selected>Approved</option>
+
                                 }
                                 else
                                 {
                                     <option value="All" selected>All</option>
                                     <option value="Pending">Pending</option>
-                                    <option value="Forwarded">Forwarded/Reversed</option>
+                                    <option value="Approved">Approved</option>
                                 }
 
                             </select>
                         </div>
                         <div class="col-auto my-1">
-                            <button type="submit" class="btn btn-primary">Sort </button>
+                            <button type="submit" class="btn btn-primary">Find</button>
                         </div>
                     </div>
                 </form>
@@ -58,7 +59,7 @@
     <div class="col-md-12">
         <div class="card">
             <div class="card-header">
-                <h4>New Customer Registration Requests</h4>
+                <h4>Customer Registration Requests</h4>
             </div>
             <div class="card-body">
 
