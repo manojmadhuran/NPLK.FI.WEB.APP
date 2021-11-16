@@ -3,6 +3,7 @@
 @{
     var title = Model.RequestHeader.CusReqID;
     ViewBag.Title = "Req:" + title;
+    int role = Convert.ToInt16(Session["role"].ToString());
 }
 
 
