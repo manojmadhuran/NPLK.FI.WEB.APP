@@ -3,7 +3,6 @@
 @{
     ViewBag.Title = "Collection Home";
     string currentSort = Session["sorting"].ToString();
-    string currentArea = Session["selected_area"].ToString();
 }
 
 <div class="row">
@@ -44,48 +43,52 @@
                     </div>
 
 
-                    <div style="padding:1%">
-                        <div class="form-row align-items-center">
-                            <div class="col-auto my-1">
-                                <label for="sort_menu">Area: </label>
-                            </div>
-                            <div class="col-auto my-1">
-                                <select id="area_menu" class="custom-select mr-sm-2" name="sortby" onchange="areaChange(this)">
-                                    @foreach (var item in Model.areas)
-                                    {
-                                        if (item.SalesCode.Equals(currentArea))
-                                        {
-                                            <option value="@item.SalesCode" selected>@item.AreaName</option>
-                                        }
-                                        else
-                                        {
-                                            <option value="@item.SalesCode">@item.AreaName</option>
-                                        }
-
-                                    }
-                                </select>
-                            </div>
-
-                        </div>
-                    </div>
-
-                    <div style="padding:1%">
-                        <form action="@Url.Action("SearchCollection", "Collection")" method="get">
+                    @*<div style="padding:1%">
                             <div class="form-row align-items-center">
                                 <div class="col-auto my-1">
-                                    <label for="sort_menu">Search: </label>
+                                    <label for="sort_menu">Area: </label>
                                 </div>
                                 <div class="col-auto my-1">
-                                    <input type="text" class="form-control" name="search_query" placeholder="Collection ID" />
+                                    <select id="area_menu" class="custom-select mr-sm-2" name="sortby" onchange="areaChange(this)">
+                                        @foreach (var item in Model.areas)
+                                        {
+                                            if (item.SalesCode.Equals(currentArea))
+                                            {
+                                                <option value="@item.SalesCode" selected>@item.AreaName</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@item.SalesCode">@item.AreaName</option>
+                                            }
+
+                                        }
+                                    </select>
                                 </div>
-                                <div class="col-auto my-1">
-                                    <button type="submit" class="btn btn-primary">Search</button>
-                                </div>
-                                <div class="col-auto my-1">
-                                    <button type="button" class="btn btn-primary"  onclick="location.href='@Url.Action("CollectionHome", "Collection")'">Reset</button>
-                                </div>
+
                             </div>
-                        </form>
+                        </div>*@
+
+                    <div style="padding:1%">
+                        @*<form action="@Url.Action("SearchCollection", "Collection")" method="get">*@
+                        <div class="form-row align-items-center">
+                            <div class="col-auto my-1">
+                                <label for="search_by">Search By: </label>
+                            </div>
+                            <div class="col-auto my-1">
+                                <select id="search_by" class="custom-select mr-sm-2">
+                                    <option value="Sales_Code">Sales Code</option>
+                                    <option value="Area">Area</option>
+                                    <option value="Rep_Name">REP Name</option>
+                                </select>
+                            </div>
+                            <div class="col-auto my-1">
+                                <input type="text" class="form-control" id="search_value" />
+                            </div>
+                            <div class="col-auto my-1">
+                                <button type="button" class="btn btn-primary" onclick="location.href='@Url.Action("CollectionHome", "Collection")'">Reset</button>
+                            </div>
+                        </div>
+                        @*</form>*@
                     </div>
 
 
@@ -112,11 +115,13 @@
                                     <th>Collection ID</th>
                                     <th>Created Date</th>
                                     <th>Sales Code</th>
+                                    <th>Area Name</th>
+                                    <th>Created By</th>
                                     <th>Acknowledge</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody id="collections_data">
                                 @if (Model.collection.Count() == 0)
                                 {
                                     <tr>
@@ -131,6 +136,8 @@
                                             <td>@item.collection_no</td>
                                             <td>@item.collection_date</td>
                                             <td>@item.sales_code</td>
+                                            <td>@item.area_name</td>
+                                            <td>@item.created_by</td>
                                             <td>
                                                 @if (item.acknowledge == true)
                                                 {<h6><span class="badge badge-success">Acknowledged</span></h6>}
@@ -155,8 +162,52 @@
     </div>
 </div>
 
+<script src="~/Scripts/jquery-3.3.1.min.js"></script>
 
 <script>
+    $(document).ready(function () {
+        $("#search_value").on('input', function () {
+            var SearchBy = $("#search_by").val();
+            var SearchVal = $("#search_value").val();
+            var SetData = $("#collections_data");
+            SetData.html("");
+            $.ajax({
+                type: "post",
+                url: "/Collection/SearchData?SearchBy=" + SearchBy + "&SearchValue=" + SearchVal,
+                contentType: "html",
+                success: function (result) {
+                    if (result.length == 0) {
+                        SetData.append('<tr><td colspan="7">No data found!</td></tr>')
+                    } else {
+                        $.each(result, function (index, value) {
+                            var date = new Date(parseInt(value.collection_date.substr(6)));
+                            var statusBadge;
+                            var collection_view = "<a href='CollectionView?collection_no=" + value.collection_no + "' class='btn btn-success btn-sm'>View</a>"
+
+                            if (value.acknowledge) {
+                                statusBadge = "<h6><span class='badge badge-success'>Acknowledged</span></h6>"
+                            } else {
+                                statusBadge = "<h6><span class='badge badge-warning'>Pending</span></h6>"
+                            };
+
+                            var Data = "<tr>" +
+                                "<td>" + value.collection_no + "</td>" +
+                                "<td>" + date.toLocaleString() + "</td>" +
+                                "<td>" + value.sales_code + "</td>" +
+                                "<td>" + value.area_name + "</td>" +
+                                "<td>" + value.created_by + "</td>" +
+                                "<td>" + statusBadge + "</td>" + "<td>" + collection_view + "</td>" + "</tr>"
+
+                            SetData.append(Data)
+                        })
+                    }
+                }
+            })
+        })
+    })
+
+
+
     function sortChange() {
         var selected = document.getElementById("sort_menu").value;
 

@@ -15,7 +15,8 @@
     decimal osBalanceTotal = 0;
     decimal settledTotal = 0;
     string uname = (Session["uname"].ToString());
-    string sales_area = Session["selected_area_name"].ToString();
+    //string sales_area = Session["selected_area_name"].ToString();
+    string sales_area = "Sales Area";
     bool MainAcknowledge = false;
     bool SubAcknowledge = true;
     bool ticketStatus = false;
@@ -152,6 +153,14 @@
                     </div>
                     <div class="col-md-6">
                         Collection Created Date: @Model.FullCollectionData.First().collection_date
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        Rep Name: @Model.FullCollectionData.First().created_by
+                    </div>
+                    <div class="col-md-6">
+                        Area Name: @Model.FullCollectionData.First().area_name
                     </div>
                 </div>
                 <div class="row">
@@ -424,7 +433,11 @@
     </tr>
     <tr>
         <td>Sales Area Name</td>
-        <td>@sales_area</td>
+        <td>@Model.FullCollectionData.First().area_name</td>
+    </tr>
+    <tr>
+        <td>Rep Name</td>
+        <td>@Model.FullCollectionData.First().created_by</td>
     </tr>
     <tr></tr>
     <tr></tr>
