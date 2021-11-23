@@ -13,6 +13,10 @@ namespace FI.PORTAL.Controllers
         // GET: CustomerRequests
         CRP_SYSEntities CRP_dbObj = new CRP_SYSEntities();
 
+        int CO_ROLE = 1;
+        int CM_ROLE = 6;
+        int FM_ROLE = 7;
+        int GM_ROLE = 8;
 
         public ActionResult Index(string findby)
         {
@@ -40,7 +44,7 @@ namespace FI.PORTAL.Controllers
 
             int role = Convert.ToInt16(Session["role"].ToString());
 
-            if (role == 1)
+            if (role == CO_ROLE)
             {
                 if (findby != null)
                 {
@@ -71,10 +75,8 @@ namespace FI.PORTAL.Controllers
                     return View(res);
                 }
 
-
-
             }
-            else if (role == 5)
+            else if (role == CM_ROLE)
             {
                 if (findby != null)
                 {
@@ -106,7 +108,7 @@ namespace FI.PORTAL.Controllers
                 }
 
             }
-            else if (role == 6)
+            else if (role == FM_ROLE)
             {
                 if (findby != null)
                 {
@@ -139,7 +141,7 @@ namespace FI.PORTAL.Controllers
                 }
 
             }
-            else if (role == 7)
+            else if (role == GM_ROLE)
             {
                 if (findby != null)
                 {
@@ -223,17 +225,17 @@ namespace FI.PORTAL.Controllers
 
             int role = Convert.ToInt16(Session["role"].ToString());
 
-            if (role == 1)
+            if (role == CO_ROLE)
             {
                 var res = CRP_dbObj.viewNEW_CUS_HEADER.Where(r => r.Level >= 5).ToList();
                 return View("Index", res);
             }
-            else if (role == 5)
+            else if (role == CM_ROLE)
             {
                 var res = CRP_dbObj.viewNEW_CUS_HEADER.Where(r => r.Level >= 6).ToList();
                 return View("Index", res);
             }
-            else if (role == 6)
+            else if (role == FM_ROLE)
             {
                 var res = CRP_dbObj.viewNEW_CUS_HEADER.Where(r => r.Level >= 7).ToList();
                 return View("Index", res);
@@ -290,17 +292,17 @@ namespace FI.PORTAL.Controllers
 
             int role = Convert.ToInt16(Session["role"].ToString());
 
-            if (role == 1)
+            if (role == CO_ROLE)
             {
                 var res = CRP_dbObj.viewNEW_CUS_HEADER.Where(r => r.Level >= 5).ToList();
                 return View("Index", res);
             }
-            else if (role == 5)
+            else if (role == CM_ROLE)
             {
                 var res = CRP_dbObj.viewNEW_CUS_HEADER.Where(r => r.Level >= 6).ToList();
                 return View("Index", res);
             }
-            else if (role == 6)
+            else if (role == FM_ROLE)
             {
                 var res = CRP_dbObj.viewNEW_CUS_HEADER.Where(r => r.Level >= 7).ToList();
                 return View("Index", res);
@@ -310,9 +312,6 @@ namespace FI.PORTAL.Controllers
                 var res = CRP_dbObj.viewNEW_CUS_HEADER.Where(r => r.Level >= 8).ToList();
                 return View("Index", res);
             }
-
         }
-
-
     }
 }

@@ -4,10 +4,14 @@
     var title = Model.RequestHeader.CusReqID;
     ViewBag.Title = "Req:" + title;
     int role = Convert.ToInt16(Session["role"].ToString());
+    int CO_ROLE = 1;
+    int CM_ROLE = 6;
+    int FM_ROLE = 7;
+    int GM_ROLE = 8;
 }
 
 
-@if ((role == 1 && Model.RequestHeader.CurrentStat.Equals("pendingCO")) || (role == 5 && Model.RequestHeader.CurrentStat.Equals("pendingCM")) || (role == 6 && Model.RequestHeader.CurrentStat.Equals("pendingFM")) || (role == 7 && Model.RequestHeader.CurrentStat.Equals("pendingGM")))
+@if ((role == CO_ROLE && Model.RequestHeader.CurrentStat.Equals("pendingCO")) || (role == CM_ROLE && Model.RequestHeader.CurrentStat.Equals("pendingCM")) || (role == FM_ROLE && Model.RequestHeader.CurrentStat.Equals("pendingFM")) || (role == GM_ROLE && Model.RequestHeader.CurrentStat.Equals("pendingGM")))
 {<div class="card">
         <div class="card-body">
             <div class="row">
@@ -16,7 +20,7 @@
                         Reverse
                     </button>
                 </div>
-                @if (role != 1)
+                @if (role != CO_ROLE)
                 {
                     <div class="col-sm text-sm-center">
                         <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#approveModal">
@@ -25,9 +29,9 @@
                     </div>
                 }
 
-                @if (role != 7)
+                @if (role != GM_ROLE)
                 {
-                    if (role != 1)
+                    if (role != CO_ROLE)
                     {
                         <div class="col-sm text-sm-center">
                             <button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#forwardModal">
@@ -37,7 +41,7 @@
                     }
 
                 }
-                @if (role == 1)
+                @if (role == CO_ROLE)
                 {
                     <div class="col-sm text-sm-center">
                         <button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#forwardModalCO">
@@ -74,20 +78,20 @@
             {
                 <div class="modal-body">
                     <div class="form-group">
-                        @if (role == 5)
+                        @if (role == CM_ROLE)
                         {
                             @Html.HiddenFor(s => s.RequestHeader.CurrentStat, new { Value = "approvedByCM" })
                             @Html.HiddenFor(s => s.Evaluation.Role, new { Value = "CM" })
                         }
-                        else if (role == 6)
+                        else if (role == FM_ROLE)
                         {
                             @Html.HiddenFor(s => s.RequestHeader.CurrentStat, new { Value = "approvedByFM" })
                             @Html.HiddenFor(s => s.Evaluation.Role, new { Value = "FM" })
                         }
-                        else if (role == 7)
+                        else if (role == GM_ROLE)
                         {
                             @Html.HiddenFor(s => s.RequestHeader.CurrentStat, new { Value = "approvedByGM" })
-                            @Html.HiddenFor(s => s.Evaluation.Role, new { Value = "FM" })
+                            @Html.HiddenFor(s => s.Evaluation.Role, new { Value = "GM" })
                         }
 
 
@@ -180,22 +184,22 @@
             {
                 <div class="modal-body">
                     <div class="form-group">
-                        @if (role == 1)
+                        @if (role == CO_ROLE)
                         {
                             @Html.HiddenFor(s => s.RequestHeader.CurrentStat, new { Value = "declineCO" })
                             @Html.HiddenFor(s => s.Evaluation.Role, new { Value = "CO" })
                         }
-                        else if (role == 5)
+                        else if (role == CM_ROLE)
                         {
                             @Html.HiddenFor(s => s.RequestHeader.CurrentStat, new { Value = "pendingCO" })
                             @Html.HiddenFor(s => s.Evaluation.Role, new { Value = "CM" })
                         }
-                        else if (role == 6)
+                        else if (role == FM_ROLE)
                         {
                             @Html.HiddenFor(s => s.RequestHeader.CurrentStat, new { Value = "pendingCM" })
                             @Html.HiddenFor(s => s.Evaluation.Role, new { Value = "FM" })
                         }
-                        else if (role == 7)
+                        else if (role == GM_ROLE)
                         {
                             @Html.HiddenFor(s => s.RequestHeader.CurrentStat, new { Value = "pendingFM" })
                             @Html.HiddenFor(s => s.Evaluation.Role, new { Value = "GM" })
@@ -282,13 +286,13 @@
             {
                 <div class="modal-body">
                     <div class="form-group">
-                        @if (role == 5)
+                        @if (role == CM_ROLE)
                         {
                             @Html.HiddenFor(s => s.RequestHeader.CurrentStat, new { Value = "pendingFM" })
                             @Html.HiddenFor(s => s.Evaluation.Role, new { Value = "CM" })
                             @Html.HiddenFor(s => s.RequestHeader.Level, new { Value = 7 })
                         }
-                        else if (role == 6)
+                        else if (role == FM_ROLE)
                         {
                             @Html.HiddenFor(s => s.RequestHeader.CurrentStat, new { Value = "pendingGM" })
                             @Html.HiddenFor(s => s.Evaluation.Role, new { Value = "FM" })
@@ -385,7 +389,7 @@
                 <div class="modal-body">
                     <div class="form-group">
 
-                        @if (role == 1)
+                        @if (role == CO_ROLE)
                         {
                             @Html.HiddenFor(s => s.RequestHeader.CurrentStat, new { Value = "pendingCM" })
                             @Html.HiddenFor(s => s.Evaluation.Role, new { Value = "CO" })
