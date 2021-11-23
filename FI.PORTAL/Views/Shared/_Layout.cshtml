@@ -33,7 +33,7 @@
                             try
                             {
                                 int role = Convert.ToInt16(Session["role"].ToString());
-                                if (role == 0)
+                                if (role == 100)//admin level
                                 {
                                     <li class="nav-item">
                                         <a href="~/Home/Initiation" class="nav-link">Initiate</a>
