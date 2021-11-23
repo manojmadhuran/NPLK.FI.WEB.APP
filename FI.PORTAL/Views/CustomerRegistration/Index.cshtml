@@ -1,4 +1,4 @@
-﻿@model List<FI.PORTAL.dbconnect.NEW_CUS_HEADER>
+﻿@model List<FI.PORTAL.dbconnect.viewNEW_CUS_HEADER>
 
 @{
     ViewBag.Title = "Index";
@@ -73,6 +73,7 @@
                                     <th>Customer Name</th>
                                     <th>Sales Area Code</th>
                                     <th>Sales Area Name</th>
+                                    <th>Created By</th>
                                     <th>Created Date</th>
                                     <th>Action</th>
                                 </tr>
@@ -89,17 +90,19 @@
                                 {
                                     foreach (var item in Model)
                                     {
-                                        <tr>
-                                            <td>@item.CusReqID</td>
-                                            <td>@item.CurrentStat</td>
-                                            <td>@item.CusName</td>
-                                            <td>@item.SalesCode</td>
-                                            <td>@item.SalesAreaName</td>
-                                            <td>@item.CreatedDate</td>
-                                            <td>
-                                                <a href="@Url.Action("CustomerRequestFormView", new { item.CusReqID})" class="btn btn-success btn-sm">View</a>
-                                            </td>
-                                        </tr>
+                            <tr>
+                                <td>@item.CusReqID</td>
+                                <td>@item.CurrentStat</td>
+                                <td>@item.CusName</td>
+                                <td>@item.SalesCode</td>
+                                <td>@item.SalesAreaName</td>
+                                <td>@item.REPName</td>
+                                <td>@item.CreatedDate</td>
+
+                                <td>
+                                    <a href="@Url.Action("CustomerRequestFormView", new { item.CusReqID})" class="btn btn-success btn-sm">View</a>
+                                </td>
+                            </tr>
                                     }
                                 }
 

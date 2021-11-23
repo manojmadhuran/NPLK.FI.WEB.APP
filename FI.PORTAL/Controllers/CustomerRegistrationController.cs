@@ -46,28 +46,28 @@ namespace FI.PORTAL.Controllers
                 {
                     if (findby.Equals("All"))
                     {
-                        var res = CRP_dbObj.NEW_CUS_HEADER.Where(r => r.Level >= 5).ToList();
+                        var res = CRP_dbObj.viewNEW_CUS_HEADER.Where(r => r.Level >= 5).ToList();
                         return View(res);
                     }
                     else if (findby.Equals("Pending"))
                     {
-                        var res = CRP_dbObj.NEW_CUS_HEADER.Where(r => r.Level >= 5 && r.CurrentStat != "approvedByGM" && r.CurrentStat != "approvedByFM" && r.CurrentStat != "approvedByCM").ToList();
+                        var res = CRP_dbObj.viewNEW_CUS_HEADER.Where(r => r.Level >= 5 && r.CurrentStat != "approvedByGM" && r.CurrentStat != "approvedByFM" && r.CurrentStat != "approvedByCM").ToList();
                         return View(res);
                     }
                     else if (findby.Equals("Approved"))
                     {
-                        var res = CRP_dbObj.NEW_CUS_HEADER.Where(r => (r.Level >= 5 && r.CurrentStat == "approvedByGM") || (r.Level >= 5  && r.CurrentStat == "approvedByFM") || (r.Level >= 5 && r.CurrentStat == "approvedByCM")).ToList();
+                        var res = CRP_dbObj.viewNEW_CUS_HEADER.Where(r => (r.Level >= 5 && r.CurrentStat == "approvedByGM") || (r.Level >= 5  && r.CurrentStat == "approvedByFM") || (r.Level >= 5 && r.CurrentStat == "approvedByCM")).ToList();
                         return View(res);
                     }
                     else
                     {
-                        var res = CRP_dbObj.NEW_CUS_HEADER.Where(r => r.Level >= 5).ToList();
+                        var res = CRP_dbObj.viewNEW_CUS_HEADER.Where(r => r.Level >= 5).ToList();
                         return View(res);
                     }
                 }
                 else
                 {
-                    var res = CRP_dbObj.NEW_CUS_HEADER.Where(r => r.Level >= 5).ToList();
+                    var res = CRP_dbObj.viewNEW_CUS_HEADER.Where(r => r.Level >= 5).ToList();
                     return View(res);
                 }
 
@@ -80,28 +80,28 @@ namespace FI.PORTAL.Controllers
                 {
                     if (findby.Equals("All"))
                     {
-                        var res = CRP_dbObj.NEW_CUS_HEADER.Where(r => r.Level >= 6).ToList();
+                        var res = CRP_dbObj.viewNEW_CUS_HEADER.Where(r => r.Level >= 6).ToList();
                         return View(res);
                     }
                     else if (findby.Equals("Pending"))
                     {
-                        var res = CRP_dbObj.NEW_CUS_HEADER.Where(r => r.Level >= 6 && r.CurrentStat != "approvedByGM" && r.CurrentStat != "approvedByFM" && r.CurrentStat != "approvedByCM").ToList();
+                        var res = CRP_dbObj.viewNEW_CUS_HEADER.Where(r => r.Level >= 6 && r.CurrentStat != "approvedByGM" && r.CurrentStat != "approvedByFM" && r.CurrentStat != "approvedByCM").ToList();
                         return View(res);
                     }
                     else if (findby.Equals("Approved"))
                     {
-                        var res = CRP_dbObj.NEW_CUS_HEADER.Where(r => (r.Level >= 6 && r.CurrentStat == "approvedByGM") || (r.Level >= 5 && r.CurrentStat == "approvedByFM") || (r.Level >= 5 && r.CurrentStat == "approvedByCM")).ToList();
+                        var res = CRP_dbObj.viewNEW_CUS_HEADER.Where(r => (r.Level >= 6 && r.CurrentStat == "approvedByGM") || (r.Level >= 5 && r.CurrentStat == "approvedByFM") || (r.Level >= 5 && r.CurrentStat == "approvedByCM")).ToList();
                         return View(res);
                     }
                     else
                     {
-                        var res = CRP_dbObj.NEW_CUS_HEADER.Where(r => r.Level >= 6).ToList();
+                        var res = CRP_dbObj.viewNEW_CUS_HEADER.Where(r => r.Level >= 6).ToList();
                         return View(res);
                     }
                 }
                 else
                 {
-                    var res = CRP_dbObj.NEW_CUS_HEADER.Where(r => r.Level >= 6).ToList();
+                    var res = CRP_dbObj.viewNEW_CUS_HEADER.Where(r => r.Level >= 6).ToList();
                     return View(res);
                 }
 
@@ -112,29 +112,29 @@ namespace FI.PORTAL.Controllers
                 {
                     if (findby.Equals("All"))
                     {
-                        var res = CRP_dbObj.NEW_CUS_HEADER.Where(r => r.Level >= 7).ToList();
+                        var res = CRP_dbObj.viewNEW_CUS_HEADER.Where(r => r.Level >= 7).ToList();
                         return View(res);
                     }
                     else if (findby.Equals("Pending"))
                     {
-                        var res = CRP_dbObj.NEW_CUS_HEADER.Where(r => r.Level >= 7 && r.CurrentStat != "approvedByGM" && r.CurrentStat != "approvedByFM" && r.CurrentStat != "approvedByCM").ToList();
+                        var res = CRP_dbObj.viewNEW_CUS_HEADER.Where(r => r.Level >= 7 && r.CurrentStat != "approvedByGM" && r.CurrentStat != "approvedByFM" && r.CurrentStat != "approvedByCM").ToList();
                         return View(res);
                     }
                     else if (findby.Equals("Approved"))
                     {
-                        var res = CRP_dbObj.NEW_CUS_HEADER.Where(r => (r.Level >= 7 && r.CurrentStat == "approvedByGM") || (r.Level >= 5 && r.CurrentStat == "approvedByFM") || (r.Level >= 5 && r.CurrentStat == "approvedByCM")).ToList();
+                        var res = CRP_dbObj.viewNEW_CUS_HEADER.Where(r => (r.Level >= 7 && r.CurrentStat == "approvedByGM") || (r.Level >= 5 && r.CurrentStat == "approvedByFM") || (r.Level >= 5 && r.CurrentStat == "approvedByCM")).ToList();
                         return View(res);
                     }
                     else
                     {
-                        var res = CRP_dbObj.NEW_CUS_HEADER.Where(r => r.Level >= 7).ToList();
+                        var res = CRP_dbObj.viewNEW_CUS_HEADER.Where(r => r.Level >= 7).ToList();
                         return View(res);
                         return View(res);
                     }
                 }
                 else
                 {
-                    var res = CRP_dbObj.NEW_CUS_HEADER.Where(r => r.Level >= 7).ToList();
+                    var res = CRP_dbObj.viewNEW_CUS_HEADER.Where(r => r.Level >= 7).ToList();
                     return View(res);
                 }
 
@@ -145,28 +145,28 @@ namespace FI.PORTAL.Controllers
                 {
                     if (findby.Equals("All"))
                     {
-                        var res = CRP_dbObj.NEW_CUS_HEADER.Where(r => r.Level >= 8).ToList();
+                        var res = CRP_dbObj.viewNEW_CUS_HEADER.Where(r => r.Level >= 8).ToList();
                         return View(res);
                     }
                     else if (findby.Equals("Pending"))
                     {
-                        var res = CRP_dbObj.NEW_CUS_HEADER.Where(r => r.Level >= 8 && r.CurrentStat != "approvedByGM" && r.CurrentStat != "approvedByFM" && r.CurrentStat != "approvedByCM").ToList();
+                        var res = CRP_dbObj.viewNEW_CUS_HEADER.Where(r => r.Level >= 8 && r.CurrentStat != "approvedByGM" && r.CurrentStat != "approvedByFM" && r.CurrentStat != "approvedByCM").ToList();
                         return View(res);
                     }
                     else if (findby.Equals("Approved"))
                     {
-                        var res = CRP_dbObj.NEW_CUS_HEADER.Where(r => (r.Level >= 8 && r.CurrentStat == "approvedByGM") || (r.Level >= 5 && r.CurrentStat == "approvedByFM") || (r.Level >= 5 && r.CurrentStat == "approvedByCM")).ToList();
+                        var res = CRP_dbObj.viewNEW_CUS_HEADER.Where(r => (r.Level >= 8 && r.CurrentStat == "approvedByGM") || (r.Level >= 5 && r.CurrentStat == "approvedByFM") || (r.Level >= 5 && r.CurrentStat == "approvedByCM")).ToList();
                         return View(res);
                     }
                     else
                     {
-                        var res = CRP_dbObj.NEW_CUS_HEADER.Where(r => r.Level >= 8).ToList();
+                        var res = CRP_dbObj.viewNEW_CUS_HEADER.Where(r => r.Level >= 8).ToList();
                         return View(res);
                     }
                 }
                 else
                 {
-                    var res = CRP_dbObj.NEW_CUS_HEADER.Where(r => r.Level >= 8).ToList();
+                    var res = CRP_dbObj.viewNEW_CUS_HEADER.Where(r => r.Level >= 8).ToList();
                     return View(res);
                 }
 
@@ -177,7 +177,7 @@ namespace FI.PORTAL.Controllers
 
         public ActionResult CustomerRequestFormView(int CusReqID)
         {
-            var Request = CRP_dbObj.NEW_CUS_HEADER.Where(r => r.CusReqID == CusReqID).FirstOrDefault();
+            var Request = CRP_dbObj.viewNEW_CUS_HEADER.Where(r => r.CusReqID == CusReqID).FirstOrDefault();
             var Companies = CRP_dbObj.NEW_CUS_COMPANIES.Where(r => r.CusReqID == CusReqID).ToList();
             var PaintBrands = CRP_dbObj.NEW_CUS_PAINT_BRANDS.Where(r => r.CusReqID == CusReqID).ToList();
             var Images = CRP_dbObj.NEW_CUS_IMAGE.Where(r => r.CusReqID == CusReqID).ToList();
@@ -188,7 +188,7 @@ namespace FI.PORTAL.Controllers
 
             var viewModel = new CustomerRegistrationRequestData
             {
-                RequestHeader = (NEW_CUS_HEADER)Request,
+                RequestHeader = (viewNEW_CUS_HEADER)Request,
                 RequestCompanies = Companies,
                 RequestPaintBrands = PaintBrands,
                 RequestImages = Images,
@@ -225,22 +225,22 @@ namespace FI.PORTAL.Controllers
 
             if (role == 1)
             {
-                var res = CRP_dbObj.NEW_CUS_HEADER.Where(r => r.Level >= 5).ToList();
+                var res = CRP_dbObj.viewNEW_CUS_HEADER.Where(r => r.Level >= 5).ToList();
                 return View("Index", res);
             }
             else if (role == 5)
             {
-                var res = CRP_dbObj.NEW_CUS_HEADER.Where(r => r.Level >= 6).ToList();
+                var res = CRP_dbObj.viewNEW_CUS_HEADER.Where(r => r.Level >= 6).ToList();
                 return View("Index", res);
             }
             else if (role == 6)
             {
-                var res = CRP_dbObj.NEW_CUS_HEADER.Where(r => r.Level >= 7).ToList();
+                var res = CRP_dbObj.viewNEW_CUS_HEADER.Where(r => r.Level >= 7).ToList();
                 return View("Index", res);
             }
             else
             {
-                var res = CRP_dbObj.NEW_CUS_HEADER.Where(r => r.Level >= 8).ToList();
+                var res = CRP_dbObj.viewNEW_CUS_HEADER.Where(r => r.Level >= 8).ToList();
                 return View("Index", res);
             }
 
@@ -292,22 +292,22 @@ namespace FI.PORTAL.Controllers
 
             if (role == 1)
             {
-                var res = CRP_dbObj.NEW_CUS_HEADER.Where(r => r.Level >= 5).ToList();
+                var res = CRP_dbObj.viewNEW_CUS_HEADER.Where(r => r.Level >= 5).ToList();
                 return View("Index", res);
             }
             else if (role == 5)
             {
-                var res = CRP_dbObj.NEW_CUS_HEADER.Where(r => r.Level >= 6).ToList();
+                var res = CRP_dbObj.viewNEW_CUS_HEADER.Where(r => r.Level >= 6).ToList();
                 return View("Index", res);
             }
             else if (role == 6)
             {
-                var res = CRP_dbObj.NEW_CUS_HEADER.Where(r => r.Level >= 7).ToList();
+                var res = CRP_dbObj.viewNEW_CUS_HEADER.Where(r => r.Level >= 7).ToList();
                 return View("Index", res);
             }
             else
             {
-                var res = CRP_dbObj.NEW_CUS_HEADER.Where(r => r.Level >= 8).ToList();
+                var res = CRP_dbObj.viewNEW_CUS_HEADER.Where(r => r.Level >= 8).ToList();
                 return View("Index", res);
             }
 

@@ -265,6 +265,9 @@
     <Compile Include="dbconnect\TICKET_MSGS.cs">
       <DependentUpon>dbModelCOL.tt</DependentUpon>
     </Compile>
+    <Compile Include="dbconnect\viewNEW_CUS_HEADER.cs">
+      <DependentUpon>dbModelCRP.tt</DependentUpon>
+    </Compile>
     <Compile Include="dbconnect\vw_Requests.cs">
       <DependentUpon>dbModelFMG.tt</DependentUpon>
     </Compile>
