@@ -33,7 +33,21 @@
                             try
                             {
                                 int role = Convert.ToInt16(Session["role"].ToString());
-
+                                if (role == 0)
+                                {
+                                    <li class="nav-item">
+                                        <a href="~/Home/Initiation" class="nav-link">Initiate</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="~/Home/ViewRequests" class="nav-link">Limit Enhancement</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="~/CustomerRegistration/Index" class="nav-link">Customer Registration</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="~/Collection/CollectionHome" class="nav-link">Collections</a>
+                                    </li>
+                                }
                                 if (role == 1)
                                 {
                                     <li class="nav-item">
