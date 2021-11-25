@@ -17,6 +17,8 @@ namespace FI.PORTAL.Controllers
         int CM_ROLE = 6;
         int FM_ROLE = 7;
         int GM_ROLE = 8;
+        int ADMIN_ROLE = 100;
+        int role;
 
         public ActionResult Index(string findby)
         {
@@ -41,8 +43,14 @@ namespace FI.PORTAL.Controllers
                 ViewBag.findString = "Invalid";
             }
 
-
-            int role = Convert.ToInt16(Session["role"].ToString());
+            try
+            {
+                role = Convert.ToInt16(Session["role"].ToString());
+            }
+            catch (Exception e)
+            {
+                Response.Redirect("/Login/UserLogin", false);
+            }
 
             if (role == CO_ROLE)
             {
@@ -60,7 +68,7 @@ namespace FI.PORTAL.Controllers
                     }
                     else if (findby.Equals("Approved"))
                     {
-                        var res = CRP_dbObj.viewNEW_CUS_HEADER.Where(r => (r.Level >= 5 && r.CurrentStat == "approvedByGM") || (r.Level >= 5  && r.CurrentStat == "approvedByFM") || (r.Level >= 5 && r.CurrentStat == "approvedByCM")).ToList();
+                        var res = CRP_dbObj.viewNEW_CUS_HEADER.Where(r => (r.Level >= 5 && r.CurrentStat == "approvedByGM") || (r.Level >= 5 && r.CurrentStat == "approvedByFM") || (r.Level >= 5 && r.CurrentStat == "approvedByCM")).ToList();
                         return View(res);
                     }
                     else
@@ -131,7 +139,6 @@ namespace FI.PORTAL.Controllers
                     {
                         var res = CRP_dbObj.viewNEW_CUS_HEADER.Where(r => r.Level >= 7).ToList();
                         return View(res);
-                        return View(res);
                     }
                 }
                 else
@@ -171,11 +178,132 @@ namespace FI.PORTAL.Controllers
                     var res = CRP_dbObj.viewNEW_CUS_HEADER.Where(r => r.Level >= 8).ToList();
                     return View(res);
                 }
+            }
+            else if (role == ADMIN_ROLE)
+            {
+                var res = CRP_dbObj.viewNEW_CUS_HEADER.ToList();
+                return View(res);
+            }
+            else
+            {
+                List<viewNEW_CUS_HEADER> emptyResult = new List<viewNEW_CUS_HEADER>();
+                return View(emptyResult);
+            }
+        }
+
+        public JsonResult SearchData(string SearchBy, string SearchValue)
+        {
+            Session["sorting"] = "All";
+            ViewBag.sortString = Session["sorting"].ToString();
+
+            try
+            {
+                role = Convert.ToInt16(Session["role"].ToString());
+            }
+            catch (Exception e)
+            {
+                Response.Redirect("/Login/UserLogin", false);
+            }
+
+            if (role == CO_ROLE)
+            {
+                if (SearchBy.Equals("Sales_Code"))
+                {
+                    var res = CRP_dbObj.viewNEW_CUS_HEADER.Where(r => r.Level >= 5 && r.SalesCode == SearchValue || SearchValue == null).ToList();
+                    return Json(res, JsonRequestBehavior.AllowGet);
+                }
+                else if (SearchBy.Equals("Area"))
+                {
+                    var res = CRP_dbObj.viewNEW_CUS_HEADER.Where(r => r.Level >= 5 && r.SalesAreaName.Contains(SearchValue) || SearchValue == null).ToList();
+                    return Json(res, JsonRequestBehavior.AllowGet);
+                }
+                else
+                {
+                    var res = CRP_dbObj.viewNEW_CUS_HEADER.Where(r => r.Level >= 5 && r.REPName.Contains(SearchValue) || SearchValue == null).ToList();
+                    return Json(res, JsonRequestBehavior.AllowGet);
+                }
 
             }
-            else { return View(); }
-
+            else if (role == CM_ROLE)
+            {
+                if (SearchBy.Equals("Sales_Code"))
+                {
+                    var res = CRP_dbObj.viewNEW_CUS_HEADER.Where(r => r.Level >= 6 && r.SalesCode == SearchValue || SearchValue == null).ToList();
+                    return Json(res, JsonRequestBehavior.AllowGet);
+                }
+                else if (SearchBy.Equals("Area"))
+                {
+                    var res = CRP_dbObj.viewNEW_CUS_HEADER.Where(r => r.Level >= 6 && r.SalesAreaName.Contains(SearchValue) || SearchValue == null).ToList();
+                    return Json(res, JsonRequestBehavior.AllowGet);
+                }
+                else
+                {
+                    var res = CRP_dbObj.viewNEW_CUS_HEADER.Where(r => r.Level >= 6 && r.REPName.Contains(SearchValue) || SearchValue == null).ToList();
+                    return Json(res, JsonRequestBehavior.AllowGet);
+                }
+            }
+            else if (role == FM_ROLE)
+            {
+                if (SearchBy.Equals("Sales_Code"))
+                {
+                    var res = CRP_dbObj.viewNEW_CUS_HEADER.Where(r => r.Level >= 7 && r.SalesCode == SearchValue || SearchValue == null).ToList();
+                    return Json(res, JsonRequestBehavior.AllowGet);
+                }
+                else if (SearchBy.Equals("Area"))
+                {
+                    var res = CRP_dbObj.viewNEW_CUS_HEADER.Where(r => r.Level >= 7 && r.SalesAreaName.Contains(SearchValue) || SearchValue == null).ToList();
+                    return Json(res, JsonRequestBehavior.AllowGet);
+                }
+                else
+                {
+                    var res = CRP_dbObj.viewNEW_CUS_HEADER.Where(r => r.Level >= 7 && r.REPName.Contains(SearchValue) || SearchValue == null).ToList();
+                    return Json(res, JsonRequestBehavior.AllowGet);
+                }
+            }
+            else if (role == GM_ROLE)
+            {
+                if (SearchBy.Equals("Sales_Code"))
+                {
+                    var res = CRP_dbObj.viewNEW_CUS_HEADER.Where(r => r.Level >= 8 && r.SalesCode == SearchValue || SearchValue == null).ToList();
+                    return Json(res, JsonRequestBehavior.AllowGet);
+                }
+                else if (SearchBy.Equals("Area"))
+                {
+                    var res = CRP_dbObj.viewNEW_CUS_HEADER.Where(r => r.Level >= 8 && r.SalesAreaName.Contains(SearchValue) || SearchValue == null).ToList();
+                    return Json(res, JsonRequestBehavior.AllowGet);
+                }
+                else
+                {
+                    var res = CRP_dbObj.viewNEW_CUS_HEADER.Where(r => r.Level >= 8 && r.REPName.Contains(SearchValue) || SearchValue == null).ToList();
+                    return Json(res, JsonRequestBehavior.AllowGet);
+                }
+            }
+            else if (role == ADMIN_ROLE)
+            {
+                if (SearchBy.Equals("Sales_Code"))
+                {
+                    var res = CRP_dbObj.viewNEW_CUS_HEADER.Where(r => r.SalesCode == SearchValue || SearchValue == null).ToList();
+                    return Json(res, JsonRequestBehavior.AllowGet);
+                }
+                else if (SearchBy.Equals("Area"))
+                {
+                    var res = CRP_dbObj.viewNEW_CUS_HEADER.Where(r => r.SalesAreaName.Contains(SearchValue) || SearchValue == null).ToList();
+                    return Json(res, JsonRequestBehavior.AllowGet);
+                }
+                else
+                {
+                    var res = CRP_dbObj.viewNEW_CUS_HEADER.Where(r => r.REPName.Contains(SearchValue) || SearchValue == null).ToList();
+                    return Json(res, JsonRequestBehavior.AllowGet);
+                }
+            }
+            else
+            {
+                var res = (dynamic)null;
+                return Json(res, JsonRequestBehavior.AllowGet);
+            }
         }
+
+
 
         public ActionResult CustomerRequestFormView(int CusReqID)
         {
@@ -204,8 +332,6 @@ namespace FI.PORTAL.Controllers
         [HttpPost]
         public ActionResult ReverseOrApproveRequest(CustomerRegistrationRequestData model)
         {
-
-
             NEW_CUS_EVAL newEvalObj = new NEW_CUS_EVAL();
             newEvalObj.EvalID = model.Evaluation.EvalID;
             newEvalObj.CusReqID = model.Evaluation.CusReqID;
@@ -313,5 +439,6 @@ namespace FI.PORTAL.Controllers
                 return View("Index", res);
             }
         }
+   
     }
 }

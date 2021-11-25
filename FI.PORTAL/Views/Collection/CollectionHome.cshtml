@@ -175,6 +175,7 @@
                 type: "post",
                 url: "/Collection/SearchData?SearchBy=" + SearchBy + "&SearchValue=" + SearchVal,
                 contentType: "html",
+                async: false,
                 success: function (result) {
                     if (result.length == 0) {
                         SetData.append('<tr><td colspan="7">No data found!</td></tr>')
