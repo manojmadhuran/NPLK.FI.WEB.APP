@@ -1,9 +1,21 @@
 ﻿@model FI.PORTAL.ViewModels.CustomerRegistrationRequestData
 
 @{
+
     var title = Model.RequestHeader.CusReqID;
     ViewBag.Title = "Req:" + title;
-    int role = Convert.ToInt16(Session["role"].ToString());
+    int role = 99;
+
+
+    try
+    {
+        role = Convert.ToInt16(Session["role"].ToString());
+    }
+    catch (Exception e)
+    {
+        Response.Redirect("/Login/UserLogin", false);
+    }
+
     int CO_ROLE = 1;
     int CM_ROLE = 6;
     int FM_ROLE = 7;
@@ -51,6 +63,9 @@
                 }
 
 
+                 <div class="col-sm text-sm-center">
+                    <button formtarget="_blank" onclick="window.open('@Url.Action("GenerateReport", new { Model.RequestHeader.CusReqID})')" type="button" class="btn btn-primary btn-sm">  Export as PDF </button>
+                </div>
 
                 <div class="col-sm text-sm-center">
                     <a id="dlink" style="display:none;"></a>
@@ -58,12 +73,6 @@
                         Export to Excel
                     </button>
                 </div>
-
-
-                <p>
-                    <input type="button" value="Create PDF"
-                           id="btPrint" onclick="createPDF()" />
-                </p>
 
             </div>
         </div>
@@ -74,16 +83,12 @@ else
     <div class="card">
         <div class="card-body">
             <div class="row">
-
-
-                <p>
-                    <input type="button" value="Create PDF"
-                           id="btPrint" onclick="createPDF()" />
-                </p>
-
+                <div class="col-sm text-sm-center">
+                    <button formtarget="_blank" onclick="window.open('@Url.Action("GenerateReport", new { Model.RequestHeader.CusReqID})')" type="button" class="btn btn-primary btn-sm">  Export as PDF </button>
+                </div>
                 <div class="col-sm text-sm-center">
                     <a id="dlink" style="display:none;"></a>
-                    <button type="button" class="btn btn-primary btn-sm" onclick="tablesToExcel(array1, array2, array3, array4, 'myfile.xls')" value="Export to Excel">
+                    <button type="button" class="btn btn-primary btn-sm" onclick="tablesToExcel(array1, array2, array3, array4, 'myfile.xls')" value="Export as Excel">
                         Export to Excel
                     </button>
                 </div>
@@ -944,7 +949,7 @@ else
                     <tr>
                         <th>Company</th>
                         <th>Credit Limit (Rs.)</th>
-                        <th>Credit Period (Rs.)</th>
+                        <th>Credit Period</th>
                         <th>Discount</th>
                     </tr>
                     @foreach (var item in Model.RequestCompanies)
@@ -1203,6 +1208,8 @@ else
 </div>
 
 
+<script src="~/Scripts/jquery-3.3.1.min.js"></script>
+
 <script>
     let rotation = 0;
     function rotate(id) {
@@ -1212,33 +1219,6 @@ else
             rotation = 0;
         }
         document.querySelector(id).style.transform = `rotate(${rotation}deg)`;
-    }
-</script>
-
-<script>
-    function createPDF() {
-        var sTable = document.getElementById('table1').innerHTML;
-
-        var style = "<style>";
-        style = style + "table {width: 100%;font: 17px Calibri;}";
-        style = style + "table, th, td {border: solid 1px #DDD; border-collapse: collapse;";
-        style = style + "padding: 2px 3px;text-align: center;}";
-        style = style + "</style>";
-
-        // CREATE A WINDOW OBJECT.
-        var win = window.open('', '', 'height=700,width=700');
-
-        win.document.write('<html><head>');
-        win.document.write('<title>Profile</title>');   // <title> FOR PDF HEADER.
-        win.document.write(style);          // ADD STYLE INSIDE THE HEAD TAG.
-        win.document.write('</head>');
-        win.document.write('<body>');
-        win.document.write(sTable);         // THE TABLE CONTENTS INSIDE THE BODY TAG.
-        win.document.write('</body></html>');
-
-        win.document.close(); 	// CLOSE THE CURRENT WINDOW.
-
-        win.print();    // PRINT THE CONTENTS.
     }
 </script>
 
@@ -1310,3 +1290,4 @@ else
     })();
 
 </script>
+

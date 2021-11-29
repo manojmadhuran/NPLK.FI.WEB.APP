@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using FI.PORTAL.dbconnect;
+using FI.PORTAL.Report;
 using FI.PORTAL.ViewModels;
 
 namespace FI.PORTAL.Controllers
@@ -440,5 +441,31 @@ namespace FI.PORTAL.Controllers
             }
         }
    
+        public ActionResult GenerateReport(int CusReqID)
+        {
+            var Request = CRP_dbObj.viewNEW_CUS_HEADER.Where(r => r.CusReqID == CusReqID).FirstOrDefault();
+            var Companies = CRP_dbObj.NEW_CUS_COMPANIES.Where(r => r.CusReqID == CusReqID).ToList();
+            var PaintBrands = CRP_dbObj.NEW_CUS_PAINT_BRANDS.Where(r => r.CusReqID == CusReqID).ToList();
+            var Images = CRP_dbObj.NEW_CUS_IMAGE.Where(r => r.CusReqID == CusReqID).ToList();
+            var Evaluations = CRP_dbObj.NEW_CUS_EVAL.Where(r => r.CusReqID == CusReqID).ToList();
+            var Owners = CRP_dbObj.NEW_CUS_OWNERS.Where(r => r.CusReqID == CusReqID).ToList();
+            var FinalApproval = CRP_dbObj.NEW_CUS_FINAL_APPROVAL.Where(r => r.CusReqID == CusReqID).ToList();
+
+
+            var viewModel = new CustomerRegistrationRequestData
+            {
+                RequestHeader = (viewNEW_CUS_HEADER)Request,
+                RequestCompanies = Companies,
+                RequestPaintBrands = PaintBrands,
+                RequestImages = Images,
+                RequestEvaluations = Evaluations,
+                RequestOwners = Owners,
+                RequestFinalApproval = FinalApproval
+            };
+
+            CustomerRequestReport customerRequestReport = new CustomerRequestReport();
+            byte[] abytes = customerRequestReport.PrepareReport(viewModel);
+            return File(abytes, "application/pdf", "Request_" + CusReqID.ToString() + ".pdf");
+        }
     }
 }
