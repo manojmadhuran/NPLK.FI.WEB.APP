@@ -1,12 +1,29 @@
 ﻿@model FI.PORTAL.ViewModels.CustomerRegistrationRequestData
 
 @{
+
     var title = Model.RequestHeader.CusReqID;
     ViewBag.Title = "Req:" + title;
+    int role = 99;
+
+
+    try
+    {
+        role = Convert.ToInt16(Session["role"].ToString());
+    }
+    catch (Exception e)
+    {
+        Response.Redirect("/Login/UserLogin", false);
+    }
+
+    int CO_ROLE = 1;
+    int CM_ROLE = 6;
+    int FM_ROLE = 7;
+    int GM_ROLE = 8;
 }
 
 
-@if ((role == 1 && Model.RequestHeader.CurrentStat.Equals("pendingCO")) || (role == 5 && Model.RequestHeader.CurrentStat.Equals("pendingCM")) || (role == 6 && Model.RequestHeader.CurrentStat.Equals("pendingFM")) || (role == 7 && Model.RequestHeader.CurrentStat.Equals("pendingGM")))
+@if ((role == CO_ROLE && Model.RequestHeader.CurrentStat.Equals("pendingCO")) || (role == CM_ROLE && Model.RequestHeader.CurrentStat.Equals("pendingCM")) || (role == FM_ROLE && Model.RequestHeader.CurrentStat.Equals("pendingFM")) || (role == GM_ROLE && Model.RequestHeader.CurrentStat.Equals("pendingGM")))
 {<div class="card">
         <div class="card-body">
             <div class="row">
@@ -15,7 +32,7 @@
                         Reverse
                     </button>
                 </div>
-                @if (role != 1)
+                @if (role != CO_ROLE)
                 {
                     <div class="col-sm text-sm-center">
                         <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#approveModal">
@@ -24,9 +41,9 @@
                     </div>
                 }
 
-                @if (role != 7)
+                @if (role != GM_ROLE)
                 {
-                    if (role != 1)
+                    if (role != CO_ROLE)
                     {
                         <div class="col-sm text-sm-center">
                             <button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#forwardModal">
@@ -36,7 +53,7 @@
                     }
 
                 }
-                @if (role == 1)
+                @if (role == CO_ROLE)
                 {
                     <div class="col-sm text-sm-center">
                         <button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#forwardModalCO">
@@ -45,6 +62,11 @@
                     </div>
                 }
 
+
+                 <div class="col-sm text-sm-center">
+                    <button formtarget="_blank" onclick="window.open('@Url.Action("GenerateReport", new { Model.RequestHeader.CusReqID})')" type="button" class="btn btn-primary btn-sm">  Export as PDF </button>
+                </div>
+
                 <div class="col-sm text-sm-center">
                     <a id="dlink" style="display:none;"></a>
                     <button type="button" class="btn btn-primary btn-sm" onclick="tablesToExcel(array1, array2, array3, array4, 'myfile.xls')" value="Export to Excel">
@@ -52,7 +74,24 @@
                     </button>
                 </div>
 
-
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="card">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-sm text-sm-center">
+                    <button formtarget="_blank" onclick="window.open('@Url.Action("GenerateReport", new { Model.RequestHeader.CusReqID})')" type="button" class="btn btn-primary btn-sm">  Export as PDF </button>
+                </div>
+                <div class="col-sm text-sm-center">
+                    <a id="dlink" style="display:none;"></a>
+                    <button type="button" class="btn btn-primary btn-sm" onclick="tablesToExcel(array1, array2, array3, array4, 'myfile.xls')" value="Export as Excel">
+                        Export to Excel
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -73,20 +112,20 @@
             {
                 <div class="modal-body">
                     <div class="form-group">
-                        @if (role == 5)
+                        @if (role == CM_ROLE)
                         {
                             @Html.HiddenFor(s => s.RequestHeader.CurrentStat, new { Value = "approvedByCM" })
                             @Html.HiddenFor(s => s.Evaluation.Role, new { Value = "CM" })
                         }
-                        else if (role == 6)
+                        else if (role == FM_ROLE)
                         {
                             @Html.HiddenFor(s => s.RequestHeader.CurrentStat, new { Value = "approvedByFM" })
                             @Html.HiddenFor(s => s.Evaluation.Role, new { Value = "FM" })
                         }
-                        else if (role == 7)
+                        else if (role == GM_ROLE)
                         {
                             @Html.HiddenFor(s => s.RequestHeader.CurrentStat, new { Value = "approvedByGM" })
-                            @Html.HiddenFor(s => s.Evaluation.Role, new { Value = "FM" })
+                            @Html.HiddenFor(s => s.Evaluation.Role, new { Value = "GM" })
                         }
 
 
@@ -179,22 +218,22 @@
             {
                 <div class="modal-body">
                     <div class="form-group">
-                        @if (role == 1)
+                        @if (role == CO_ROLE)
                         {
                             @Html.HiddenFor(s => s.RequestHeader.CurrentStat, new { Value = "declineCO" })
                             @Html.HiddenFor(s => s.Evaluation.Role, new { Value = "CO" })
                         }
-                        else if (role == 5)
+                        else if (role == CM_ROLE)
                         {
                             @Html.HiddenFor(s => s.RequestHeader.CurrentStat, new { Value = "pendingCO" })
                             @Html.HiddenFor(s => s.Evaluation.Role, new { Value = "CM" })
                         }
-                        else if (role == 6)
+                        else if (role == FM_ROLE)
                         {
                             @Html.HiddenFor(s => s.RequestHeader.CurrentStat, new { Value = "pendingCM" })
                             @Html.HiddenFor(s => s.Evaluation.Role, new { Value = "FM" })
                         }
-                        else if (role == 7)
+                        else if (role == GM_ROLE)
                         {
                             @Html.HiddenFor(s => s.RequestHeader.CurrentStat, new { Value = "pendingFM" })
                             @Html.HiddenFor(s => s.Evaluation.Role, new { Value = "GM" })
@@ -281,13 +320,13 @@
             {
                 <div class="modal-body">
                     <div class="form-group">
-                        @if (role == 5)
+                        @if (role == CM_ROLE)
                         {
                             @Html.HiddenFor(s => s.RequestHeader.CurrentStat, new { Value = "pendingFM" })
                             @Html.HiddenFor(s => s.Evaluation.Role, new { Value = "CM" })
                             @Html.HiddenFor(s => s.RequestHeader.Level, new { Value = 7 })
                         }
-                        else if (role == 6)
+                        else if (role == FM_ROLE)
                         {
                             @Html.HiddenFor(s => s.RequestHeader.CurrentStat, new { Value = "pendingGM" })
                             @Html.HiddenFor(s => s.Evaluation.Role, new { Value = "FM" })
@@ -384,7 +423,7 @@
                 <div class="modal-body">
                     <div class="form-group">
 
-                        @if (role == 1)
+                        @if (role == CO_ROLE)
                         {
                             @Html.HiddenFor(s => s.RequestHeader.CurrentStat, new { Value = "pendingCM" })
                             @Html.HiddenFor(s => s.Evaluation.Role, new { Value = "CO" })
@@ -641,137 +680,141 @@
 }
 
 @*This Table for Excel sheet*@
-<table id="1" style="display:none">
-    <caption><b>Main Details</b></caption>
-    <tr>
-        <td><b>Request ID:</b></td>
-        <td style="text-align:left"> @Model.RequestHeader.CusReqID</td>
-    </tr>
-    <tr>
-        <td><b>Customer Name:</b>
-        <td>  @Model.RequestHeader.CusName</td>
-    </tr>
-    <tr>
-        <td><b>Customer Address:</b>
-        <td>  @Model.RequestHeader.CusAddress</td>
-    </tr>
-    <tr>
-        <td><b>Customer Telephone:</b>
-        <td style="text-align:left">  @Model.RequestHeader.CusTel</td>
-    </tr>
-    <tr>
-        <td><b>Customer Fax:</b>
-        <td style="text-align:left"> @Model.RequestHeader.CusFax</td>
-    </tr>
-    <tr>
-        <td><b>Customer Email:</b>
-        <td>  @Model.RequestHeader.CusEmail</td>
-    </tr>
-    <tr>
-        <td><b>Factory Address:</b>
-        <td>  @Model.RequestHeader.DelAddress</td>
-    </tr>
-    <tr>
-        <td><b>Factory Telephone:</b>
-        <td style="text-align:left">  @Model.RequestHeader.DelTel</td>
-    </tr>
-    <tr>
-        <td><b>Factory Fax:</b>
-        <td style="text-align:left">  @Model.RequestHeader.DelFax</td>
-    </tr>
-    <tr>
-        <td><b>Factory Email:</b>
-        <td>  @Model.RequestHeader.DelEmail</td>
-    </tr>
+<div id="table1">
+    <table id="1" style="display:none">
+        <caption><b>Main Details</b></caption>
+        <tr>
+            <td><b>Request ID:</b></td>
+            <td style="text-align:left"> @Model.RequestHeader.CusReqID</td>
+        </tr>
+        <tr>
+            <td><b>Customer Name:</b>
+            <td>  @Model.RequestHeader.CusName</td>
+        </tr>
+        <tr>
+            <td><b>Customer Address:</b>
+            <td>  @Model.RequestHeader.CusAddress</td>
+        </tr>
+        <tr>
+            <td><b>Customer Telephone:</b>
+            <td style="text-align:left">  @Model.RequestHeader.CusTel</td>
+        </tr>
+        <tr>
+            <td><b>Customer Fax:</b>
+            <td style="text-align:left"> @Model.RequestHeader.CusFax</td>
+        </tr>
+        <tr>
+            <td><b>Customer Email:</b>
+            <td>  @Model.RequestHeader.CusEmail</td>
+        </tr>
+        <tr>
+            <td><b>Factory Address:</b>
+            <td>  @Model.RequestHeader.DelAddress</td>
+        </tr>
+        <tr>
+            <td><b>Factory Telephone:</b>
+            <td style="text-align:left">  @Model.RequestHeader.DelTel</td>
+        </tr>
+        <tr>
+            <td><b>Factory Fax:</b>
+            <td style="text-align:left">  @Model.RequestHeader.DelFax</td>
+        </tr>
+        <tr>
+            <td><b>Factory Email:</b>
+            <td>  @Model.RequestHeader.DelEmail</td>
+        </tr>
 
-    <tr>
-        <td><b>Sales Area:</b>
-        <td>  @Model.RequestHeader.SalesAreaName</td>
-    </tr>
-    <tr>
-        <td><b>Sales Area Code:</b>
-        <td style="text-align:left">  @Model.RequestHeader.SalesCode</td>
-    </tr>
-    <tr>
-        <td><b>VAT Registraion No:</b>
-        <td style="text-align:left">  @Model.RequestHeader.VatRegNo</td>
-    </tr>
+        <tr>
+            <td><b>Sales Area:</b>
+            <td>  @Model.RequestHeader.SalesAreaName</td>
+        </tr>
+        <tr>
+            <td><b>Sales Area Code:</b>
+            <td style="text-align:left">  @Model.RequestHeader.SalesCode</td>
+        </tr>
+        <tr>
+            <td><b>VAT Registraion No:</b>
+            <td style="text-align:left">  @Model.RequestHeader.VatRegNo</td>
+        </tr>
 
-    <tr>
-        <td><b>Date of Initial customer Visit:</b>
-        <td style="text-align:left">  @Model.RequestHeader.DateofInitialCusVisit</td>
-    </tr>
-    <tr>
-        <td><b>Name of the Person Deal with:</b>
-        <td>  @Model.RequestHeader.PersonDealWith</td>
-    </tr>
-    <tr>
-        <td><b>Designation of the Person Deal with:</b>
-        <td>  @Model.RequestHeader.DesignationPersonDealWith</td>
-    </tr>
-    <tr>
-        <td><b>Contact No. of the Person Deal with:</b>
-        <td>  @Model.RequestHeader.ContactNoPersonDealWith</td>
-    </tr>
-    <tr>
-        <td><b>Nature of the Business:</b></td>
-        <td>
-            @Model.RequestHeader.BusinessNature
-        </td>
-    </tr>
-    <tr>
-        <td><b>Nature:</b></td>
-        <td>
-            @Model.RequestHeader.Nature
-        </td>
-    </tr>
-    <tr>
-        <td><b>How Long Business Operates:</b></td>
-        <td>@Model.RequestHeader.BusinessDuration</td>
-    </tr>
-    <tr>
-        <td><b>Area of the business premises (SF):</b></td>
-        <td>@Model.RequestHeader.BusinessArea</td>
-    </tr>
-    <tr>
-        <td><b>Ownership of the business premises:</b></td>
-        <td>@Model.RequestHeader.BusinessPremises</td>
-    </tr>
-    <tr>
-        <td><b>SVAT Customer</b></td>
-        <td>@if (Model.RequestHeader.SVAT_Customer)
-        {<text>Yes</text> }
-    else
-    {<text>No</text>}</td>
-    </tr>
-    <tr>
-        <td><b>Customer Financial/Wealth Stability:</b></td>
-        <td>@Model.RequestHeader.CusFinanceStability</td>
-    </tr>
-    <tr>
-        <td><b>Customer Payment Strength:</b></td>
-        <td>@Model.RequestHeader.CusPayStrength</td>
-    </tr>
-    <tr>
-        <td><b>Initial Order:</b></td>
-        <td>@Model.RequestHeader.InitialOrder</td>
-    </tr>
-    <tr>
-        <td><b>First 6 Months(Avg. Monthly Sale) Rs:</b></td>
-        <td>@Model.RequestHeader.FirstAvgSales</td>
-    </tr>
-    <tr>
-        <td><b>Next 6 Months(Avg. Monthly Sale) Rs:</b></td>
-        <td>@Model.RequestHeader.NextAvgSales</td>
-    </tr>
-    <tr>
-        <td><b>Estimated Monthly Nippon Paint Purchase Rs:</b></td>
-        <td>@Model.RequestHeader.EstiPurchase</td>
-    </tr>
-    <tr></tr>
-    <tr></tr>
-    <tr></tr>
-</table>
+        <tr>
+            <td><b>Date of Initial customer Visit:</b>
+            <td style="text-align:left">  @Model.RequestHeader.DateofInitialCusVisit</td>
+        </tr>
+        <tr>
+            <td><b>Name of the Person Deal with:</b>
+            <td>  @Model.RequestHeader.PersonDealWith</td>
+        </tr>
+        <tr>
+            <td><b>Designation of the Person Deal with:</b>
+            <td>  @Model.RequestHeader.DesignationPersonDealWith</td>
+        </tr>
+        <tr>
+            <td><b>Contact No. of the Person Deal with:</b>
+            <td>  @Model.RequestHeader.ContactNoPersonDealWith</td>
+        </tr>
+        <tr>
+            <td><b>Nature of the Business:</b></td>
+            <td>
+                @Model.RequestHeader.BusinessNature
+            </td>
+        </tr>
+        <tr>
+            <td><b>Nature:</b></td>
+            <td>
+                @Model.RequestHeader.Nature
+            </td>
+        </tr>
+        <tr>
+            <td><b>How Long Business Operates:</b></td>
+            <td>@Model.RequestHeader.BusinessDuration</td>
+        </tr>
+        <tr>
+            <td><b>Area of the business premises (SF):</b></td>
+            <td>@Model.RequestHeader.BusinessArea</td>
+        </tr>
+        <tr>
+            <td><b>Ownership of the business premises:</b></td>
+            <td>@Model.RequestHeader.BusinessPremises</td>
+        </tr>
+        <tr>
+            <td><b>SVAT Customer</b></td>
+            <td>
+                @if (Model.RequestHeader.SVAT_Customer)
+                {<text>Yes</text> }
+            else
+            {<text>No</text>}
+            </td>
+        </tr>
+        <tr>
+            <td><b>Customer Financial/Wealth Stability:</b></td>
+            <td>@Model.RequestHeader.CusFinanceStability</td>
+        </tr>
+        <tr>
+            <td><b>Customer Payment Strength:</b></td>
+            <td>@Model.RequestHeader.CusPayStrength</td>
+        </tr>
+        <tr>
+            <td><b>Initial Order:</b></td>
+            <td>@Model.RequestHeader.InitialOrder</td>
+        </tr>
+        <tr>
+            <td><b>First 6 Months(Avg. Monthly Sale) Rs:</b></td>
+            <td>@Model.RequestHeader.FirstAvgSales</td>
+        </tr>
+        <tr>
+            <td><b>Next 6 Months(Avg. Monthly Sale) Rs:</b></td>
+            <td>@Model.RequestHeader.NextAvgSales</td>
+        </tr>
+        <tr>
+            <td><b>Estimated Monthly Nippon Paint Purchase Rs:</b></td>
+            <td>@Model.RequestHeader.EstiPurchase</td>
+        </tr>
+        <tr></tr>
+        <tr></tr>
+        <tr></tr>
+    </table>
+</div>
 
 
 <div class="row">
@@ -906,7 +949,7 @@
                     <tr>
                         <th>Company</th>
                         <th>Credit Limit (Rs.)</th>
-                        <th>Credit Period (Rs.)</th>
+                        <th>Credit Period</th>
                         <th>Discount</th>
                     </tr>
                     @foreach (var item in Model.RequestCompanies)
@@ -1165,6 +1208,8 @@
 </div>
 
 
+<script src="~/Scripts/jquery-3.3.1.min.js"></script>
+
 <script>
     let rotation = 0;
     function rotate(id) {
@@ -1245,3 +1290,4 @@
     })();
 
 </script>
+

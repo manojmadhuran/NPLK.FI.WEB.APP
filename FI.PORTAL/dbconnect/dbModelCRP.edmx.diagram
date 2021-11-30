@@ -12,6 +12,7 @@
         <EntityTypeShape EntityType="CRP_SYSModel.NEW_CUS_FINAL_APPROVAL" Width="1.5" PointX="0.75" PointY="7.75" />
         <EntityTypeShape EntityType="CRP_SYSModel.NEW_CUS_OWNERS" Width="1.5" PointX="7.375" PointY="3.75" />
         <EntityTypeShape EntityType="CRP_SYSModel.NEW_CUS_HEADER" Width="1.5" PointX="3.375" PointY="4.75" />
+        <EntityTypeShape EntityType="CRP_SYSModel.viewNEW_CUS_HEADER" Width="1.5" PointX="5.375" PointY="6.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

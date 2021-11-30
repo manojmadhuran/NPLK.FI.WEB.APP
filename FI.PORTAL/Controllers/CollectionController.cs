@@ -16,20 +16,20 @@ namespace FI.PORTAL.Controllers
         CollectionSYSEntities COL_dbObj = new CollectionSYSEntities();
         public ActionResult CollectionHome(string sortby)
         {
-            var result_areas = COL_dbObj.Area_Master.OrderBy(a => a.AreaName).ToList();
+            //var result_areas = COL_dbObj.Area_Master.OrderBy(a => a.AreaName).ToList();
             if (Session["sorting"] == null )
             {
-                Session["selected_area"] = result_areas.FirstOrDefault().SalesCode;
-                var area = Session["selected_area"].ToString();
+                //Session["selected_area"] = result_areas.FirstOrDefault().SalesCode;
+                //var area = Session["selected_area"].ToString();
                 Session["sorting"] = "All";
                 ViewBag.sortString = "All";
 
-                var result_collections = COL_dbObj.COLLECTIONS.Where(c => c.sales_code == area).ToList();
+                var result_collections = COL_dbObj.COLLECTIONS.ToList();
            
                 var viewModel = new CollectionVM
                 {
                     collection = result_collections,
-                    areas = result_areas
+                   
                 };
 
                 return View(viewModel);
@@ -38,25 +38,25 @@ namespace FI.PORTAL.Controllers
             {
                 ViewBag.sortString = Session["sorting"].ToString();
                 string sorting = Session["sorting"].ToString();
-                var area = Session["selected_area"].ToString();
+                //var area = Session["selected_area"].ToString();
                 var result_collections = (dynamic)null; 
                 if (sorting.Equals("All"))
                 {
-                    result_collections = COL_dbObj.COLLECTIONS.Where(c => c.sales_code == area).ToList();
+                    result_collections = COL_dbObj.COLLECTIONS.ToList();
                 }
                 else if (sorting.Equals("Pending"))
                 {
-                    result_collections = COL_dbObj.COLLECTIONS.Where(c => c.acknowledge == false && c.sales_code == area).ToList();
+                    result_collections = COL_dbObj.COLLECTIONS.Where(c => c.acknowledge == false).ToList();
                 }
                 else if (sorting.Equals("Acknowledged"))
                 {
-                    result_collections = COL_dbObj.COLLECTIONS.Where(c => c.acknowledge == true && c.sales_code == area).ToList();
+                    result_collections = COL_dbObj.COLLECTIONS.Where(c => c.acknowledge == true).ToList();
                 }
 
                 var viewModel = new CollectionVM
                 {
                     collection = result_collections,
-                    areas = result_areas
+                   
                 };
 
                 return View(viewModel);
@@ -115,29 +115,29 @@ namespace FI.PORTAL.Controllers
 
             COL_dbObj.SaveChanges();
 
-            var result_areas = COL_dbObj.Area_Master.OrderBy(a => a.AreaName).ToList();
+            //var result_areas = COL_dbObj.Area_Master.OrderBy(a => a.AreaName).ToList();
             ViewBag.sortString = Session["sorting"].ToString();
             string sorting = Session["sorting"].ToString();
-            var area = Session["selected_area"].ToString();
+            //var area = Session["selected_area"].ToString();
             var result_collections = (dynamic)null;
 
             if (sorting.Equals("All"))
             {
-                result_collections = COL_dbObj.COLLECTIONS.Where(c => c.sales_code == area).ToList();
+                result_collections = COL_dbObj.COLLECTIONS.ToList();
             }
             else if (sorting.Equals("Pending"))
             {
-                result_collections = COL_dbObj.COLLECTIONS.Where(c => c.acknowledge == false && c.sales_code == area ).ToList();
+                result_collections = COL_dbObj.COLLECTIONS.Where(c => c.acknowledge == false).ToList();
             }
             else if (sorting.Equals("Acknowledged"))
             {
-                result_collections = COL_dbObj.COLLECTIONS.Where(c => c.acknowledge == true && c.sales_code == area ).ToList();
+                result_collections = COL_dbObj.COLLECTIONS.Where(c => c.acknowledge == true).ToList();
             }
 
             var viewModel = new CollectionVM
             {
                 collection = result_collections,
-                areas = result_areas
+                
             };
 
             return View("CollectionHome", viewModel);
@@ -147,29 +147,28 @@ namespace FI.PORTAL.Controllers
 
         public ActionResult SearchCollection(string search_query)
         {
-            var result_areas = COL_dbObj.Area_Master.OrderBy(a => a.AreaName).ToList();
+            //var result_areas = COL_dbObj.Area_Master.OrderBy(a => a.AreaName).ToList();
             ViewBag.sortString = Session["sorting"].ToString();
             string sorting = Session["sorting"].ToString();
-            var area = Session["selected_area"].ToString();
+            //var area = Session["selected_area"].ToString();
             var result_collections = (dynamic)null;
 
             if (sorting.Equals("All"))
             {
-                result_collections = COL_dbObj.COLLECTIONS.Where(c => c.sales_code == area && c.collection_no == search_query ).ToList();
+                result_collections = COL_dbObj.COLLECTIONS.Where(c => c.collection_no == search_query ).ToList();
             }
             else if (sorting.Equals("Pending"))
             {
-                result_collections = COL_dbObj.COLLECTIONS.Where(c => c.acknowledge == false && c.sales_code == area && c.collection_no == search_query ).ToList();
+                result_collections = COL_dbObj.COLLECTIONS.Where(c => c.acknowledge == false && c.collection_no == search_query ).ToList();
             }
             else if (sorting.Equals("Acknowledged"))
             {
-                result_collections = COL_dbObj.COLLECTIONS.Where(c => c.acknowledge == true && c.sales_code == area && c.collection_no == search_query).ToList();
+                result_collections = COL_dbObj.COLLECTIONS.Where(c => c.acknowledge == true && c.collection_no == search_query).ToList();
             }
 
             var viewModel = new CollectionVM
             {
                 collection = result_collections,
-                areas = result_areas
             };
 
             return View("CollectionHome", viewModel);
@@ -234,6 +233,30 @@ namespace FI.PORTAL.Controllers
             Session["selected_area"] = area;
             Session["selected_area_name"] = areaName;
             return Json(new { msg = area });
+        }
+
+        public JsonResult SearchData(string SearchBy, string SearchValue)
+        {
+            Session["sorting"] = "All";
+            ViewBag.sortString = Session["sorting"].ToString();
+            var result_collections = (dynamic)null;
+
+            if (SearchBy.Equals("Sales_Code"))
+            {
+                result_collections = COL_dbObj.COLLECTIONS.Where(c => c.sales_code == SearchValue || SearchValue == null).ToList();
+                return Json(result_collections, JsonRequestBehavior.AllowGet);
+            }
+            else if (SearchBy.Equals("Area"))
+            {
+                result_collections = COL_dbObj.COLLECTIONS.Where(c => c.area_name.Contains(SearchValue) || SearchValue == null).ToList();
+                return Json(result_collections, JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                result_collections = COL_dbObj.COLLECTIONS.Where(c => c.created_by.Contains(SearchValue) || SearchValue == null).ToList();
+                return Json(result_collections, JsonRequestBehavior.AllowGet);
+            }
+
         }
 
 

@@ -126,6 +126,64 @@
           <Property Name="StockVal" Type="numeric" Precision="10" Scale="2" />
           <Property Name="MonthlyTOVal" Type="numeric" Precision="10" Scale="2" />
         </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'FINANCE_GEN_SYS.dbo.viewNEW_CUS_HEADER' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="viewNEW_CUS_HEADER">
+          <Key>
+            <PropertyRef Name="CusReqID" />
+            <PropertyRef Name="BusinessRegCert" />
+            <PropertyRef Name="VatRegCert" />
+            <PropertyRef Name="IDofOwner" />
+            <PropertyRef Name="Form20" />
+            <PropertyRef Name="BankStatments" />
+            <PropertyRef Name="Business_Place" />
+            <PropertyRef Name="Application_Form" />
+            <PropertyRef Name="SVAT_Customer" />
+            <PropertyRef Name="SVAT_Validation" />
+          </Key>
+          <Property Name="CusReqID" Type="int" Nullable="false" />
+          <Property Name="CurrentStat" Type="varchar" MaxLength="50" />
+          <Property Name="CreatedDate" Type="smalldatetime" />
+          <Property Name="CusName" Type="varchar" MaxLength="200" />
+          <Property Name="CusAddress" Type="varchar" MaxLength="500" />
+          <Property Name="CusTel" Type="varchar" MaxLength="15" />
+          <Property Name="CusFax" Type="varchar" MaxLength="15" />
+          <Property Name="CusEmail" Type="varchar" MaxLength="100" />
+          <Property Name="DelAddress" Type="varchar" MaxLength="500" />
+          <Property Name="DelTel" Type="varchar" MaxLength="15" />
+          <Property Name="DelFax" Type="varchar" MaxLength="15" />
+          <Property Name="DelEmail" Type="varchar" MaxLength="100" />
+          <Property Name="SalesCode" Type="varchar" MaxLength="10" />
+          <Property Name="SalesAreaName" Type="varchar" MaxLength="225" />
+          <Property Name="VatRegNo" Type="varchar" MaxLength="20" />
+          <Property Name="DateofInitialCusVisit" Type="smalldatetime" />
+          <Property Name="PersonDealWith" Type="varchar" MaxLength="200" />
+          <Property Name="BusinessNature" Type="varchar" MaxLength="50" />
+          <Property Name="BusinessDuration" Type="varchar" MaxLength="100" />
+          <Property Name="Nature" Type="varchar" MaxLength="100" />
+          <Property Name="ContactNoPersonDealWith" Type="varchar" MaxLength="20" />
+          <Property Name="DesignationPersonDealWith" Type="varchar" MaxLength="100" />
+          <Property Name="BusinessArea" Type="varchar" MaxLength="20" />
+          <Property Name="BusinessPremises" Type="varchar" MaxLength="20" />
+          <Property Name="CusFinanceStability" Type="varchar" MaxLength="50" />
+          <Property Name="CusPayStrength" Type="varchar" MaxLength="50" />
+          <Property Name="InitialOrder" Type="numeric" Precision="10" Scale="2" />
+          <Property Name="FirstAvgSales" Type="numeric" Precision="10" Scale="2" />
+          <Property Name="NextAvgSales" Type="numeric" Precision="10" Scale="2" />
+          <Property Name="EstiPurchase" Type="numeric" Precision="10" Scale="2" />
+          <Property Name="BusinessRegCert" Type="bit" Nullable="false" />
+          <Property Name="VatRegCert" Type="bit" Nullable="false" />
+          <Property Name="IDofOwner" Type="bit" Nullable="false" />
+          <Property Name="Form20" Type="bit" Nullable="false" />
+          <Property Name="BankStatments" Type="bit" Nullable="false" />
+          <Property Name="Business_Place" Type="bit" Nullable="false" />
+          <Property Name="Application_Form" Type="bit" Nullable="false" />
+          <Property Name="SVAT_Customer" Type="bit" Nullable="false" />
+          <Property Name="SVAT_Validation" Type="bit" Nullable="false" />
+          <Property Name="Level" Type="int" />
+          <Property Name="REPName" Type="varchar" MaxLength="50" />
+          <Property Name="UName" Type="varchar" MaxLength="50" />
+        </EntityType>
         <EntityContainer Name="CRP_SYSModelStoreContainer">
           <EntitySet Name="NEW_CUS_COMPANIES" EntityType="Self.NEW_CUS_COMPANIES" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="NEW_CUS_EVAL" EntityType="Self.NEW_CUS_EVAL" Schema="dbo" store:Type="Tables" />
@@ -134,6 +192,52 @@
           <EntitySet Name="NEW_CUS_IMAGE" EntityType="Self.NEW_CUS_IMAGE" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="NEW_CUS_OWNERS" EntityType="Self.NEW_CUS_OWNERS" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="NEW_CUS_PAINT_BRANDS" EntityType="Self.NEW_CUS_PAINT_BRANDS" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="viewNEW_CUS_HEADER" EntityType="Self.viewNEW_CUS_HEADER" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [viewNEW_CUS_HEADER].[CusReqID] AS [CusReqID], 
+    [viewNEW_CUS_HEADER].[CurrentStat] AS [CurrentStat], 
+    [viewNEW_CUS_HEADER].[CreatedDate] AS [CreatedDate], 
+    [viewNEW_CUS_HEADER].[CusName] AS [CusName], 
+    [viewNEW_CUS_HEADER].[CusAddress] AS [CusAddress], 
+    [viewNEW_CUS_HEADER].[CusTel] AS [CusTel], 
+    [viewNEW_CUS_HEADER].[CusFax] AS [CusFax], 
+    [viewNEW_CUS_HEADER].[CusEmail] AS [CusEmail], 
+    [viewNEW_CUS_HEADER].[DelAddress] AS [DelAddress], 
+    [viewNEW_CUS_HEADER].[DelTel] AS [DelTel], 
+    [viewNEW_CUS_HEADER].[DelFax] AS [DelFax], 
+    [viewNEW_CUS_HEADER].[DelEmail] AS [DelEmail], 
+    [viewNEW_CUS_HEADER].[SalesCode] AS [SalesCode], 
+    [viewNEW_CUS_HEADER].[SalesAreaName] AS [SalesAreaName], 
+    [viewNEW_CUS_HEADER].[VatRegNo] AS [VatRegNo], 
+    [viewNEW_CUS_HEADER].[DateofInitialCusVisit] AS [DateofInitialCusVisit], 
+    [viewNEW_CUS_HEADER].[PersonDealWith] AS [PersonDealWith], 
+    [viewNEW_CUS_HEADER].[BusinessNature] AS [BusinessNature], 
+    [viewNEW_CUS_HEADER].[BusinessDuration] AS [BusinessDuration], 
+    [viewNEW_CUS_HEADER].[Nature] AS [Nature], 
+    [viewNEW_CUS_HEADER].[ContactNoPersonDealWith] AS [ContactNoPersonDealWith], 
+    [viewNEW_CUS_HEADER].[DesignationPersonDealWith] AS [DesignationPersonDealWith], 
+    [viewNEW_CUS_HEADER].[BusinessArea] AS [BusinessArea], 
+    [viewNEW_CUS_HEADER].[BusinessPremises] AS [BusinessPremises], 
+    [viewNEW_CUS_HEADER].[CusFinanceStability] AS [CusFinanceStability], 
+    [viewNEW_CUS_HEADER].[CusPayStrength] AS [CusPayStrength], 
+    [viewNEW_CUS_HEADER].[InitialOrder] AS [InitialOrder], 
+    [viewNEW_CUS_HEADER].[FirstAvgSales] AS [FirstAvgSales], 
+    [viewNEW_CUS_HEADER].[NextAvgSales] AS [NextAvgSales], 
+    [viewNEW_CUS_HEADER].[EstiPurchase] AS [EstiPurchase], 
+    [viewNEW_CUS_HEADER].[BusinessRegCert] AS [BusinessRegCert], 
+    [viewNEW_CUS_HEADER].[VatRegCert] AS [VatRegCert], 
+    [viewNEW_CUS_HEADER].[IDofOwner] AS [IDofOwner], 
+    [viewNEW_CUS_HEADER].[Form20] AS [Form20], 
+    [viewNEW_CUS_HEADER].[BankStatments] AS [BankStatments], 
+    [viewNEW_CUS_HEADER].[Business_Place] AS [Business_Place], 
+    [viewNEW_CUS_HEADER].[Application_Form] AS [Application_Form], 
+    [viewNEW_CUS_HEADER].[SVAT_Customer] AS [SVAT_Customer], 
+    [viewNEW_CUS_HEADER].[SVAT_Validation] AS [SVAT_Validation], 
+    [viewNEW_CUS_HEADER].[Level] AS [Level], 
+    [viewNEW_CUS_HEADER].[REPName] AS [REPName], 
+    [viewNEW_CUS_HEADER].[UName] AS [UName]
+    FROM [dbo].[viewNEW_CUS_HEADER] AS [viewNEW_CUS_HEADER]</DefiningQuery>
+          </EntitySet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
@@ -191,6 +295,7 @@
           <EntitySet Name="NEW_CUS_FINAL_APPROVAL" EntityType="CRP_SYSModel.NEW_CUS_FINAL_APPROVAL" />
           <EntitySet Name="NEW_CUS_OWNERS" EntityType="CRP_SYSModel.NEW_CUS_OWNERS" />
           <EntitySet Name="NEW_CUS_HEADER" EntityType="CRP_SYSModel.NEW_CUS_HEADER" />
+          <EntitySet Name="viewNEW_CUS_HEADER" EntityType="CRP_SYSModel.viewNEW_CUS_HEADER" />
         </EntityContainer>
         <EntityType Name="NEW_CUS_FINAL_APPROVAL">
           <Key>
@@ -268,6 +373,62 @@
           <Property Name="SVAT_Customer" Type="Boolean" Nullable="false" />
           <Property Name="SVAT_Validation" Type="Boolean" Nullable="false" />
           <Property Name="Level" Type="Int32" />
+        </EntityType>
+        <EntityType Name="viewNEW_CUS_HEADER">
+          <Key>
+            <PropertyRef Name="CusReqID" />
+            <PropertyRef Name="BusinessRegCert" />
+            <PropertyRef Name="VatRegCert" />
+            <PropertyRef Name="IDofOwner" />
+            <PropertyRef Name="Form20" />
+            <PropertyRef Name="BankStatments" />
+            <PropertyRef Name="Business_Place" />
+            <PropertyRef Name="Application_Form" />
+            <PropertyRef Name="SVAT_Customer" />
+            <PropertyRef Name="SVAT_Validation" />
+          </Key>
+          <Property Name="CusReqID" Type="Int32" Nullable="false" />
+          <Property Name="CurrentStat" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="CreatedDate" Type="DateTime" Precision="0" />
+          <Property Name="CusName" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="CusAddress" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="CusTel" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="CusFax" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="CusEmail" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="DelAddress" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="DelTel" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="DelFax" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="DelEmail" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="SalesCode" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="SalesAreaName" Type="String" MaxLength="225" FixedLength="false" Unicode="false" />
+          <Property Name="VatRegNo" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="DateofInitialCusVisit" Type="DateTime" Precision="0" />
+          <Property Name="PersonDealWith" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="BusinessNature" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="BusinessDuration" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Nature" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="ContactNoPersonDealWith" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="DesignationPersonDealWith" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="BusinessArea" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="BusinessPremises" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="CusFinanceStability" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="CusPayStrength" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="InitialOrder" Type="Decimal" Precision="10" Scale="2" />
+          <Property Name="FirstAvgSales" Type="Decimal" Precision="10" Scale="2" />
+          <Property Name="NextAvgSales" Type="Decimal" Precision="10" Scale="2" />
+          <Property Name="EstiPurchase" Type="Decimal" Precision="10" Scale="2" />
+          <Property Name="BusinessRegCert" Type="Boolean" Nullable="false" />
+          <Property Name="VatRegCert" Type="Boolean" Nullable="false" />
+          <Property Name="IDofOwner" Type="Boolean" Nullable="false" />
+          <Property Name="Form20" Type="Boolean" Nullable="false" />
+          <Property Name="BankStatments" Type="Boolean" Nullable="false" />
+          <Property Name="Business_Place" Type="Boolean" Nullable="false" />
+          <Property Name="Application_Form" Type="Boolean" Nullable="false" />
+          <Property Name="SVAT_Customer" Type="Boolean" Nullable="false" />
+          <Property Name="SVAT_Validation" Type="Boolean" Nullable="false" />
+          <Property Name="Level" Type="Int32" />
+          <Property Name="REPName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="UName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -360,6 +521,54 @@
           <EntitySetMapping Name="NEW_CUS_HEADER">
             <EntityTypeMapping TypeName="CRP_SYSModel.NEW_CUS_HEADER">
               <MappingFragment StoreEntitySet="NEW_CUS_HEADER">
+                <ScalarProperty Name="Level" ColumnName="Level" />
+                <ScalarProperty Name="SVAT_Validation" ColumnName="SVAT_Validation" />
+                <ScalarProperty Name="SVAT_Customer" ColumnName="SVAT_Customer" />
+                <ScalarProperty Name="Application_Form" ColumnName="Application_Form" />
+                <ScalarProperty Name="Business_Place" ColumnName="Business_Place" />
+                <ScalarProperty Name="BankStatments" ColumnName="BankStatments" />
+                <ScalarProperty Name="Form20" ColumnName="Form20" />
+                <ScalarProperty Name="IDofOwner" ColumnName="IDofOwner" />
+                <ScalarProperty Name="VatRegCert" ColumnName="VatRegCert" />
+                <ScalarProperty Name="BusinessRegCert" ColumnName="BusinessRegCert" />
+                <ScalarProperty Name="EstiPurchase" ColumnName="EstiPurchase" />
+                <ScalarProperty Name="NextAvgSales" ColumnName="NextAvgSales" />
+                <ScalarProperty Name="FirstAvgSales" ColumnName="FirstAvgSales" />
+                <ScalarProperty Name="InitialOrder" ColumnName="InitialOrder" />
+                <ScalarProperty Name="CusPayStrength" ColumnName="CusPayStrength" />
+                <ScalarProperty Name="CusFinanceStability" ColumnName="CusFinanceStability" />
+                <ScalarProperty Name="BusinessPremises" ColumnName="BusinessPremises" />
+                <ScalarProperty Name="BusinessArea" ColumnName="BusinessArea" />
+                <ScalarProperty Name="DesignationPersonDealWith" ColumnName="DesignationPersonDealWith" />
+                <ScalarProperty Name="ContactNoPersonDealWith" ColumnName="ContactNoPersonDealWith" />
+                <ScalarProperty Name="Nature" ColumnName="Nature" />
+                <ScalarProperty Name="BusinessDuration" ColumnName="BusinessDuration" />
+                <ScalarProperty Name="BusinessNature" ColumnName="BusinessNature" />
+                <ScalarProperty Name="PersonDealWith" ColumnName="PersonDealWith" />
+                <ScalarProperty Name="DateofInitialCusVisit" ColumnName="DateofInitialCusVisit" />
+                <ScalarProperty Name="VatRegNo" ColumnName="VatRegNo" />
+                <ScalarProperty Name="SalesAreaName" ColumnName="SalesAreaName" />
+                <ScalarProperty Name="SalesCode" ColumnName="SalesCode" />
+                <ScalarProperty Name="DelEmail" ColumnName="DelEmail" />
+                <ScalarProperty Name="DelFax" ColumnName="DelFax" />
+                <ScalarProperty Name="DelTel" ColumnName="DelTel" />
+                <ScalarProperty Name="DelAddress" ColumnName="DelAddress" />
+                <ScalarProperty Name="CusEmail" ColumnName="CusEmail" />
+                <ScalarProperty Name="CusFax" ColumnName="CusFax" />
+                <ScalarProperty Name="CusTel" ColumnName="CusTel" />
+                <ScalarProperty Name="CusAddress" ColumnName="CusAddress" />
+                <ScalarProperty Name="CusName" ColumnName="CusName" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="CurrentStat" ColumnName="CurrentStat" />
+                <ScalarProperty Name="CusReqID" ColumnName="CusReqID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="viewNEW_CUS_HEADER">
+            <EntityTypeMapping TypeName="CRP_SYSModel.viewNEW_CUS_HEADER">
+              <MappingFragment StoreEntitySet="viewNEW_CUS_HEADER">
+                <ScalarProperty Name="UName" ColumnName="UName" />
+                <ScalarProperty Name="REPName" ColumnName="REPName" />
                 <ScalarProperty Name="Level" ColumnName="Level" />
                 <ScalarProperty Name="SVAT_Validation" ColumnName="SVAT_Validation" />
                 <ScalarProperty Name="SVAT_Customer" ColumnName="SVAT_Customer" />

@@ -21,5 +21,7 @@ namespace FI.PORTAL.dbconnect
         public Nullable<bool> acknowledge { get; set; }
         public string acknowledge_by { get; set; }
         public Nullable<System.DateTime> acknowledged_date { get; set; }
+        public string created_by { get; set; }
+        public string area_name { get; set; }
     }
 }

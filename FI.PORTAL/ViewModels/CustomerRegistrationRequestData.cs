@@ -8,7 +8,7 @@ namespace FI.PORTAL.ViewModels
 {
     public class CustomerRegistrationRequestData
     {
-        public NEW_CUS_HEADER RequestHeader { get; set; }
+        public viewNEW_CUS_HEADER RequestHeader { get; set; }
 
         public IEnumerable<NEW_CUS_COMPANIES> RequestCompanies { get; set; }
 
