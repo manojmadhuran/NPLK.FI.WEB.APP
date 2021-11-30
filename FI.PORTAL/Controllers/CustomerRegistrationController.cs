@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using FI.PORTAL.dbconnect;
+using FI.PORTAL.Report;
 using FI.PORTAL.ViewModels;
 
 namespace FI.PORTAL.Controllers
@@ -13,6 +14,12 @@ namespace FI.PORTAL.Controllers
         // GET: CustomerRequests
         CRP_SYSEntities CRP_dbObj = new CRP_SYSEntities();
 
+        int CO_ROLE = 1;
+        int CM_ROLE = 6;
+        int FM_ROLE = 7;
+        int GM_ROLE = 8;
+        int ADMIN_ROLE = 100;
+        int role;
 
         public ActionResult Index(string findby)
         {
@@ -37,147 +44,271 @@ namespace FI.PORTAL.Controllers
                 ViewBag.findString = "Invalid";
             }
 
+            try
+            {
+                role = Convert.ToInt16(Session["role"].ToString());
+            }
+            catch (Exception e)
+            {
+                Response.Redirect("/Login/UserLogin", false);
+            }
 
-            int role = Convert.ToInt16(Session["role"].ToString());
-
-            if (role == 1)
+            if (role == CO_ROLE)
             {
                 if (findby != null)
                 {
                     if (findby.Equals("All"))
                     {
-                        var res = CRP_dbObj.NEW_CUS_HEADER.Where(r => r.Level >= 5).ToList();
+                        var res = CRP_dbObj.viewNEW_CUS_HEADER.Where(r => r.Level >= 5).ToList();
                         return View(res);
                     }
                     else if (findby.Equals("Pending"))
                     {
-                        var res = CRP_dbObj.NEW_CUS_HEADER.Where(r => r.Level >= 5 && r.CurrentStat != "approvedByGM" && r.CurrentStat != "approvedByFM" && r.CurrentStat != "approvedByCM").ToList();
+                        var res = CRP_dbObj.viewNEW_CUS_HEADER.Where(r => r.Level >= 5 && r.CurrentStat != "approvedByGM" && r.CurrentStat != "approvedByFM" && r.CurrentStat != "approvedByCM").ToList();
                         return View(res);
                     }
                     else if (findby.Equals("Approved"))
                     {
-                        var res = CRP_dbObj.NEW_CUS_HEADER.Where(r => (r.Level >= 5 && r.CurrentStat == "approvedByGM") || (r.Level >= 5  && r.CurrentStat == "approvedByFM") || (r.Level >= 5 && r.CurrentStat == "approvedByCM")).ToList();
+                        var res = CRP_dbObj.viewNEW_CUS_HEADER.Where(r => (r.Level >= 5 && r.CurrentStat == "approvedByGM") || (r.Level >= 5 && r.CurrentStat == "approvedByFM") || (r.Level >= 5 && r.CurrentStat == "approvedByCM")).ToList();
                         return View(res);
                     }
                     else
                     {
-                        var res = CRP_dbObj.NEW_CUS_HEADER.Where(r => r.Level >= 5).ToList();
+                        var res = CRP_dbObj.viewNEW_CUS_HEADER.Where(r => r.Level >= 5).ToList();
                         return View(res);
                     }
                 }
                 else
                 {
-                    var res = CRP_dbObj.NEW_CUS_HEADER.Where(r => r.Level >= 5).ToList();
+                    var res = CRP_dbObj.viewNEW_CUS_HEADER.Where(r => r.Level >= 5).ToList();
                     return View(res);
                 }
 
-
-
             }
-            else if (role == 5)
+            else if (role == CM_ROLE)
             {
                 if (findby != null)
                 {
                     if (findby.Equals("All"))
                     {
-                        var res = CRP_dbObj.NEW_CUS_HEADER.Where(r => r.Level >= 6).ToList();
+                        var res = CRP_dbObj.viewNEW_CUS_HEADER.Where(r => r.Level >= 6).ToList();
                         return View(res);
                     }
                     else if (findby.Equals("Pending"))
                     {
-                        var res = CRP_dbObj.NEW_CUS_HEADER.Where(r => r.Level >= 6 && r.CurrentStat != "approvedByGM" && r.CurrentStat != "approvedByFM" && r.CurrentStat != "approvedByCM").ToList();
+                        var res = CRP_dbObj.viewNEW_CUS_HEADER.Where(r => r.Level >= 6 && r.CurrentStat != "approvedByGM" && r.CurrentStat != "approvedByFM" && r.CurrentStat != "approvedByCM").ToList();
                         return View(res);
                     }
                     else if (findby.Equals("Approved"))
                     {
-                        var res = CRP_dbObj.NEW_CUS_HEADER.Where(r => (r.Level >= 6 && r.CurrentStat == "approvedByGM") || (r.Level >= 5 && r.CurrentStat == "approvedByFM") || (r.Level >= 5 && r.CurrentStat == "approvedByCM")).ToList();
+                        var res = CRP_dbObj.viewNEW_CUS_HEADER.Where(r => (r.Level >= 6 && r.CurrentStat == "approvedByGM") || (r.Level >= 5 && r.CurrentStat == "approvedByFM") || (r.Level >= 5 && r.CurrentStat == "approvedByCM")).ToList();
                         return View(res);
                     }
                     else
                     {
-                        var res = CRP_dbObj.NEW_CUS_HEADER.Where(r => r.Level >= 6).ToList();
+                        var res = CRP_dbObj.viewNEW_CUS_HEADER.Where(r => r.Level >= 6).ToList();
                         return View(res);
                     }
                 }
                 else
                 {
-                    var res = CRP_dbObj.NEW_CUS_HEADER.Where(r => r.Level >= 6).ToList();
+                    var res = CRP_dbObj.viewNEW_CUS_HEADER.Where(r => r.Level >= 6).ToList();
                     return View(res);
                 }
 
             }
-            else if (role == 6)
+            else if (role == FM_ROLE)
             {
                 if (findby != null)
                 {
                     if (findby.Equals("All"))
                     {
-                        var res = CRP_dbObj.NEW_CUS_HEADER.Where(r => r.Level >= 7).ToList();
+                        var res = CRP_dbObj.viewNEW_CUS_HEADER.Where(r => r.Level >= 7).ToList();
                         return View(res);
                     }
                     else if (findby.Equals("Pending"))
                     {
-                        var res = CRP_dbObj.NEW_CUS_HEADER.Where(r => r.Level >= 7 && r.CurrentStat != "approvedByGM" && r.CurrentStat != "approvedByFM" && r.CurrentStat != "approvedByCM").ToList();
+                        var res = CRP_dbObj.viewNEW_CUS_HEADER.Where(r => r.Level >= 7 && r.CurrentStat != "approvedByGM" && r.CurrentStat != "approvedByFM" && r.CurrentStat != "approvedByCM").ToList();
                         return View(res);
                     }
                     else if (findby.Equals("Approved"))
                     {
-                        var res = CRP_dbObj.NEW_CUS_HEADER.Where(r => (r.Level >= 7 && r.CurrentStat == "approvedByGM") || (r.Level >= 5 && r.CurrentStat == "approvedByFM") || (r.Level >= 5 && r.CurrentStat == "approvedByCM")).ToList();
+                        var res = CRP_dbObj.viewNEW_CUS_HEADER.Where(r => (r.Level >= 7 && r.CurrentStat == "approvedByGM") || (r.Level >= 5 && r.CurrentStat == "approvedByFM") || (r.Level >= 5 && r.CurrentStat == "approvedByCM")).ToList();
                         return View(res);
                     }
                     else
                     {
-                        var res = CRP_dbObj.NEW_CUS_HEADER.Where(r => r.Level >= 7).ToList();
-                        return View(res);
+                        var res = CRP_dbObj.viewNEW_CUS_HEADER.Where(r => r.Level >= 7).ToList();
                         return View(res);
                     }
                 }
                 else
                 {
-                    var res = CRP_dbObj.NEW_CUS_HEADER.Where(r => r.Level >= 7).ToList();
+                    var res = CRP_dbObj.viewNEW_CUS_HEADER.Where(r => r.Level >= 7).ToList();
                     return View(res);
                 }
 
             }
-            else if (role == 7)
+            else if (role == GM_ROLE)
             {
                 if (findby != null)
                 {
                     if (findby.Equals("All"))
                     {
-                        var res = CRP_dbObj.NEW_CUS_HEADER.Where(r => r.Level >= 8).ToList();
+                        var res = CRP_dbObj.viewNEW_CUS_HEADER.Where(r => r.Level >= 8).ToList();
                         return View(res);
                     }
                     else if (findby.Equals("Pending"))
                     {
-                        var res = CRP_dbObj.NEW_CUS_HEADER.Where(r => r.Level >= 8 && r.CurrentStat != "approvedByGM" && r.CurrentStat != "approvedByFM" && r.CurrentStat != "approvedByCM").ToList();
+                        var res = CRP_dbObj.viewNEW_CUS_HEADER.Where(r => r.Level >= 8 && r.CurrentStat != "approvedByGM" && r.CurrentStat != "approvedByFM" && r.CurrentStat != "approvedByCM").ToList();
                         return View(res);
                     }
                     else if (findby.Equals("Approved"))
                     {
-                        var res = CRP_dbObj.NEW_CUS_HEADER.Where(r => (r.Level >= 8 && r.CurrentStat == "approvedByGM") || (r.Level >= 5 && r.CurrentStat == "approvedByFM") || (r.Level >= 5 && r.CurrentStat == "approvedByCM")).ToList();
+                        var res = CRP_dbObj.viewNEW_CUS_HEADER.Where(r => (r.Level >= 8 && r.CurrentStat == "approvedByGM") || (r.Level >= 5 && r.CurrentStat == "approvedByFM") || (r.Level >= 5 && r.CurrentStat == "approvedByCM")).ToList();
                         return View(res);
                     }
                     else
                     {
-                        var res = CRP_dbObj.NEW_CUS_HEADER.Where(r => r.Level >= 8).ToList();
+                        var res = CRP_dbObj.viewNEW_CUS_HEADER.Where(r => r.Level >= 8).ToList();
                         return View(res);
                     }
                 }
                 else
                 {
-                    var res = CRP_dbObj.NEW_CUS_HEADER.Where(r => r.Level >= 8).ToList();
+                    var res = CRP_dbObj.viewNEW_CUS_HEADER.Where(r => r.Level >= 8).ToList();
                     return View(res);
                 }
-
             }
-            else { return View(); }
-
+            else if (role == ADMIN_ROLE)
+            {
+                var res = CRP_dbObj.viewNEW_CUS_HEADER.ToList();
+                return View(res);
+            }
+            else
+            {
+                List<viewNEW_CUS_HEADER> emptyResult = new List<viewNEW_CUS_HEADER>();
+                return View(emptyResult);
+            }
         }
+
+        public JsonResult SearchData(string SearchBy, string SearchValue)
+        {
+            Session["sorting"] = "All";
+            ViewBag.sortString = Session["sorting"].ToString();
+
+            try
+            {
+                role = Convert.ToInt16(Session["role"].ToString());
+            }
+            catch (Exception e)
+            {
+                Response.Redirect("/Login/UserLogin", false);
+            }
+
+            if (role == CO_ROLE)
+            {
+                if (SearchBy.Equals("Sales_Code"))
+                {
+                    var res = CRP_dbObj.viewNEW_CUS_HEADER.Where(r => r.Level >= 5 && r.SalesCode == SearchValue || SearchValue == null).ToList();
+                    return Json(res, JsonRequestBehavior.AllowGet);
+                }
+                else if (SearchBy.Equals("Area"))
+                {
+                    var res = CRP_dbObj.viewNEW_CUS_HEADER.Where(r => r.Level >= 5 && r.SalesAreaName.Contains(SearchValue) || SearchValue == null).ToList();
+                    return Json(res, JsonRequestBehavior.AllowGet);
+                }
+                else
+                {
+                    var res = CRP_dbObj.viewNEW_CUS_HEADER.Where(r => r.Level >= 5 && r.REPName.Contains(SearchValue) || SearchValue == null).ToList();
+                    return Json(res, JsonRequestBehavior.AllowGet);
+                }
+
+            }
+            else if (role == CM_ROLE)
+            {
+                if (SearchBy.Equals("Sales_Code"))
+                {
+                    var res = CRP_dbObj.viewNEW_CUS_HEADER.Where(r => r.Level >= 6 && r.SalesCode == SearchValue || SearchValue == null).ToList();
+                    return Json(res, JsonRequestBehavior.AllowGet);
+                }
+                else if (SearchBy.Equals("Area"))
+                {
+                    var res = CRP_dbObj.viewNEW_CUS_HEADER.Where(r => r.Level >= 6 && r.SalesAreaName.Contains(SearchValue) || SearchValue == null).ToList();
+                    return Json(res, JsonRequestBehavior.AllowGet);
+                }
+                else
+                {
+                    var res = CRP_dbObj.viewNEW_CUS_HEADER.Where(r => r.Level >= 6 && r.REPName.Contains(SearchValue) || SearchValue == null).ToList();
+                    return Json(res, JsonRequestBehavior.AllowGet);
+                }
+            }
+            else if (role == FM_ROLE)
+            {
+                if (SearchBy.Equals("Sales_Code"))
+                {
+                    var res = CRP_dbObj.viewNEW_CUS_HEADER.Where(r => r.Level >= 7 && r.SalesCode == SearchValue || SearchValue == null).ToList();
+                    return Json(res, JsonRequestBehavior.AllowGet);
+                }
+                else if (SearchBy.Equals("Area"))
+                {
+                    var res = CRP_dbObj.viewNEW_CUS_HEADER.Where(r => r.Level >= 7 && r.SalesAreaName.Contains(SearchValue) || SearchValue == null).ToList();
+                    return Json(res, JsonRequestBehavior.AllowGet);
+                }
+                else
+                {
+                    var res = CRP_dbObj.viewNEW_CUS_HEADER.Where(r => r.Level >= 7 && r.REPName.Contains(SearchValue) || SearchValue == null).ToList();
+                    return Json(res, JsonRequestBehavior.AllowGet);
+                }
+            }
+            else if (role == GM_ROLE)
+            {
+                if (SearchBy.Equals("Sales_Code"))
+                {
+                    var res = CRP_dbObj.viewNEW_CUS_HEADER.Where(r => r.Level >= 8 && r.SalesCode == SearchValue || SearchValue == null).ToList();
+                    return Json(res, JsonRequestBehavior.AllowGet);
+                }
+                else if (SearchBy.Equals("Area"))
+                {
+                    var res = CRP_dbObj.viewNEW_CUS_HEADER.Where(r => r.Level >= 8 && r.SalesAreaName.Contains(SearchValue) || SearchValue == null).ToList();
+                    return Json(res, JsonRequestBehavior.AllowGet);
+                }
+                else
+                {
+                    var res = CRP_dbObj.viewNEW_CUS_HEADER.Where(r => r.Level >= 8 && r.REPName.Contains(SearchValue) || SearchValue == null).ToList();
+                    return Json(res, JsonRequestBehavior.AllowGet);
+                }
+            }
+            else if (role == ADMIN_ROLE)
+            {
+                if (SearchBy.Equals("Sales_Code"))
+                {
+                    var res = CRP_dbObj.viewNEW_CUS_HEADER.Where(r => r.SalesCode == SearchValue || SearchValue == null).ToList();
+                    return Json(res, JsonRequestBehavior.AllowGet);
+                }
+                else if (SearchBy.Equals("Area"))
+                {
+                    var res = CRP_dbObj.viewNEW_CUS_HEADER.Where(r => r.SalesAreaName.Contains(SearchValue) || SearchValue == null).ToList();
+                    return Json(res, JsonRequestBehavior.AllowGet);
+                }
+                else
+                {
+                    var res = CRP_dbObj.viewNEW_CUS_HEADER.Where(r => r.REPName.Contains(SearchValue) || SearchValue == null).ToList();
+                    return Json(res, JsonRequestBehavior.AllowGet);
+                }
+            }
+            else
+            {
+                var res = (dynamic)null;
+                return Json(res, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+
 
         public ActionResult CustomerRequestFormView(int CusReqID)
         {
-            var Request = CRP_dbObj.NEW_CUS_HEADER.Where(r => r.CusReqID == CusReqID).FirstOrDefault();
+            var Request = CRP_dbObj.viewNEW_CUS_HEADER.Where(r => r.CusReqID == CusReqID).FirstOrDefault();
             var Companies = CRP_dbObj.NEW_CUS_COMPANIES.Where(r => r.CusReqID == CusReqID).ToList();
             var PaintBrands = CRP_dbObj.NEW_CUS_PAINT_BRANDS.Where(r => r.CusReqID == CusReqID).ToList();
             var Images = CRP_dbObj.NEW_CUS_IMAGE.Where(r => r.CusReqID == CusReqID).ToList();
@@ -188,7 +319,7 @@ namespace FI.PORTAL.Controllers
 
             var viewModel = new CustomerRegistrationRequestData
             {
-                RequestHeader = (NEW_CUS_HEADER)Request,
+                RequestHeader = (viewNEW_CUS_HEADER)Request,
                 RequestCompanies = Companies,
                 RequestPaintBrands = PaintBrands,
                 RequestImages = Images,
@@ -202,8 +333,6 @@ namespace FI.PORTAL.Controllers
         [HttpPost]
         public ActionResult ReverseOrApproveRequest(CustomerRegistrationRequestData model)
         {
-
-
             NEW_CUS_EVAL newEvalObj = new NEW_CUS_EVAL();
             newEvalObj.EvalID = model.Evaluation.EvalID;
             newEvalObj.CusReqID = model.Evaluation.CusReqID;
@@ -223,24 +352,24 @@ namespace FI.PORTAL.Controllers
 
             int role = Convert.ToInt16(Session["role"].ToString());
 
-            if (role == 1)
+            if (role == CO_ROLE)
             {
-                var res = CRP_dbObj.NEW_CUS_HEADER.Where(r => r.Level >= 5).ToList();
+                var res = CRP_dbObj.viewNEW_CUS_HEADER.Where(r => r.Level >= 5).ToList();
                 return View("Index", res);
             }
-            else if (role == 5)
+            else if (role == CM_ROLE)
             {
-                var res = CRP_dbObj.NEW_CUS_HEADER.Where(r => r.Level >= 6).ToList();
+                var res = CRP_dbObj.viewNEW_CUS_HEADER.Where(r => r.Level >= 6).ToList();
                 return View("Index", res);
             }
-            else if (role == 6)
+            else if (role == FM_ROLE)
             {
-                var res = CRP_dbObj.NEW_CUS_HEADER.Where(r => r.Level >= 7).ToList();
+                var res = CRP_dbObj.viewNEW_CUS_HEADER.Where(r => r.Level >= 7).ToList();
                 return View("Index", res);
             }
             else
             {
-                var res = CRP_dbObj.NEW_CUS_HEADER.Where(r => r.Level >= 8).ToList();
+                var res = CRP_dbObj.viewNEW_CUS_HEADER.Where(r => r.Level >= 8).ToList();
                 return View("Index", res);
             }
 
@@ -290,29 +419,53 @@ namespace FI.PORTAL.Controllers
 
             int role = Convert.ToInt16(Session["role"].ToString());
 
-            if (role == 1)
+            if (role == CO_ROLE)
             {
-                var res = CRP_dbObj.NEW_CUS_HEADER.Where(r => r.Level >= 5).ToList();
+                var res = CRP_dbObj.viewNEW_CUS_HEADER.Where(r => r.Level >= 5).ToList();
                 return View("Index", res);
             }
-            else if (role == 5)
+            else if (role == CM_ROLE)
             {
-                var res = CRP_dbObj.NEW_CUS_HEADER.Where(r => r.Level >= 6).ToList();
+                var res = CRP_dbObj.viewNEW_CUS_HEADER.Where(r => r.Level >= 6).ToList();
                 return View("Index", res);
             }
-            else if (role == 6)
+            else if (role == FM_ROLE)
             {
-                var res = CRP_dbObj.NEW_CUS_HEADER.Where(r => r.Level >= 7).ToList();
+                var res = CRP_dbObj.viewNEW_CUS_HEADER.Where(r => r.Level >= 7).ToList();
                 return View("Index", res);
             }
             else
             {
-                var res = CRP_dbObj.NEW_CUS_HEADER.Where(r => r.Level >= 8).ToList();
+                var res = CRP_dbObj.viewNEW_CUS_HEADER.Where(r => r.Level >= 8).ToList();
                 return View("Index", res);
             }
-
         }
+   
+        public ActionResult GenerateReport(int CusReqID)
+        {
+            var Request = CRP_dbObj.viewNEW_CUS_HEADER.Where(r => r.CusReqID == CusReqID).FirstOrDefault();
+            var Companies = CRP_dbObj.NEW_CUS_COMPANIES.Where(r => r.CusReqID == CusReqID).ToList();
+            var PaintBrands = CRP_dbObj.NEW_CUS_PAINT_BRANDS.Where(r => r.CusReqID == CusReqID).ToList();
+            var Images = CRP_dbObj.NEW_CUS_IMAGE.Where(r => r.CusReqID == CusReqID).ToList();
+            var Evaluations = CRP_dbObj.NEW_CUS_EVAL.Where(r => r.CusReqID == CusReqID).ToList();
+            var Owners = CRP_dbObj.NEW_CUS_OWNERS.Where(r => r.CusReqID == CusReqID).ToList();
+            var FinalApproval = CRP_dbObj.NEW_CUS_FINAL_APPROVAL.Where(r => r.CusReqID == CusReqID).ToList();
 
 
+            var viewModel = new CustomerRegistrationRequestData
+            {
+                RequestHeader = (viewNEW_CUS_HEADER)Request,
+                RequestCompanies = Companies,
+                RequestPaintBrands = PaintBrands,
+                RequestImages = Images,
+                RequestEvaluations = Evaluations,
+                RequestOwners = Owners,
+                RequestFinalApproval = FinalApproval
+            };
+
+            CustomerRequestReport customerRequestReport = new CustomerRequestReport();
+            byte[] abytes = customerRequestReport.PrepareReport(viewModel);
+            return File(abytes, "application/pdf", "Request_" + CusReqID.ToString() + ".pdf");
+        }
     }
 }

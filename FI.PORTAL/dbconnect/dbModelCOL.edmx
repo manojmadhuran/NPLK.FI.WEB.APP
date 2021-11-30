@@ -34,6 +34,8 @@ warning 6002: The table/view 'INV_SYS.dbo.Area_Master' does not have a primary k
           <Property Name="acknowledge" Type="bit" />
           <Property Name="acknowledge_by" Type="varchar" MaxLength="225" />
           <Property Name="acknowledged_date" Type="smalldatetime" />
+          <Property Name="created_by" Type="varchar" MaxLength="255" />
+          <Property Name="area_name" Type="varchar" MaxLength="255" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'INV_SYS.dbo.PAYED_INVOICES' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -118,12 +120,11 @@ warning 6002: The table/view 'INV_SYS.dbo.PAYED_INVOICES' does not have a primar
           <Property Name="acknowledge" Type="Boolean" />
           <Property Name="acknowledge_by" Type="String" MaxLength="225" FixedLength="false" Unicode="false" />
           <Property Name="acknowledged_date" Type="DateTime" Precision="0" />
+          <Property Name="created_by" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="area_name" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityContainer Name="CollectionSYSEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="COLLECTIONS" EntityType="Self.COLLECTION" />
-          <FunctionImport Name="FullCollectionData" ReturnType="Collection(COL_SYSModel.FullCollectionData_Result)">
-          <Parameter Name="collectionID" Mode="In" Type="String" />
-          </FunctionImport>
           <EntitySet Name="PAYED_INVOICES" EntityType="COL_SYSModel.PAYED_INVOICES" />
           <FunctionImport Name="UpdateInvoiceAcknowledge">
             <Parameter Name="invoice_id" Mode="In" Type="String" />
@@ -132,47 +133,10 @@ warning 6002: The table/view 'INV_SYS.dbo.PAYED_INVOICES' does not have a primar
           <EntitySet Name="COLLECTION_TICKETS" EntityType="COL_SYSModel.COLLECTION_TICKETS" />
           <EntitySet Name="TICKET_MSGS" EntityType="COL_SYSModel.TICKET_MSGS" />
           <EntitySet Name="Area_Master" EntityType="COL_SYSModel.Area_Master" />
+          <FunctionImport Name="FullCollectionData" ReturnType="Collection(COL_SYSModel.FullCollectionData_Result)">
+            <Parameter Name="collectionID" Mode="In" Type="String" />
+          </FunctionImport>
         </EntityContainer>
-        <ComplexType Name="FullCollectionData_Result">
-          <Property Type="Int32" Name="id" Nullable="true" />
-          <Property Type="String" Name="collection_no" Nullable="true" MaxLength="225" />
-          <Property Type="DateTime" Name="collection_date" Nullable="true" Precision="16" />
-          <Property Type="String" Name="sales_code" Nullable="true" MaxLength="225" />
-          <Property Type="Boolean" Name="acknowledge" Nullable="true" />
-          <Property Type="String" Name="acknowledge_by" Nullable="true" MaxLength="225" />
-          <Property Type="DateTime" Name="acknowledged_date" Nullable="true" Precision="16" />
-          <Property Type="String" Name="payment_collection_no" Nullable="true" MaxLength="225" />
-          <Property Type="String" Name="customer_code" Nullable="true" MaxLength="225" />
-          <Property Type="String" Name="cus_sales_group" Nullable="true" MaxLength="225" />
-          <Property Type="String" Name="payment_key" Nullable="true" MaxLength="225" />
-          <Property Type="String" Name="payment_type" Nullable="true" MaxLength="225" />
-          <Property Type="String" Name="cheque_no" Nullable="true" MaxLength="225" />
-          <Property Type="String" Name="cheque_type" Nullable="true" MaxLength="225" />
-          <Property Type="String" Name="issued_bank" Nullable="true" MaxLength="225" />
-          <Property Type="String" Name="issued_branch" Nullable="true" MaxLength="225" />
-          <Property Type="DateTime" Name="banking_date" Nullable="true" Precision="16" />
-          <Property Type="Decimal" Name="payment_amount" Nullable="true" Precision="19" Scale="2" />
-          <Property Type="Decimal" Name="unallocated_amount" Nullable="true" Precision="19" Scale="2" />
-          <Property Type="String" Name="receipt_no" Nullable="true" MaxLength="225" />
-          <Property Type="DateTime" Name="receipt_date" Nullable="true" Precision="16" />
-          <Property Type="String" Name="deposited_bank" Nullable="true" MaxLength="225" />
-          <Property Type="String" Name="deposited_branch" Nullable="true" MaxLength="225" />
-          <Property Type="Int32" Name="primary_key" Nullable="true" />
-          <Property Type="String" Name="invoice_collection_no" Nullable="true" MaxLength="225" />
-          <Property Type="String" Name="invoice_payment_key" Nullable="true" MaxLength="225" />
-          <Property Type="String" Name="invoice_no" Nullable="true" MaxLength="225" />
-          <Property Type="String" Name="invoice_cutomer_id" Nullable="true" MaxLength="225" />
-          <Property Type="String" Name="invoice_sales_code" Nullable="true" MaxLength="225" />
-          <Property Type="Decimal" Name="invoice_amount" Nullable="true" Precision="19" Scale="2" />
-          <Property Type="Decimal" Name="invoice_allocated" Nullable="true" Precision="19" Scale="2" />
-          <Property Type="String" Name="payment_term" Nullable="true" MaxLength="100" />
-          <Property Type="Decimal" Name="os_balance" Nullable="true" Precision="19" Scale="2" />
-          <Property Type="Int32" Name="nod" Nullable="true" />
-          <Property Type="DateTime" Name="invoice_date" Nullable="true" Precision="16" />
-          <Property Type="String" Name="remarks" Nullable="true" MaxLength="2000" />
-          <Property Type="String" Name="CusName" Nullable="true" MaxLength="255" />
-          <Property Type="Boolean" Name="invoice_acknowledge" Nullable="true" />
-        </ComplexType>
         <EntityType Name="PAYED_INVOICES">
           <Key>
             <PropertyRef Name="id" />
@@ -218,6 +182,48 @@ warning 6002: The table/view 'INV_SYS.dbo.PAYED_INVOICES' does not have a primar
           <Property Name="AreaName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="SalesCode" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
         </EntityType>
+        <ComplexType Name="FullCollectionData_Result">
+          <Property Type="Int32" Name="id" Nullable="true" />
+          <Property Type="String" Name="collection_no" Nullable="true" MaxLength="225" />
+          <Property Type="DateTime" Name="collection_date" Nullable="true" Precision="16" />
+          <Property Type="String" Name="sales_code" Nullable="true" MaxLength="225" />
+          <Property Type="String" Name="area_name" Nullable="true" MaxLength="255" />
+          <Property Type="String" Name="created_by" Nullable="true" MaxLength="255" />
+          <Property Type="Boolean" Name="acknowledge" Nullable="true" />
+          <Property Type="String" Name="acknowledge_by" Nullable="true" MaxLength="225" />
+          <Property Type="DateTime" Name="acknowledged_date" Nullable="true" Precision="16" />
+          <Property Type="String" Name="payment_collection_no" Nullable="true" MaxLength="225" />
+          <Property Type="String" Name="customer_code" Nullable="true" MaxLength="225" />
+          <Property Type="String" Name="cus_sales_group" Nullable="true" MaxLength="225" />
+          <Property Type="String" Name="payment_key" Nullable="true" MaxLength="225" />
+          <Property Type="String" Name="payment_type" Nullable="true" MaxLength="225" />
+          <Property Type="String" Name="cheque_no" Nullable="true" MaxLength="225" />
+          <Property Type="String" Name="cheque_type" Nullable="true" MaxLength="225" />
+          <Property Type="String" Name="issued_bank" Nullable="true" MaxLength="225" />
+          <Property Type="String" Name="issued_branch" Nullable="true" MaxLength="225" />
+          <Property Type="DateTime" Name="banking_date" Nullable="true" Precision="16" />
+          <Property Type="Decimal" Name="payment_amount" Nullable="true" Precision="19" Scale="2" />
+          <Property Type="Decimal" Name="unallocated_amount" Nullable="true" Precision="19" Scale="2" />
+          <Property Type="String" Name="receipt_no" Nullable="true" MaxLength="225" />
+          <Property Type="DateTime" Name="receipt_date" Nullable="true" Precision="16" />
+          <Property Type="String" Name="deposited_bank" Nullable="true" MaxLength="225" />
+          <Property Type="String" Name="deposited_branch" Nullable="true" MaxLength="225" />
+          <Property Type="Int32" Name="primary_key" Nullable="true" />
+          <Property Type="String" Name="invoice_collection_no" Nullable="true" MaxLength="225" />
+          <Property Type="String" Name="invoice_payment_key" Nullable="true" MaxLength="225" />
+          <Property Type="String" Name="invoice_no" Nullable="true" MaxLength="225" />
+          <Property Type="String" Name="invoice_cutomer_id" Nullable="true" MaxLength="225" />
+          <Property Type="String" Name="invoice_sales_code" Nullable="true" MaxLength="225" />
+          <Property Type="Decimal" Name="invoice_amount" Nullable="true" Precision="19" Scale="2" />
+          <Property Type="Decimal" Name="invoice_allocated" Nullable="true" Precision="19" Scale="2" />
+          <Property Type="String" Name="payment_term" Nullable="true" MaxLength="100" />
+          <Property Type="Decimal" Name="os_balance" Nullable="true" Precision="19" Scale="2" />
+          <Property Type="Int32" Name="nod" Nullable="true" />
+          <Property Type="DateTime" Name="invoice_date" Nullable="true" Precision="16" />
+          <Property Type="String" Name="remarks" Nullable="true" MaxLength="2000" />
+          <Property Type="String" Name="CusName" Nullable="true" MaxLength="255" />
+          <Property Type="Boolean" Name="invoice_acknowledge" Nullable="true" />
+        </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -227,6 +233,8 @@ warning 6002: The table/view 'INV_SYS.dbo.PAYED_INVOICES' does not have a primar
           <EntitySetMapping Name="COLLECTIONS">
             <EntityTypeMapping TypeName="COL_SYSModel.COLLECTION">
               <MappingFragment StoreEntitySet="COLLECTIONS">
+                <ScalarProperty Name="area_name" ColumnName="area_name" />
+                <ScalarProperty Name="created_by" ColumnName="created_by" />
                 <ScalarProperty Name="id" ColumnName="id" />
                 <ScalarProperty Name="collection_no" ColumnName="collection_no" />
                 <ScalarProperty Name="collection_date" ColumnName="collection_date" />
@@ -237,50 +245,6 @@ warning 6002: The table/view 'INV_SYS.dbo.PAYED_INVOICES' does not have a primar
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <FunctionImportMapping FunctionImportName="FullCollectionData" FunctionName="COL_SYSModel.Store.FullCollectionData">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="COL_SYSModel.FullCollectionData_Result">
-                <ScalarProperty Name="id" ColumnName="id" />
-                <ScalarProperty Name="collection_no" ColumnName="collection_no" />
-                <ScalarProperty Name="collection_date" ColumnName="collection_date" />
-                <ScalarProperty Name="sales_code" ColumnName="sales_code" />
-                <ScalarProperty Name="acknowledge" ColumnName="acknowledge" />
-                <ScalarProperty Name="acknowledge_by" ColumnName="acknowledge_by" />
-                <ScalarProperty Name="acknowledged_date" ColumnName="acknowledged_date" />
-                <ScalarProperty Name="payment_collection_no" ColumnName="payment_collection_no" />
-                <ScalarProperty Name="customer_code" ColumnName="customer_code" />
-                <ScalarProperty Name="cus_sales_group" ColumnName="cus_sales_group" />
-                <ScalarProperty Name="payment_key" ColumnName="payment_key" />
-                <ScalarProperty Name="payment_type" ColumnName="payment_type" />
-                <ScalarProperty Name="cheque_no" ColumnName="cheque_no" />
-                <ScalarProperty Name="cheque_type" ColumnName="cheque_type" />
-                <ScalarProperty Name="issued_bank" ColumnName="issued_bank" />
-                <ScalarProperty Name="issued_branch" ColumnName="issued_branch" />
-                <ScalarProperty Name="banking_date" ColumnName="banking_date" />
-                <ScalarProperty Name="payment_amount" ColumnName="payment_amount" />
-                <ScalarProperty Name="unallocated_amount" ColumnName="unallocated_amount" />
-                <ScalarProperty Name="receipt_no" ColumnName="receipt_no" />
-                <ScalarProperty Name="receipt_date" ColumnName="receipt_date" />
-                <ScalarProperty Name="deposited_bank" ColumnName="deposited_bank" />
-                <ScalarProperty Name="deposited_branch" ColumnName="deposited_branch" />
-                <ScalarProperty Name="primary_key" ColumnName="primary_key" />
-                <ScalarProperty Name="invoice_collection_no" ColumnName="invoice_collection_no" />
-                <ScalarProperty Name="invoice_payment_key" ColumnName="invoice_payment_key" />
-                <ScalarProperty Name="invoice_no" ColumnName="invoice_no" />
-                <ScalarProperty Name="invoice_cutomer_id" ColumnName="invoice_cutomer_id" />
-                <ScalarProperty Name="invoice_sales_code" ColumnName="invoice_sales_code" />
-                <ScalarProperty Name="invoice_amount" ColumnName="invoice_amount" />
-                <ScalarProperty Name="invoice_allocated" ColumnName="invoice_allocated" />
-                <ScalarProperty Name="payment_term" ColumnName="payment_term" />
-                <ScalarProperty Name="os_balance" ColumnName="os_balance" />
-                <ScalarProperty Name="nod" ColumnName="nod" />
-                <ScalarProperty Name="invoice_date" ColumnName="invoice_date" />
-                <ScalarProperty Name="remarks" ColumnName="remarks" />
-                <ScalarProperty Name="CusName" ColumnName="CusName" />
-                <ScalarProperty Name="invoice_acknowledge" ColumnName="invoice_acknowledge" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
           <EntitySetMapping Name="PAYED_INVOICES">
             <EntityTypeMapping TypeName="COL_SYSModel.PAYED_INVOICES">
               <MappingFragment StoreEntitySet="PAYED_INVOICES">
@@ -331,6 +295,52 @@ warning 6002: The table/view 'INV_SYS.dbo.PAYED_INVOICES' does not have a primar
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="FullCollectionData" FunctionName="COL_SYSModel.Store.FullCollectionData">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="COL_SYSModel.FullCollectionData_Result">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="collection_no" ColumnName="collection_no" />
+                <ScalarProperty Name="collection_date" ColumnName="collection_date" />
+                <ScalarProperty Name="sales_code" ColumnName="sales_code" />
+                <ScalarProperty Name="area_name" ColumnName="area_name" />
+                <ScalarProperty Name="created_by" ColumnName="created_by" />
+                <ScalarProperty Name="acknowledge" ColumnName="acknowledge" />
+                <ScalarProperty Name="acknowledge_by" ColumnName="acknowledge_by" />
+                <ScalarProperty Name="acknowledged_date" ColumnName="acknowledged_date" />
+                <ScalarProperty Name="payment_collection_no" ColumnName="payment_collection_no" />
+                <ScalarProperty Name="customer_code" ColumnName="customer_code" />
+                <ScalarProperty Name="cus_sales_group" ColumnName="cus_sales_group" />
+                <ScalarProperty Name="payment_key" ColumnName="payment_key" />
+                <ScalarProperty Name="payment_type" ColumnName="payment_type" />
+                <ScalarProperty Name="cheque_no" ColumnName="cheque_no" />
+                <ScalarProperty Name="cheque_type" ColumnName="cheque_type" />
+                <ScalarProperty Name="issued_bank" ColumnName="issued_bank" />
+                <ScalarProperty Name="issued_branch" ColumnName="issued_branch" />
+                <ScalarProperty Name="banking_date" ColumnName="banking_date" />
+                <ScalarProperty Name="payment_amount" ColumnName="payment_amount" />
+                <ScalarProperty Name="unallocated_amount" ColumnName="unallocated_amount" />
+                <ScalarProperty Name="receipt_no" ColumnName="receipt_no" />
+                <ScalarProperty Name="receipt_date" ColumnName="receipt_date" />
+                <ScalarProperty Name="deposited_bank" ColumnName="deposited_bank" />
+                <ScalarProperty Name="deposited_branch" ColumnName="deposited_branch" />
+                <ScalarProperty Name="primary_key" ColumnName="primary_key" />
+                <ScalarProperty Name="invoice_collection_no" ColumnName="invoice_collection_no" />
+                <ScalarProperty Name="invoice_payment_key" ColumnName="invoice_payment_key" />
+                <ScalarProperty Name="invoice_no" ColumnName="invoice_no" />
+                <ScalarProperty Name="invoice_cutomer_id" ColumnName="invoice_cutomer_id" />
+                <ScalarProperty Name="invoice_sales_code" ColumnName="invoice_sales_code" />
+                <ScalarProperty Name="invoice_amount" ColumnName="invoice_amount" />
+                <ScalarProperty Name="invoice_allocated" ColumnName="invoice_allocated" />
+                <ScalarProperty Name="payment_term" ColumnName="payment_term" />
+                <ScalarProperty Name="os_balance" ColumnName="os_balance" />
+                <ScalarProperty Name="nod" ColumnName="nod" />
+                <ScalarProperty Name="invoice_date" ColumnName="invoice_date" />
+                <ScalarProperty Name="remarks" ColumnName="remarks" />
+                <ScalarProperty Name="CusName" ColumnName="CusName" />
+                <ScalarProperty Name="invoice_acknowledge" ColumnName="invoice_acknowledge" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
