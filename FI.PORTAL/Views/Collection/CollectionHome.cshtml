@@ -1,9 +1,14 @@
 ﻿@model FI.PORTAL.ViewModels.CollectionVM
+@using PagedList.Mvc;
 
 @{
     ViewBag.Title = "Collection Home";
+    Layout = "~/Views/Shared/_Layout.cshtml";
     string currentSort = Session["sorting"].ToString();
 }
+
+
+@Styles.Render("~/Content/PagedList.css")
 
 <div class="row">
     <div class="col-md-12">
@@ -150,9 +155,19 @@
                                         </tr>
                                     }
                                 }
-
                             </tbody>
                         </table>
+
+
+                        Page @(this.Model.collection.PageNumber) of  @this.Model.collection.PageCount
+
+                        <div style="float:right">
+                            @Html.PagedListPager(Model.collection, page => Url.Action("CollectionHome", new { page }))
+                        </div>
+
+
+
+
                     </div>
                 </div>
 

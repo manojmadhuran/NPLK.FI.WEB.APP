@@ -10,6 +10,8 @@ namespace FI.PORTAL.ViewModels
     {
         public viewNEW_CUS_HEADER RequestHeader { get; set; }
 
+        public NEW_CUS_HEADER TableRequestHeader { get; set; }
+
         public IEnumerable<NEW_CUS_COMPANIES> RequestCompanies { get; set; }
 
         public IEnumerable<NEW_CUS_PAINT_BRANDS> RequestPaintBrands { get; set; }

@@ -7,15 +7,19 @@ using System.Web.Mvc;
 using System.Web.UI.WebControls;
 using FI.PORTAL.dbconnect;
 using FI.PORTAL.ViewModels;
+using PagedList;
 
 namespace FI.PORTAL.Controllers
 {
     public class CollectionController : Controller
     {
+        int pageSize = 10;
         // GET: Collection
         CollectionSYSEntities COL_dbObj = new CollectionSYSEntities();
-        public ActionResult CollectionHome(string sortby)
+        public ActionResult CollectionHome(string sortby, int? page)
         {
+   
+            int pageNumber = (page ?? 1);
             //var result_areas = COL_dbObj.Area_Master.OrderBy(a => a.AreaName).ToList();
             if (Session["sorting"] == null )
             {
@@ -25,13 +29,15 @@ namespace FI.PORTAL.Controllers
                 ViewBag.sortString = "All";
 
                 var result_collections = COL_dbObj.COLLECTIONS.ToList();
-           
+
+             
                 var viewModel = new CollectionVM
                 {
-                    collection = result_collections,
+                    collection = result_collections.ToPagedList(pageNumber, pageSize),
                    
                 };
 
+              
                 return View(viewModel);
             }
             else
@@ -39,7 +45,8 @@ namespace FI.PORTAL.Controllers
                 ViewBag.sortString = Session["sorting"].ToString();
                 string sorting = Session["sorting"].ToString();
                 //var area = Session["selected_area"].ToString();
-                var result_collections = (dynamic)null; 
+                var result_collections = COL_dbObj.COLLECTIONS.ToList();
+
                 if (sorting.Equals("All"))
                 {
                     result_collections = COL_dbObj.COLLECTIONS.ToList();
@@ -55,8 +62,7 @@ namespace FI.PORTAL.Controllers
 
                 var viewModel = new CollectionVM
                 {
-                    collection = result_collections,
-                   
+                    collection = result_collections.ToPagedList(pageNumber, pageSize),
                 };
 
                 return View(viewModel);
@@ -94,19 +100,14 @@ namespace FI.PORTAL.Controllers
                     messageModel = new Models.MessageModel(),
                     ticketModel = new Models.TicketModel(),
                 };
-
-
                 return View(viewModel);
             }
-
-
-
-
         }
 
         [HttpPost]
-        public ActionResult AcknowledgeCollection(CollectionData model)
+        public ActionResult AcknowledgeCollection(CollectionData model, int ? page)
         {
+            int pageNumber = (page ?? 1);
             var result = COL_dbObj.COLLECTIONS.Where(c => c.collection_no == model.Collection.collection_no).FirstOrDefault();
             result.id = model.Collection.id;
             result.acknowledge_by = model.Collection.acknowledge_by;
@@ -119,7 +120,7 @@ namespace FI.PORTAL.Controllers
             ViewBag.sortString = Session["sorting"].ToString();
             string sorting = Session["sorting"].ToString();
             //var area = Session["selected_area"].ToString();
-            var result_collections = (dynamic)null;
+            var result_collections = COL_dbObj.COLLECTIONS.ToList();
 
             if (sorting.Equals("All"))
             {
@@ -136,7 +137,7 @@ namespace FI.PORTAL.Controllers
 
             var viewModel = new CollectionVM
             {
-                collection = result_collections,
+                collection = result_collections.ToPagedList(pageNumber, pageSize),
                 
             };
 
@@ -147,6 +148,7 @@ namespace FI.PORTAL.Controllers
 
         public ActionResult SearchCollection(string search_query)
         {
+            Session["searching"] = "true";
             //var result_areas = COL_dbObj.Area_Master.OrderBy(a => a.AreaName).ToList();
             ViewBag.sortString = Session["sorting"].ToString();
             string sorting = Session["sorting"].ToString();
@@ -235,26 +237,27 @@ namespace FI.PORTAL.Controllers
             return Json(new { msg = area });
         }
 
-        public JsonResult SearchData(string SearchBy, string SearchValue)
+        public JsonResult SearchData(string SearchBy, string SearchValue, int ? page)
         {
+            int pageNumber = (page ?? 1);
             Session["sorting"] = "All";
             ViewBag.sortString = Session["sorting"].ToString();
-            var result_collections = (dynamic)null;
+ 
 
             if (SearchBy.Equals("Sales_Code"))
             {
-                result_collections = COL_dbObj.COLLECTIONS.Where(c => c.sales_code == SearchValue || SearchValue == null).ToList();
-                return Json(result_collections, JsonRequestBehavior.AllowGet);
+                var result_collections = COL_dbObj.COLLECTIONS.Where(c => c.sales_code == SearchValue || SearchValue == null).ToList();
+                return Json(result_collections.ToPagedList(pageNumber, pageSize), JsonRequestBehavior.AllowGet);
             }
             else if (SearchBy.Equals("Area"))
             {
-                result_collections = COL_dbObj.COLLECTIONS.Where(c => c.area_name.Contains(SearchValue) || SearchValue == null).ToList();
-                return Json(result_collections, JsonRequestBehavior.AllowGet);
+                var result_collections = COL_dbObj.COLLECTIONS.Where(c => c.area_name.Contains(SearchValue) || SearchValue == null).ToList();
+                return Json(result_collections.ToPagedList(pageNumber, pageSize), JsonRequestBehavior.AllowGet);
             }
             else
             {
-                result_collections = COL_dbObj.COLLECTIONS.Where(c => c.created_by.Contains(SearchValue) || SearchValue == null).ToList();
-                return Json(result_collections, JsonRequestBehavior.AllowGet);
+                var result_collections = COL_dbObj.COLLECTIONS.Where(c => c.created_by.Contains(SearchValue) || SearchValue == null).ToList();
+                return Json(result_collections.ToPagedList(pageNumber, pageSize), JsonRequestBehavior.AllowGet);
             }
 
         }

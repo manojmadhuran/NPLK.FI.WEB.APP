@@ -315,11 +315,13 @@ namespace FI.PORTAL.Controllers
             var Evaluations = CRP_dbObj.NEW_CUS_EVAL.Where(r => r.CusReqID == CusReqID).ToList();
             var Owners = CRP_dbObj.NEW_CUS_OWNERS.Where(r => r.CusReqID == CusReqID).ToList();
             var FinalApproval = CRP_dbObj.NEW_CUS_FINAL_APPROVAL.Where(r => r.CusReqID == CusReqID).ToList();
+            var TableRequest = CRP_dbObj.NEW_CUS_HEADER.Where(r => r.CusReqID == CusReqID).FirstOrDefault();
 
 
             var viewModel = new CustomerRegistrationRequestData
             {
                 RequestHeader = (viewNEW_CUS_HEADER)Request,
+                TableRequestHeader = TableRequest,
                 RequestCompanies = Companies,
                 RequestPaintBrands = PaintBrands,
                 RequestImages = Images,
@@ -345,7 +347,7 @@ namespace FI.PORTAL.Controllers
             newEvalObj.Status = model.Evaluation.Status;
             newEvalObj.CreatedDate = DateTime.Now;
 
-            CRP_dbObj.Entry(model.RequestHeader).State = System.Data.Entity.EntityState.Modified;
+            CRP_dbObj.Entry(model.TableRequestHeader).State = System.Data.Entity.EntityState.Modified;
             CRP_dbObj.NEW_CUS_EVAL.Add(newEvalObj);
 
             CRP_dbObj.SaveChanges();
@@ -411,7 +413,7 @@ namespace FI.PORTAL.Controllers
             newEvalObj.Status = model.Evaluation.Status;
             newEvalObj.CreatedDate = DateTime.Now;
 
-            CRP_dbObj.Entry(model.RequestHeader).State = System.Data.Entity.EntityState.Modified;
+            CRP_dbObj.Entry(model.TableRequestHeader).State = System.Data.Entity.EntityState.Modified;
             CRP_dbObj.NEW_CUS_FINAL_APPROVAL.Add(finalApprovalObj);
             CRP_dbObj.NEW_CUS_EVAL.Add(newEvalObj);
 
