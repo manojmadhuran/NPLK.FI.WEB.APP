@@ -185,78 +185,82 @@ namespace FI.PORTAL.Report
             #region Table Body
 
             fontStyle = FontFactory.GetFont("Tahoma", 8f, 0);
-
-            foreach (var item in data.RequestEvaluations)
+            
+            if(data.RequestEvaluations.Count() > 0)
             {
-
-                pdfPCell = new PdfPCell(new Phrase(item.EvalID.ToString(), fontStyle));
-                pdfPCell.HorizontalAlignment = Element.ALIGN_CENTER;
-                pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
-                pdfPCell.BackgroundColor = BaseColor.WHITE;
-                pdfPCell.ExtraParagraphSpace = 0;
-                evaluation_table.AddCell(pdfPCell);
-
-                try
-                {
-                    x = (decimal)item.RecLimit;
-                }
-                catch (Exception e)
+                foreach (var item in data.RequestEvaluations)
                 {
 
+                    pdfPCell = new PdfPCell(new Phrase(item.EvalID.ToString(), fontStyle));
+                    pdfPCell.HorizontalAlignment = Element.ALIGN_CENTER;
+                    pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                    pdfPCell.BackgroundColor = BaseColor.WHITE;
+                    pdfPCell.ExtraParagraphSpace = 0;
+                    evaluation_table.AddCell(pdfPCell);
+
+                    try
+                    {
+                        x = (decimal)item.RecLimit;
+                    }
+                    catch (Exception e)
+                    {
+
+                    }
+
+                    pdfPCell = new PdfPCell(new Phrase(x.ToString("0.00"), fontStyle));
+                    pdfPCell.HorizontalAlignment = Element.ALIGN_CENTER;
+                    pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                    pdfPCell.BackgroundColor = BaseColor.WHITE;
+                    pdfPCell.ExtraParagraphSpace = 0;
+                    evaluation_table.AddCell(pdfPCell);
+
+                    pdfPCell = new PdfPCell(new Phrase(item.RecPeriod == null ? "-" : item.RecPeriod.ToString(), fontStyle));
+                    pdfPCell.HorizontalAlignment = Element.ALIGN_CENTER;
+                    pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                    pdfPCell.BackgroundColor = BaseColor.WHITE;
+                    pdfPCell.ExtraParagraphSpace = 0;
+                    evaluation_table.AddCell(pdfPCell);
+
+                    pdfPCell = new PdfPCell(new Phrase(item.RecDiscount == null ? "-" : item.RecDiscount.ToString(), fontStyle));
+                    pdfPCell.HorizontalAlignment = Element.ALIGN_CENTER;
+                    pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                    pdfPCell.BackgroundColor = BaseColor.WHITE;
+                    pdfPCell.ExtraParagraphSpace = 0;
+                    evaluation_table.AddCell(pdfPCell);
+
+                    pdfPCell = new PdfPCell(new Phrase(item.Remarks == null ? "-" : item.Remarks.ToString(), fontStyle));
+                    pdfPCell.HorizontalAlignment = Element.ALIGN_CENTER;
+                    pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                    pdfPCell.BackgroundColor = BaseColor.WHITE;
+                    pdfPCell.ExtraParagraphSpace = 0;
+                    evaluation_table.AddCell(pdfPCell);
+
+                    pdfPCell = new PdfPCell(new Phrase(item.Role == null ? "-" : item.Role.ToString(), fontStyle));
+                    pdfPCell.HorizontalAlignment = Element.ALIGN_CENTER;
+                    pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                    pdfPCell.BackgroundColor = BaseColor.WHITE;
+                    pdfPCell.ExtraParagraphSpace = 0;
+                    evaluation_table.AddCell(pdfPCell);
+
+                    pdfPCell = new PdfPCell(new Phrase(item.CreatedDate == null ? "-" : item.CreatedDate.ToString(), fontStyle));
+                    pdfPCell.HorizontalAlignment = Element.ALIGN_CENTER;
+                    pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                    pdfPCell.BackgroundColor = BaseColor.WHITE;
+                    pdfPCell.ExtraParagraphSpace = 0;
+                    evaluation_table.AddCell(pdfPCell);
+
+                    pdfPCell = new PdfPCell(new Phrase(item.Status == null ? "-" : item.Status.ToString(), fontStyle));
+                    pdfPCell.HorizontalAlignment = Element.ALIGN_CENTER;
+                    pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                    pdfPCell.BackgroundColor = BaseColor.WHITE;
+                    pdfPCell.ExtraParagraphSpace = 0;
+                    evaluation_table.AddCell(pdfPCell);
+
+                    evaluation_table.CompleteRow();
                 }
-
-                pdfPCell = new PdfPCell(new Phrase(x.ToString("0.00"), fontStyle));
-                pdfPCell.HorizontalAlignment = Element.ALIGN_CENTER;
-                pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
-                pdfPCell.BackgroundColor = BaseColor.WHITE;
-                pdfPCell.ExtraParagraphSpace = 0;
-                evaluation_table.AddCell(pdfPCell);
-
-                pdfPCell = new PdfPCell(new Phrase(item.RecPeriod.ToString(), fontStyle));
-                pdfPCell.HorizontalAlignment = Element.ALIGN_CENTER;
-                pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
-                pdfPCell.BackgroundColor = BaseColor.WHITE;
-                pdfPCell.ExtraParagraphSpace = 0;
-                evaluation_table.AddCell(pdfPCell);
-
-                pdfPCell = new PdfPCell(new Phrase(item.RecDiscount.ToString(), fontStyle));
-                pdfPCell.HorizontalAlignment = Element.ALIGN_CENTER;
-                pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
-                pdfPCell.BackgroundColor = BaseColor.WHITE;
-                pdfPCell.ExtraParagraphSpace = 0;
-                evaluation_table.AddCell(pdfPCell);
-
-                pdfPCell = new PdfPCell(new Phrase(item.Remarks.ToString(), fontStyle));
-                pdfPCell.HorizontalAlignment = Element.ALIGN_CENTER;
-                pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
-                pdfPCell.BackgroundColor = BaseColor.WHITE;
-                pdfPCell.ExtraParagraphSpace = 0;
-                evaluation_table.AddCell(pdfPCell);
-
-                pdfPCell = new PdfPCell(new Phrase(item.Role.ToString(), fontStyle));
-                pdfPCell.HorizontalAlignment = Element.ALIGN_CENTER;
-                pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
-                pdfPCell.BackgroundColor = BaseColor.WHITE;
-                pdfPCell.ExtraParagraphSpace = 0;
-                evaluation_table.AddCell(pdfPCell);
-
-                pdfPCell = new PdfPCell(new Phrase(item.CreatedDate.ToString(), fontStyle));
-                pdfPCell.HorizontalAlignment = Element.ALIGN_CENTER;
-                pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
-                pdfPCell.BackgroundColor = BaseColor.WHITE;
-                pdfPCell.ExtraParagraphSpace = 0;
-                evaluation_table.AddCell(pdfPCell);
-
-                pdfPCell = new PdfPCell(new Phrase(item.Status.ToString(), fontStyle));
-                pdfPCell.HorizontalAlignment = Element.ALIGN_CENTER;
-                pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
-                pdfPCell.BackgroundColor = BaseColor.WHITE;
-                pdfPCell.ExtraParagraphSpace = 0;
-                evaluation_table.AddCell(pdfPCell);
-
-                evaluation_table.CompleteRow();
+                #endregion
             }
-            #endregion
+
         }
 
         private void SubheaderTable(string title)
@@ -324,7 +328,7 @@ namespace FI.PORTAL.Report
             pdfPCell.BackgroundColor = BaseColor.WHITE;
             pdfPCell.ExtraParagraphSpace = 0;
             main_table.AddCell(pdfPCell);
-            pdfPCell = new PdfPCell(new Phrase(data.RequestHeader.REPName.ToString(), fontStyleNormal));
+            pdfPCell = new PdfPCell(new Phrase(data.RequestHeader.REPName == null || data.RequestHeader.REPName.Equals("") ? "-" : data.RequestHeader.REPName.ToString(), fontStyleNormal));
             pdfPCell.PaddingBottom = cellPadding;
             pdfPCell.Border = borderSize;
             pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
@@ -342,7 +346,7 @@ namespace FI.PORTAL.Report
             pdfPCell.BackgroundColor = BaseColor.WHITE;
             pdfPCell.ExtraParagraphSpace = 0;
             main_table.AddCell(pdfPCell);
-            pdfPCell = new PdfPCell(new Phrase(data.RequestHeader.CusName.ToString(), fontStyleNormal));
+            pdfPCell = new PdfPCell(new Phrase(data.RequestHeader.CusName == null || data.RequestHeader.CusName.Equals("") ? "-" : data.RequestHeader.CusName.ToString(), fontStyleNormal));
             pdfPCell.PaddingBottom = cellPadding;
             pdfPCell.Border = borderSize;
             pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
@@ -360,7 +364,7 @@ namespace FI.PORTAL.Report
             pdfPCell.BackgroundColor = BaseColor.WHITE;
             pdfPCell.ExtraParagraphSpace = 0;
             main_table.AddCell(pdfPCell);
-            pdfPCell = new PdfPCell(new Phrase(data.RequestHeader.CusAddress.ToString(), fontStyleNormal));
+            pdfPCell = new PdfPCell(new Phrase(data.RequestHeader.CusAddress == null || data.RequestHeader.CusAddress.Equals("") ? "-" : data.RequestHeader.CusAddress.ToString(), fontStyleNormal));
             pdfPCell.PaddingBottom = cellPadding;
             pdfPCell.Border = borderSize;
             pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
@@ -378,7 +382,7 @@ namespace FI.PORTAL.Report
             pdfPCell.BackgroundColor = BaseColor.WHITE;
             pdfPCell.ExtraParagraphSpace = 0;
             main_table.AddCell(pdfPCell);
-            pdfPCell = new PdfPCell(new Phrase(data.RequestHeader.CusTel.ToString(), fontStyleNormal));
+            pdfPCell = new PdfPCell(new Phrase(data.RequestHeader.CusTel == null || data.RequestHeader.CusTel.Equals("") ? "-" : data.RequestHeader.CusTel.ToString(), fontStyleNormal));
             pdfPCell.PaddingBottom = cellPadding;
             pdfPCell.Border = borderSize;
             pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
@@ -396,7 +400,7 @@ namespace FI.PORTAL.Report
             pdfPCell.BackgroundColor = BaseColor.WHITE;
             pdfPCell.ExtraParagraphSpace = 0;
             main_table.AddCell(pdfPCell);
-            pdfPCell = new PdfPCell(new Phrase(data.RequestHeader.CusFax.ToString(), fontStyleNormal));
+            pdfPCell = new PdfPCell(new Phrase(data.RequestHeader.CusFax == null || data.RequestHeader.CusFax.Equals("") ? "-" : data.RequestHeader.CusFax.ToString(), fontStyleNormal));
             pdfPCell.PaddingBottom = cellPadding;
             pdfPCell.Border = borderSize;
             pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
@@ -414,7 +418,7 @@ namespace FI.PORTAL.Report
             pdfPCell.BackgroundColor = BaseColor.WHITE;
             pdfPCell.ExtraParagraphSpace = 0;
             main_table.AddCell(pdfPCell);
-            pdfPCell = new PdfPCell(new Phrase(data.RequestHeader.CusEmail.ToString(), fontStyleNormal));
+            pdfPCell = new PdfPCell(new Phrase(data.RequestHeader.CusEmail == null ? "-" : data.RequestHeader.CusEmail.ToString(), fontStyleNormal));
             pdfPCell.PaddingBottom = cellPadding;
             pdfPCell.Border = borderSize;
             pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
@@ -432,7 +436,7 @@ namespace FI.PORTAL.Report
             pdfPCell.BackgroundColor = BaseColor.WHITE;
             pdfPCell.ExtraParagraphSpace = 0;
             main_table.AddCell(pdfPCell);
-            pdfPCell = new PdfPCell(new Phrase(data.RequestHeader.DelAddress.ToString(), fontStyleNormal));
+            pdfPCell = new PdfPCell(new Phrase(data.RequestHeader.DelAddress == null ? "-" : data.RequestHeader.DelAddress.ToString(), fontStyleNormal));
             pdfPCell.PaddingBottom = cellPadding;
             pdfPCell.Border = borderSize;
             pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
@@ -450,7 +454,7 @@ namespace FI.PORTAL.Report
             pdfPCell.BackgroundColor = BaseColor.WHITE;
             pdfPCell.ExtraParagraphSpace = 0;
             main_table.AddCell(pdfPCell);
-            pdfPCell = new PdfPCell(new Phrase(data.RequestHeader.DelTel.ToString(), fontStyleNormal));
+            pdfPCell = new PdfPCell(new Phrase(data.RequestHeader.DelTel == null ? "-" : data.RequestHeader.DelTel.ToString(), fontStyleNormal));
             pdfPCell.PaddingBottom = cellPadding;
             pdfPCell.Border = borderSize;
             pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
@@ -469,7 +473,7 @@ namespace FI.PORTAL.Report
             pdfPCell.BackgroundColor = BaseColor.WHITE;
             pdfPCell.ExtraParagraphSpace = 0;
             main_table.AddCell(pdfPCell);
-            pdfPCell = new PdfPCell(new Phrase(data.RequestHeader.DelFax.ToString(), fontStyleNormal));
+            pdfPCell = new PdfPCell(new Phrase(data.RequestHeader.DelFax == null ? "-" : data.RequestHeader.DelFax.ToString()));
             pdfPCell.PaddingBottom = cellPadding;
             pdfPCell.Border = borderSize;
             pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
@@ -487,7 +491,7 @@ namespace FI.PORTAL.Report
             pdfPCell.BackgroundColor = BaseColor.WHITE;
             pdfPCell.ExtraParagraphSpace = 0;
             main_table.AddCell(pdfPCell);
-            pdfPCell = new PdfPCell(new Phrase(data.RequestHeader.DelEmail.ToString(), fontStyleNormal));
+            pdfPCell = new PdfPCell(new Phrase(data.RequestHeader.DelEmail == null ? "-" : data.RequestHeader.DelEmail.ToString(), fontStyleNormal));
             pdfPCell.PaddingBottom = cellPadding;
             pdfPCell.Border = borderSize;
             pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
@@ -505,7 +509,7 @@ namespace FI.PORTAL.Report
             pdfPCell.BackgroundColor = BaseColor.WHITE;
             pdfPCell.ExtraParagraphSpace = 0;
             main_table.AddCell(pdfPCell);
-            pdfPCell = new PdfPCell(new Phrase(data.RequestHeader.SalesAreaName.ToString(), fontStyleNormal));
+            pdfPCell = new PdfPCell(new Phrase(data.RequestHeader.SalesAreaName == null ? "-" : data.RequestHeader.SalesAreaName.ToString(), fontStyleNormal));
             pdfPCell.PaddingBottom = cellPadding;
             pdfPCell.Border = borderSize;
             pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
@@ -524,7 +528,7 @@ namespace FI.PORTAL.Report
             pdfPCell.BackgroundColor = BaseColor.WHITE;
             pdfPCell.ExtraParagraphSpace = 0;
             main_table.AddCell(pdfPCell);
-            pdfPCell = new PdfPCell(new Phrase(data.RequestHeader.SalesCode.ToString(), fontStyleNormal));
+            pdfPCell = new PdfPCell(new Phrase(data.RequestHeader.SalesCode == null ? "-" : data.RequestHeader.SalesCode.ToString(), fontStyleNormal));
             pdfPCell.PaddingBottom = cellPadding;
             pdfPCell.Border = borderSize;
             pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
@@ -542,7 +546,7 @@ namespace FI.PORTAL.Report
             pdfPCell.BackgroundColor = BaseColor.WHITE;
             pdfPCell.ExtraParagraphSpace = 0;
             main_table.AddCell(pdfPCell);
-            pdfPCell = new PdfPCell(new Phrase(data.RequestHeader.VatRegNo.ToString(), fontStyleNormal));
+            pdfPCell = new PdfPCell(new Phrase(data.RequestHeader.VatRegNo == null ? "-" : data.RequestHeader.VatRegNo.ToString(), fontStyleNormal));
             pdfPCell.PaddingBottom = cellPadding;
             pdfPCell.Border = borderSize;
             pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
@@ -560,7 +564,7 @@ namespace FI.PORTAL.Report
             pdfPCell.BackgroundColor = BaseColor.WHITE;
             pdfPCell.ExtraParagraphSpace = 0;
             main_table.AddCell(pdfPCell);
-            pdfPCell = new PdfPCell(new Phrase(data.RequestHeader.DateofInitialCusVisit.ToString(), fontStyleNormal));
+            pdfPCell = new PdfPCell(new Phrase(data.RequestHeader.DateofInitialCusVisit == null ? "-" : data.RequestHeader.DateofInitialCusVisit.ToString(), fontStyleNormal));
             pdfPCell.PaddingBottom = cellPadding;
             pdfPCell.Border = borderSize;
             pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
@@ -579,7 +583,7 @@ namespace FI.PORTAL.Report
             pdfPCell.BackgroundColor = BaseColor.WHITE;
             pdfPCell.ExtraParagraphSpace = 0;
             main_table.AddCell(pdfPCell);
-            pdfPCell = new PdfPCell(new Phrase(data.RequestHeader.PersonDealWith.ToString(), fontStyleNormal));
+            pdfPCell = new PdfPCell(new Phrase(data.RequestHeader.PersonDealWith == null ? "-" : data.RequestHeader.PersonDealWith.ToString(), fontStyleNormal));
             pdfPCell.PaddingBottom = cellPadding;
             pdfPCell.Border = borderSize;
             pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
@@ -598,7 +602,7 @@ namespace FI.PORTAL.Report
             pdfPCell.BackgroundColor = BaseColor.WHITE;
             pdfPCell.ExtraParagraphSpace = 0;
             main_table.AddCell(pdfPCell);
-            pdfPCell = new PdfPCell(new Phrase(data.RequestHeader.DesignationPersonDealWith.ToString(), fontStyleNormal));
+            pdfPCell = new PdfPCell(new Phrase(data.RequestHeader.DesignationPersonDealWith == null ? "-" : data.RequestHeader.DesignationPersonDealWith.ToString(), fontStyleNormal));
             pdfPCell.PaddingBottom = cellPadding;
             pdfPCell.Border = borderSize;
             pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
@@ -616,7 +620,7 @@ namespace FI.PORTAL.Report
             pdfPCell.BackgroundColor = BaseColor.WHITE;
             pdfPCell.ExtraParagraphSpace = 0;
             main_table.AddCell(pdfPCell);
-            pdfPCell = new PdfPCell(new Phrase(data.RequestHeader.ContactNoPersonDealWith.ToString(), fontStyleNormal));
+            pdfPCell = new PdfPCell(new Phrase(data.RequestHeader.ContactNoPersonDealWith == null ? "-" : data.RequestHeader.ContactNoPersonDealWith.ToString(), fontStyleNormal));
             pdfPCell.PaddingBottom = cellPadding;
             pdfPCell.Border = borderSize;
             pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
@@ -634,7 +638,7 @@ namespace FI.PORTAL.Report
             pdfPCell.BackgroundColor = BaseColor.WHITE;
             pdfPCell.ExtraParagraphSpace = 0;
             main_table.AddCell(pdfPCell);
-            pdfPCell = new PdfPCell(new Phrase(data.RequestHeader.BusinessNature.ToString(), fontStyleNormal));
+            pdfPCell = new PdfPCell(new Phrase(data.RequestHeader.BusinessNature == null ? "-" : data.RequestHeader.BusinessNature.ToString(), fontStyleNormal));
             pdfPCell.PaddingBottom = cellPadding;
             pdfPCell.Border = borderSize;
             pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
@@ -652,7 +656,7 @@ namespace FI.PORTAL.Report
             pdfPCell.BackgroundColor = BaseColor.WHITE;
             pdfPCell.ExtraParagraphSpace = 0;
             main_table.AddCell(pdfPCell);
-            pdfPCell = new PdfPCell(new Phrase(data.RequestHeader.Nature.ToString(), fontStyleNormal));
+            pdfPCell = new PdfPCell(new Phrase(data.RequestHeader.Nature == null ? "-" : data.RequestHeader.Nature.ToString(), fontStyleNormal));
             pdfPCell.PaddingBottom = cellPadding;
             pdfPCell.Border = borderSize;
             pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
@@ -670,7 +674,7 @@ namespace FI.PORTAL.Report
             pdfPCell.BackgroundColor = BaseColor.WHITE;
             pdfPCell.ExtraParagraphSpace = 0;
             main_table.AddCell(pdfPCell);
-            pdfPCell = new PdfPCell(new Phrase(data.RequestHeader.BusinessDuration.ToString(), fontStyleNormal));
+            pdfPCell = new PdfPCell(new Phrase(data.RequestHeader.BusinessDuration == null ? "-" : data.RequestHeader.BusinessDuration.ToString(), fontStyleNormal));
             pdfPCell.PaddingBottom = cellPadding;
             pdfPCell.Border = borderSize;
             pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
@@ -688,7 +692,7 @@ namespace FI.PORTAL.Report
             pdfPCell.BackgroundColor = BaseColor.WHITE;
             pdfPCell.ExtraParagraphSpace = 0;
             main_table.AddCell(pdfPCell);
-            pdfPCell = new PdfPCell(new Phrase(data.RequestHeader.BusinessArea.ToString(), fontStyleNormal));
+            pdfPCell = new PdfPCell(new Phrase(data.RequestHeader.BusinessArea == null ? "-" : data.RequestHeader.BusinessArea.ToString(), fontStyleNormal));
             pdfPCell.PaddingBottom = cellPadding;
             pdfPCell.Border = borderSize;
             pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
@@ -706,7 +710,7 @@ namespace FI.PORTAL.Report
             pdfPCell.BackgroundColor = BaseColor.WHITE;
             pdfPCell.ExtraParagraphSpace = 0;
             main_table.AddCell(pdfPCell);
-            pdfPCell = new PdfPCell(new Phrase(data.RequestHeader.BusinessPremises.ToString(), fontStyleNormal));
+            pdfPCell = new PdfPCell(new Phrase(data.RequestHeader.BusinessPremises == null ? "-" : data.RequestHeader.BusinessPremises.ToString(), fontStyleNormal));
             pdfPCell.PaddingBottom = cellPadding;
             pdfPCell.Border = borderSize;
             pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
@@ -743,7 +747,7 @@ namespace FI.PORTAL.Report
             pdfPCell.BackgroundColor = BaseColor.WHITE;
             pdfPCell.ExtraParagraphSpace = 0;
             main_table.AddCell(pdfPCell);
-            pdfPCell = new PdfPCell(new Phrase(data.RequestHeader.CusFinanceStability.ToString(), fontStyleNormal));
+            pdfPCell = new PdfPCell(new Phrase(data.RequestHeader.CusFinanceStability == null ? "-" : data.RequestHeader.CusFinanceStability.ToString(), fontStyleNormal));
             pdfPCell.PaddingBottom = cellPadding;
             pdfPCell.Border = borderSize;
             pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
@@ -762,7 +766,7 @@ namespace FI.PORTAL.Report
             pdfPCell.BackgroundColor = BaseColor.WHITE;
             pdfPCell.ExtraParagraphSpace = 0;
             main_table.AddCell(pdfPCell);
-            pdfPCell = new PdfPCell(new Phrase(data.RequestHeader.CusPayStrength.ToString(), fontStyleNormal));
+            pdfPCell = new PdfPCell(new Phrase(data.RequestHeader.CusPayStrength == null ? "-" : data.RequestHeader.CusPayStrength.ToString(), fontStyleNormal));
             pdfPCell.PaddingBottom = cellPadding;
             pdfPCell.Border = borderSize;
             pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
@@ -780,7 +784,7 @@ namespace FI.PORTAL.Report
             pdfPCell.BackgroundColor = BaseColor.WHITE;
             pdfPCell.ExtraParagraphSpace = 0;
             main_table.AddCell(pdfPCell);
-            pdfPCell = new PdfPCell(new Phrase(data.RequestHeader.InitialOrder.ToString(), fontStyleNormal));
+            pdfPCell = new PdfPCell(new Phrase(data.RequestHeader.InitialOrder == null ? "-" : data.RequestHeader.InitialOrder.ToString(), fontStyleNormal));
             pdfPCell.PaddingBottom = cellPadding;
             pdfPCell.Border = borderSize;
             pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
@@ -798,7 +802,7 @@ namespace FI.PORTAL.Report
             pdfPCell.BackgroundColor = BaseColor.WHITE;
             pdfPCell.ExtraParagraphSpace = 0;
             main_table.AddCell(pdfPCell);
-            pdfPCell = new PdfPCell(new Phrase(data.RequestHeader.FirstAvgSales.ToString(), fontStyleNormal));
+            pdfPCell = new PdfPCell(new Phrase(data.RequestHeader.FirstAvgSales == null ? "-" : data.RequestHeader.FirstAvgSales.ToString(), fontStyleNormal));
             pdfPCell.PaddingBottom = cellPadding;
             pdfPCell.Border = borderSize;
             pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
@@ -816,7 +820,7 @@ namespace FI.PORTAL.Report
             pdfPCell.BackgroundColor = BaseColor.WHITE;
             pdfPCell.ExtraParagraphSpace = 0;
             main_table.AddCell(pdfPCell);
-            pdfPCell = new PdfPCell(new Phrase(data.RequestHeader.NextAvgSales.ToString(), fontStyleNormal));
+            pdfPCell = new PdfPCell(new Phrase(data.RequestHeader.NextAvgSales == null ? "-" : data.RequestHeader.NextAvgSales.ToString(), fontStyleNormal));
             pdfPCell.PaddingBottom = cellPadding;
             pdfPCell.Border = borderSize;
             pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
@@ -834,7 +838,7 @@ namespace FI.PORTAL.Report
             pdfPCell.BackgroundColor = BaseColor.WHITE;
             pdfPCell.ExtraParagraphSpace = 0;
             main_table.AddCell(pdfPCell);
-            pdfPCell = new PdfPCell(new Phrase(data.RequestHeader.EstiPurchase.ToString(), fontStyleNormal));
+            pdfPCell = new PdfPCell(new Phrase(data.RequestHeader.EstiPurchase == null ? "-" : data.RequestHeader.EstiPurchase.ToString(), fontStyleNormal));
             pdfPCell.PaddingBottom = cellPadding;
             pdfPCell.Border = borderSize;
             pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
@@ -903,7 +907,7 @@ namespace FI.PORTAL.Report
                 foreach (var item in data.RequestOwners)
                 {
 
-                    pdfPCell = new PdfPCell(new Phrase(item.Owner_name.ToString(), fontStyle));
+                    pdfPCell = new PdfPCell(new Phrase(item.Owner_name == null ? "-" : item.Owner_name.ToString(), fontStyle));
                     pdfPCell.HorizontalAlignment = Element.ALIGN_CENTER;
                     pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
                     pdfPCell.BackgroundColor = BaseColor.WHITE;
@@ -912,14 +916,14 @@ namespace FI.PORTAL.Report
 
 
 
-                    pdfPCell = new PdfPCell(new Phrase(item.Contact_no.ToString(), fontStyle));
+                    pdfPCell = new PdfPCell(new Phrase(item.Contact_no == null ? "-" : item.Contact_no.ToString(), fontStyle));
                     pdfPCell.HorizontalAlignment = Element.ALIGN_CENTER;
                     pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
                     pdfPCell.BackgroundColor = BaseColor.WHITE;
                     pdfPCell.ExtraParagraphSpace = 0;
                     owner_table.AddCell(pdfPCell);
 
-                    pdfPCell = new PdfPCell(new Phrase(item.NIC.ToString(), fontStyle));
+                    pdfPCell = new PdfPCell(new Phrase(item.NIC == null ? "-" : item.NIC.ToString(), fontStyle));
                     pdfPCell.HorizontalAlignment = Element.ALIGN_CENTER;
                     pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
                     pdfPCell.BackgroundColor = BaseColor.WHITE;
@@ -985,21 +989,21 @@ namespace FI.PORTAL.Report
             {
                 foreach (var item in data.RequestPaintBrands)
                 {
-                    pdfPCell = new PdfPCell(new Phrase(item.PaintBrand.ToString(), fontStyle));
+                    pdfPCell = new PdfPCell(new Phrase(item.PaintBrand == null ? "-" : item.PaintBrand.ToString(), fontStyle));
                     pdfPCell.HorizontalAlignment = Element.ALIGN_CENTER;
                     pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
                     pdfPCell.BackgroundColor = BaseColor.WHITE;
                     pdfPCell.ExtraParagraphSpace = 0;
                     paintbrands_table.AddCell(pdfPCell);
 
-                    pdfPCell = new PdfPCell(new Phrase(item.StockVal.ToString(), fontStyle));
+                    pdfPCell = new PdfPCell(new Phrase(item.StockVal == null ? "-" : item.StockVal.ToString(), fontStyle));
                     pdfPCell.HorizontalAlignment = Element.ALIGN_CENTER;
                     pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
                     pdfPCell.BackgroundColor = BaseColor.WHITE;
                     pdfPCell.ExtraParagraphSpace = 0;
                     paintbrands_table.AddCell(pdfPCell);
 
-                    pdfPCell = new PdfPCell(new Phrase(item.MonthlyTOVal.ToString(), fontStyle));
+                    pdfPCell = new PdfPCell(new Phrase(item.MonthlyTOVal == null ? "-" : item.MonthlyTOVal.ToString(), fontStyle));
                     pdfPCell.HorizontalAlignment = Element.ALIGN_CENTER;
                     pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
                     pdfPCell.BackgroundColor = BaseColor.WHITE;
@@ -1074,28 +1078,28 @@ namespace FI.PORTAL.Report
             {
                 foreach (var item in data.RequestCompanies)
                 {
-                    pdfPCell = new PdfPCell(new Phrase(item.Company.ToString(), fontStyle));
+                    pdfPCell = new PdfPCell(new Phrase(item.Company == null ? "-" : item.Company.ToString(), fontStyle));
                     pdfPCell.HorizontalAlignment = Element.ALIGN_CENTER;
                     pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
                     pdfPCell.BackgroundColor = BaseColor.WHITE;
                     pdfPCell.ExtraParagraphSpace = 0;
                     other_companies_table.AddCell(pdfPCell);
 
-                    pdfPCell = new PdfPCell(new Phrase(item.CreditLimit.ToString(), fontStyle));
+                    pdfPCell = new PdfPCell(new Phrase(item.CreditLimit == null ? "-" : item.CreditLimit.ToString(), fontStyle));
                     pdfPCell.HorizontalAlignment = Element.ALIGN_CENTER;
                     pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
                     pdfPCell.BackgroundColor = BaseColor.WHITE;
                     pdfPCell.ExtraParagraphSpace = 0;
                     other_companies_table.AddCell(pdfPCell);
 
-                    pdfPCell = new PdfPCell(new Phrase(item.CreditPeriod.ToString(), fontStyle));
+                    pdfPCell = new PdfPCell(new Phrase(item.CreditPeriod == null ? "-" : item.CreditPeriod.ToString(), fontStyle));
                     pdfPCell.HorizontalAlignment = Element.ALIGN_CENTER;
                     pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
                     pdfPCell.BackgroundColor = BaseColor.WHITE;
                     pdfPCell.ExtraParagraphSpace = 0;
                     other_companies_table.AddCell(pdfPCell);
 
-                    pdfPCell = new PdfPCell(new Phrase(item.Discount.ToString(), fontStyle));
+                    pdfPCell = new PdfPCell(new Phrase(item.Discount == null ? "-" : item.Discount.ToString(), fontStyle));
                     pdfPCell.HorizontalAlignment = Element.ALIGN_CENTER;
                     pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
                     pdfPCell.BackgroundColor = BaseColor.WHITE;
