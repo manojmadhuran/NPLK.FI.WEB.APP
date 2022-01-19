@@ -79,8 +79,6 @@ namespace FI.PORTAL.Report
 
         }
 
-        
-
         private void HeaderTable()
         {
             header_table.WidthPercentage = 100;

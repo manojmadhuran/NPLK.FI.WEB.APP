@@ -11,7 +11,6 @@ namespace FI.PORTAL.ViewModels
     {
         public IPagedList<COLLECTION> collection { get; set; }
 
-        public IEnumerable<Area_Master> areas { get; set; }
 
     }
 }

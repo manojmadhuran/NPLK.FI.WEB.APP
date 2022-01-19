@@ -4,12 +4,11 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="1794665f1d854e4f9391bccc0fc95d1a" Name="Diagram1">
-        <EntityTypeShape EntityType="COL_SYSModel.COLLECTION" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="COL_SYSModel.PAYED_INVOICES" Width="1.5" PointX="3.375" PointY="0.75" />
-        <EntityTypeShape EntityType="COL_SYSModel.COLLECTION_TICKETS" Width="1.5" PointX="0.75" PointY="4.75" />
-        <EntityTypeShape EntityType="COL_SYSModel.TICKET_MSGS" Width="1.5" PointX="5.75" PointY="0.75" />
-        <EntityTypeShape EntityType="COL_SYSModel.Area_Master" Width="1.5" PointX="5.375" PointY="3.75" />
+      <Diagram DiagramId="53d7cf7333b5423baa9d9ae0c311e174" Name="Diagram1">
+        <EntityTypeShape EntityType="Collection_SYS_Model.COLLECTION_TICKETS" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Collection_SYS_Model.TICKET_MSGS" Width="1.5" PointX="2.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Collection_SYS_Model.COLLECTION" Width="1.5" PointX="0.75" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Collection_SYS_Model.PAYED_INVOICES" Width="1.5" PointX="2.75" PointY="3.75" IsExpanded="true" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
