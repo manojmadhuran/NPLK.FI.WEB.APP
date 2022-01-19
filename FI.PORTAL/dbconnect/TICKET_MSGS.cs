@@ -17,7 +17,7 @@ namespace FI.PORTAL.dbconnect
         public int msg_id { get; set; }
         public Nullable<int> ticket_id { get; set; }
         public string msg { get; set; }
-        public Nullable<System.DateTime> date_time { get; set; }
         public string msg_from { get; set; }
+        public Nullable<System.DateTime> date_time { get; set; }
     }
 }

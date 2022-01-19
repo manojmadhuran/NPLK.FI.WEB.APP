@@ -18,7 +18,7 @@ namespace FI.PORTAL.dbconnect
         public string collection_no { get; set; }
         public Nullable<System.DateTime> collection_date { get; set; }
         public string sales_code { get; set; }
-        public Nullable<bool> acknowledge { get; set; }
+        public bool acknowledge { get; set; }
         public string acknowledge_by { get; set; }
         public Nullable<System.DateTime> acknowledged_date { get; set; }
         public string created_by { get; set; }

@@ -1,4 +1,5 @@
 ﻿using FI.PORTAL.dbconnect;
+using PagedList;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,8 +9,8 @@ namespace FI.PORTAL.ViewModels
 {
     public class CollectionVM
     {
-        public IEnumerable<COLLECTION> collection { get; set; }
+        public IPagedList<COLLECTION> collection { get; set; }
 
-        public IEnumerable<Area_Master> areas { get; set; }
+
     }
 }

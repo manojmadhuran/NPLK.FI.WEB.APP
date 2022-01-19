@@ -4,17 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="COL_SYSModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
-        <!--Errors Found During Generation:
-warning 6002: The table/view 'INV_SYS.dbo.Area_Master' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
-        <EntityType Name="Area_Master">
-          <Key>
-            <PropertyRef Name="AreaID" />
-          </Key>
-          <Property Name="AreaID" Type="numeric" Precision="10" Scale="0" Nullable="false" />
-          <Property Name="AreaName" Type="varchar" MaxLength="50" />
-          <Property Name="SalesCode" Type="varchar" MaxLength="10" />
-        </EntityType>
+      <Schema Namespace="Collection_SYS_Model.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="COLLECTION_TICKETS">
           <Key>
             <PropertyRef Name="ticket_id" />
@@ -23,22 +13,25 @@ warning 6002: The table/view 'INV_SYS.dbo.Area_Master' does not have a primary k
           <Property Name="collection_id" Type="varchar" MaxLength="20" />
           <Property Name="status" Type="bit" Nullable="false" />
         </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'FINANCE_GEN_SYS.dbo.COLLECTIONS' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="COLLECTIONS">
           <Key>
             <PropertyRef Name="id" />
+            <PropertyRef Name="acknowledge" />
           </Key>
           <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="collection_no" Type="varchar" MaxLength="225" />
+          <Property Name="collection_no" Type="varchar" MaxLength="50" />
           <Property Name="collection_date" Type="smalldatetime" />
-          <Property Name="sales_code" Type="varchar" MaxLength="225" />
-          <Property Name="acknowledge" Type="bit" />
-          <Property Name="acknowledge_by" Type="varchar" MaxLength="225" />
+          <Property Name="sales_code" Type="varchar" MaxLength="10" />
+          <Property Name="acknowledge" Type="bit" Nullable="false" />
+          <Property Name="acknowledge_by" Type="varchar" MaxLength="50" />
           <Property Name="acknowledged_date" Type="smalldatetime" />
-          <Property Name="created_by" Type="varchar" MaxLength="255" />
-          <Property Name="area_name" Type="varchar" MaxLength="255" />
+          <Property Name="created_by" Type="varchar" MaxLength="50" />
+          <Property Name="area_name" Type="varchar" MaxLength="50" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'INV_SYS.dbo.PAYED_INVOICES' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'FINANCE_GEN_SYS.dbo.PAYED_INVOICES' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="PAYED_INVOICES">
           <Key>
             <PropertyRef Name="id" />
@@ -48,7 +41,7 @@ warning 6002: The table/view 'INV_SYS.dbo.PAYED_INVOICES' does not have a primar
           <Property Name="payment_key" Type="varchar" MaxLength="225" />
           <Property Name="invoice_no" Type="varchar" MaxLength="225" />
           <Property Name="customer_id" Type="varchar" MaxLength="225" />
-          <Property Name="sales_code" Type="varchar" MaxLength="225" />
+          <Property Name="sales_code" Type="varchar" MaxLength="10" />
           <Property Name="invoice_amount" Type="decimal" Precision="19" Scale="2" />
           <Property Name="invoice_allocated" Type="decimal" Precision="19" Scale="2" />
           <Property Name="payment_term" Type="varchar" MaxLength="100" />
@@ -75,16 +68,21 @@ warning 6002: The table/view 'INV_SYS.dbo.PAYED_INVOICES' does not have a primar
           <Parameter Name="invoice_id" Type="varchar" Mode="In" />
           <Parameter Name="state" Type="bit" Mode="In" />
         </Function>
-        <EntityContainer Name="COL_SYSModelStoreContainer">
+        <EntityContainer Name="Collection_SYS_ModelStoreContainer">
           <EntitySet Name="COLLECTION_TICKETS" EntityType="Self.COLLECTION_TICKETS" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="COLLECTIONS" EntityType="Self.COLLECTIONS" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TICKET_MSGS" EntityType="Self.TICKET_MSGS" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="Area_Master" EntityType="Self.Area_Master" store:Type="Tables" store:Schema="dbo">
+          <EntitySet Name="COLLECTIONS" EntityType="Self.COLLECTIONS" store:Type="Tables" store:Schema="dbo">
             <DefiningQuery>SELECT 
-    [Area_Master].[AreaID] AS [AreaID], 
-    [Area_Master].[AreaName] AS [AreaName], 
-    [Area_Master].[SalesCode] AS [SalesCode]
-    FROM [dbo].[Area_Master] AS [Area_Master]</DefiningQuery>
+    [COLLECTIONS].[id] AS [id], 
+    [COLLECTIONS].[collection_no] AS [collection_no], 
+    [COLLECTIONS].[collection_date] AS [collection_date], 
+    [COLLECTIONS].[sales_code] AS [sales_code], 
+    [COLLECTIONS].[acknowledge] AS [acknowledge], 
+    [COLLECTIONS].[acknowledge_by] AS [acknowledge_by], 
+    [COLLECTIONS].[acknowledged_date] AS [acknowledged_date], 
+    [COLLECTIONS].[created_by] AS [created_by], 
+    [COLLECTIONS].[area_name] AS [area_name]
+    FROM [dbo].[COLLECTIONS] AS [COLLECTIONS]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="PAYED_INVOICES" EntityType="Self.PAYED_INVOICES" store:Type="Tables" store:Schema="dbo">
             <DefiningQuery>SELECT 
@@ -105,57 +103,11 @@ warning 6002: The table/view 'INV_SYS.dbo.PAYED_INVOICES' does not have a primar
     FROM [dbo].[PAYED_INVOICES] AS [PAYED_INVOICES]</DefiningQuery>
           </EntitySet>
         </EntityContainer>
-      </Schema></edmx:StorageModels>
+      </Schema>
+    </edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
-      <Schema Namespace="COL_SYSModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
-        <EntityType Name="COLLECTION">
-          <Key>
-            <PropertyRef Name="id" />
-          </Key>
-          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="collection_no" Type="String" MaxLength="225" FixedLength="false" Unicode="false" />
-          <Property Name="collection_date" Type="DateTime" Precision="0" />
-          <Property Name="sales_code" Type="String" MaxLength="225" FixedLength="false" Unicode="false" />
-          <Property Name="acknowledge" Type="Boolean" />
-          <Property Name="acknowledge_by" Type="String" MaxLength="225" FixedLength="false" Unicode="false" />
-          <Property Name="acknowledged_date" Type="DateTime" Precision="0" />
-          <Property Name="created_by" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
-          <Property Name="area_name" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
-        </EntityType>
-        <EntityContainer Name="CollectionSYSEntities" annotation:LazyLoadingEnabled="true">
-          <EntitySet Name="COLLECTIONS" EntityType="Self.COLLECTION" />
-          <EntitySet Name="PAYED_INVOICES" EntityType="COL_SYSModel.PAYED_INVOICES" />
-          <FunctionImport Name="UpdateInvoiceAcknowledge">
-            <Parameter Name="invoice_id" Mode="In" Type="String" />
-            <Parameter Name="state" Mode="In" Type="Boolean" />
-          </FunctionImport>
-          <EntitySet Name="COLLECTION_TICKETS" EntityType="COL_SYSModel.COLLECTION_TICKETS" />
-          <EntitySet Name="TICKET_MSGS" EntityType="COL_SYSModel.TICKET_MSGS" />
-          <EntitySet Name="Area_Master" EntityType="COL_SYSModel.Area_Master" />
-          <FunctionImport Name="FullCollectionData" ReturnType="Collection(COL_SYSModel.FullCollectionData_Result)">
-            <Parameter Name="collectionID" Mode="In" Type="String" />
-          </FunctionImport>
-        </EntityContainer>
-        <EntityType Name="PAYED_INVOICES">
-          <Key>
-            <PropertyRef Name="id" />
-          </Key>
-          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="collection_no" Type="String" MaxLength="225" FixedLength="false" Unicode="false" />
-          <Property Name="payment_key" Type="String" MaxLength="225" FixedLength="false" Unicode="false" />
-          <Property Name="invoice_no" Type="String" MaxLength="225" FixedLength="false" Unicode="false" />
-          <Property Name="customer_id" Type="String" MaxLength="225" FixedLength="false" Unicode="false" />
-          <Property Name="sales_code" Type="String" MaxLength="225" FixedLength="false" Unicode="false" />
-          <Property Name="invoice_amount" Type="Decimal" Precision="19" Scale="2" />
-          <Property Name="invoice_allocated" Type="Decimal" Precision="19" Scale="2" />
-          <Property Name="payment_term" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="os_balance" Type="Decimal" Precision="19" Scale="2" />
-          <Property Name="nod" Type="Int32" />
-          <Property Name="invoice_date" Type="DateTime" Precision="0" />
-          <Property Name="remarks" Type="String" MaxLength="2000" FixedLength="false" Unicode="false" />
-          <Property Name="acknowledge" Type="Boolean" />
-        </EntityType>
+      <Schema Namespace="Collection_SYS_Model" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
         <EntityType Name="COLLECTION_TICKETS">
           <Key>
             <PropertyRef Name="ticket_id" />
@@ -171,27 +123,66 @@ warning 6002: The table/view 'INV_SYS.dbo.PAYED_INVOICES' does not have a primar
           <Property Name="msg_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="ticket_id" Type="Int32" />
           <Property Name="msg" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="date_time" Type="DateTime" Precision="0" />
           <Property Name="msg_from" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="date_time" Type="DateTime" Precision="0" />
         </EntityType>
-        <EntityType Name="Area_Master">
+        <EntityType Name="COLLECTION">
           <Key>
-            <PropertyRef Name="AreaID" />
+            <PropertyRef Name="id" />
+            <PropertyRef Name="acknowledge" />
           </Key>
-          <Property Name="AreaID" Type="Decimal" Nullable="false" Precision="10" Scale="0" />
-          <Property Name="AreaName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="SalesCode" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="collection_no" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="collection_date" Type="DateTime" Precision="0" />
+          <Property Name="sales_code" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="acknowledge" Type="Boolean" Nullable="false" />
+          <Property Name="acknowledge_by" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="acknowledged_date" Type="DateTime" Precision="0" />
+          <Property Name="created_by" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="area_name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
         </EntityType>
+        <EntityType Name="PAYED_INVOICES">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="collection_no" Type="String" MaxLength="225" FixedLength="false" Unicode="false" />
+          <Property Name="payment_key" Type="String" MaxLength="225" FixedLength="false" Unicode="false" />
+          <Property Name="invoice_no" Type="String" MaxLength="225" FixedLength="false" Unicode="false" />
+          <Property Name="customer_id" Type="String" MaxLength="225" FixedLength="false" Unicode="false" />
+          <Property Name="sales_code" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="invoice_amount" Type="Decimal" Precision="19" Scale="2" />
+          <Property Name="invoice_allocated" Type="Decimal" Precision="19" Scale="2" />
+          <Property Name="payment_term" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="os_balance" Type="Decimal" Precision="19" Scale="2" />
+          <Property Name="nod" Type="Int32" />
+          <Property Name="invoice_date" Type="DateTime" Precision="0" />
+          <Property Name="remarks" Type="String" MaxLength="2000" FixedLength="false" Unicode="false" />
+          <Property Name="acknowledge" Type="Boolean" />
+        </EntityType>
+        <EntityContainer Name="Collection_SYSEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="COLLECTION_TICKETS" EntityType="Self.COLLECTION_TICKETS" />
+          <EntitySet Name="TICKET_MSGS" EntityType="Self.TICKET_MSGS" />
+          <EntitySet Name="COLLECTIONS" EntityType="Self.COLLECTION" />
+          <EntitySet Name="PAYED_INVOICES" EntityType="Self.PAYED_INVOICES" />
+          <FunctionImport Name="FullCollectionData" ReturnType="Collection(Collection_SYS_Model.FullCollectionData_Result)">
+            <Parameter Name="collectionID" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="UpdateInvoiceAcknowledge">
+            <Parameter Name="invoice_id" Mode="In" Type="String" />
+            <Parameter Name="state" Mode="In" Type="Boolean" />
+          </FunctionImport>
+        </EntityContainer>
         <ComplexType Name="FullCollectionData_Result">
           <Property Type="Int32" Name="id" Nullable="true" />
-          <Property Type="String" Name="collection_no" Nullable="true" MaxLength="225" />
+          <Property Type="String" Name="collection_no" Nullable="true" MaxLength="50" />
           <Property Type="DateTime" Name="collection_date" Nullable="true" Precision="16" />
-          <Property Type="String" Name="sales_code" Nullable="true" MaxLength="225" />
-          <Property Type="String" Name="area_name" Nullable="true" MaxLength="255" />
-          <Property Type="String" Name="created_by" Nullable="true" MaxLength="255" />
+          <Property Type="String" Name="sales_code" Nullable="true" MaxLength="10" />
           <Property Type="Boolean" Name="acknowledge" Nullable="true" />
-          <Property Type="String" Name="acknowledge_by" Nullable="true" MaxLength="225" />
+          <Property Type="String" Name="acknowledge_by" Nullable="true" MaxLength="50" />
           <Property Type="DateTime" Name="acknowledged_date" Nullable="true" Precision="16" />
+          <Property Type="String" Name="area_name" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="created_by" Nullable="true" MaxLength="50" />
           <Property Type="String" Name="payment_collection_no" Nullable="true" MaxLength="225" />
           <Property Type="String" Name="customer_code" Nullable="true" MaxLength="225" />
           <Property Type="String" Name="cus_sales_group" Nullable="true" MaxLength="225" />
@@ -213,7 +204,7 @@ warning 6002: The table/view 'INV_SYS.dbo.PAYED_INVOICES' does not have a primar
           <Property Type="String" Name="invoice_payment_key" Nullable="true" MaxLength="225" />
           <Property Type="String" Name="invoice_no" Nullable="true" MaxLength="225" />
           <Property Type="String" Name="invoice_cutomer_id" Nullable="true" MaxLength="225" />
-          <Property Type="String" Name="invoice_sales_code" Nullable="true" MaxLength="225" />
+          <Property Type="String" Name="invoice_sales_code" Nullable="true" MaxLength="10" />
           <Property Type="Decimal" Name="invoice_amount" Nullable="true" Precision="19" Scale="2" />
           <Property Type="Decimal" Name="invoice_allocated" Nullable="true" Precision="19" Scale="2" />
           <Property Type="String" Name="payment_term" Nullable="true" MaxLength="100" />
@@ -221,7 +212,7 @@ warning 6002: The table/view 'INV_SYS.dbo.PAYED_INVOICES' does not have a primar
           <Property Type="Int32" Name="nod" Nullable="true" />
           <Property Type="DateTime" Name="invoice_date" Nullable="true" Precision="16" />
           <Property Type="String" Name="remarks" Nullable="true" MaxLength="2000" />
-          <Property Type="String" Name="CusName" Nullable="true" MaxLength="255" />
+          <Property Type="String" Name="CusName" Nullable="true" MaxLength="50" />
           <Property Type="Boolean" Name="invoice_acknowledge" Nullable="true" />
         </ComplexType>
       </Schema>
@@ -229,84 +220,74 @@ warning 6002: The table/view 'INV_SYS.dbo.PAYED_INVOICES' does not have a primar
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
-        <EntityContainerMapping StorageEntityContainer="COL_SYSModelStoreContainer" CdmEntityContainer="CollectionSYSEntities">
-          <EntitySetMapping Name="COLLECTIONS">
-            <EntityTypeMapping TypeName="COL_SYSModel.COLLECTION">
-              <MappingFragment StoreEntitySet="COLLECTIONS">
-                <ScalarProperty Name="area_name" ColumnName="area_name" />
-                <ScalarProperty Name="created_by" ColumnName="created_by" />
-                <ScalarProperty Name="id" ColumnName="id" />
-                <ScalarProperty Name="collection_no" ColumnName="collection_no" />
-                <ScalarProperty Name="collection_date" ColumnName="collection_date" />
-                <ScalarProperty Name="sales_code" ColumnName="sales_code" />
-                <ScalarProperty Name="acknowledge" ColumnName="acknowledge" />
-                <ScalarProperty Name="acknowledge_by" ColumnName="acknowledge_by" />
-                <ScalarProperty Name="acknowledged_date" ColumnName="acknowledged_date" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="PAYED_INVOICES">
-            <EntityTypeMapping TypeName="COL_SYSModel.PAYED_INVOICES">
-              <MappingFragment StoreEntitySet="PAYED_INVOICES">
-                <ScalarProperty Name="acknowledge" ColumnName="acknowledge" />
-                <ScalarProperty Name="remarks" ColumnName="remarks" />
-                <ScalarProperty Name="invoice_date" ColumnName="invoice_date" />
-                <ScalarProperty Name="nod" ColumnName="nod" />
-                <ScalarProperty Name="os_balance" ColumnName="os_balance" />
-                <ScalarProperty Name="payment_term" ColumnName="payment_term" />
-                <ScalarProperty Name="invoice_allocated" ColumnName="invoice_allocated" />
-                <ScalarProperty Name="invoice_amount" ColumnName="invoice_amount" />
-                <ScalarProperty Name="sales_code" ColumnName="sales_code" />
-                <ScalarProperty Name="customer_id" ColumnName="customer_id" />
-                <ScalarProperty Name="invoice_no" ColumnName="invoice_no" />
-                <ScalarProperty Name="payment_key" ColumnName="payment_key" />
-                <ScalarProperty Name="collection_no" ColumnName="collection_no" />
-                <ScalarProperty Name="id" ColumnName="id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <FunctionImportMapping FunctionImportName="UpdateInvoiceAcknowledge" FunctionName="COL_SYSModel.Store.UpdateInvoiceAcknowledge" />
+        <EntityContainerMapping StorageEntityContainer="Collection_SYS_ModelStoreContainer" CdmEntityContainer="Collection_SYSEntities">
           <EntitySetMapping Name="COLLECTION_TICKETS">
-            <EntityTypeMapping TypeName="COL_SYSModel.COLLECTION_TICKETS">
+            <EntityTypeMapping TypeName="Collection_SYS_Model.COLLECTION_TICKETS">
               <MappingFragment StoreEntitySet="COLLECTION_TICKETS">
-                <ScalarProperty Name="status" ColumnName="status" />
-                <ScalarProperty Name="collection_id" ColumnName="collection_id" />
                 <ScalarProperty Name="ticket_id" ColumnName="ticket_id" />
+                <ScalarProperty Name="collection_id" ColumnName="collection_id" />
+                <ScalarProperty Name="status" ColumnName="status" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="TICKET_MSGS">
-            <EntityTypeMapping TypeName="COL_SYSModel.TICKET_MSGS">
+            <EntityTypeMapping TypeName="Collection_SYS_Model.TICKET_MSGS">
               <MappingFragment StoreEntitySet="TICKET_MSGS">
+                <ScalarProperty Name="msg_id" ColumnName="msg_id" />
+                <ScalarProperty Name="ticket_id" ColumnName="ticket_id" />
+                <ScalarProperty Name="msg" ColumnName="msg" />
                 <ScalarProperty Name="msg_from" ColumnName="msg_from" />
                 <ScalarProperty Name="date_time" ColumnName="date_time" />
-                <ScalarProperty Name="msg" ColumnName="msg" />
-                <ScalarProperty Name="ticket_id" ColumnName="ticket_id" />
-                <ScalarProperty Name="msg_id" ColumnName="msg_id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="Area_Master">
-            <EntityTypeMapping TypeName="COL_SYSModel.Area_Master">
-              <MappingFragment StoreEntitySet="Area_Master">
-                <ScalarProperty Name="SalesCode" ColumnName="SalesCode" />
-                <ScalarProperty Name="AreaName" ColumnName="AreaName" />
-                <ScalarProperty Name="AreaID" ColumnName="AreaID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <FunctionImportMapping FunctionImportName="FullCollectionData" FunctionName="COL_SYSModel.Store.FullCollectionData">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="COL_SYSModel.FullCollectionData_Result">
+          <EntitySetMapping Name="COLLECTIONS">
+            <EntityTypeMapping TypeName="Collection_SYS_Model.COLLECTION">
+              <MappingFragment StoreEntitySet="COLLECTIONS">
                 <ScalarProperty Name="id" ColumnName="id" />
                 <ScalarProperty Name="collection_no" ColumnName="collection_no" />
                 <ScalarProperty Name="collection_date" ColumnName="collection_date" />
                 <ScalarProperty Name="sales_code" ColumnName="sales_code" />
-                <ScalarProperty Name="area_name" ColumnName="area_name" />
-                <ScalarProperty Name="created_by" ColumnName="created_by" />
                 <ScalarProperty Name="acknowledge" ColumnName="acknowledge" />
                 <ScalarProperty Name="acknowledge_by" ColumnName="acknowledge_by" />
                 <ScalarProperty Name="acknowledged_date" ColumnName="acknowledged_date" />
+                <ScalarProperty Name="created_by" ColumnName="created_by" />
+                <ScalarProperty Name="area_name" ColumnName="area_name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PAYED_INVOICES">
+            <EntityTypeMapping TypeName="Collection_SYS_Model.PAYED_INVOICES">
+              <MappingFragment StoreEntitySet="PAYED_INVOICES">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="collection_no" ColumnName="collection_no" />
+                <ScalarProperty Name="payment_key" ColumnName="payment_key" />
+                <ScalarProperty Name="invoice_no" ColumnName="invoice_no" />
+                <ScalarProperty Name="customer_id" ColumnName="customer_id" />
+                <ScalarProperty Name="sales_code" ColumnName="sales_code" />
+                <ScalarProperty Name="invoice_amount" ColumnName="invoice_amount" />
+                <ScalarProperty Name="invoice_allocated" ColumnName="invoice_allocated" />
+                <ScalarProperty Name="payment_term" ColumnName="payment_term" />
+                <ScalarProperty Name="os_balance" ColumnName="os_balance" />
+                <ScalarProperty Name="nod" ColumnName="nod" />
+                <ScalarProperty Name="invoice_date" ColumnName="invoice_date" />
+                <ScalarProperty Name="remarks" ColumnName="remarks" />
+                <ScalarProperty Name="acknowledge" ColumnName="acknowledge" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="FullCollectionData" FunctionName="Collection_SYS_Model.Store.FullCollectionData">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="Collection_SYS_Model.FullCollectionData_Result">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="collection_no" ColumnName="collection_no" />
+                <ScalarProperty Name="collection_date" ColumnName="collection_date" />
+                <ScalarProperty Name="sales_code" ColumnName="sales_code" />
+                <ScalarProperty Name="acknowledge" ColumnName="acknowledge" />
+                <ScalarProperty Name="acknowledge_by" ColumnName="acknowledge_by" />
+                <ScalarProperty Name="acknowledged_date" ColumnName="acknowledged_date" />
+                <ScalarProperty Name="area_name" ColumnName="area_name" />
+                <ScalarProperty Name="created_by" ColumnName="created_by" />
                 <ScalarProperty Name="payment_collection_no" ColumnName="payment_collection_no" />
                 <ScalarProperty Name="customer_code" ColumnName="customer_code" />
                 <ScalarProperty Name="cus_sales_group" ColumnName="cus_sales_group" />
@@ -341,6 +322,7 @@ warning 6002: The table/view 'INV_SYS.dbo.PAYED_INVOICES' does not have a primar
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="UpdateInvoiceAcknowledge" FunctionName="Collection_SYS_Model.Store.UpdateInvoiceAcknowledge" />
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
