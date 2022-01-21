@@ -23,7 +23,7 @@
                                 <label for="sort_menu">Sort: </label>
                             </div>
                             <div class="col-auto my-1">
-                                <select id="sort_menu" class="custom-select mr-sm-2" name="sortby" onchange="sortChange()">
+                                <select id="sort_menu" class="form-control form-control-sm" name="sortby" onchange="sortChange()">
                                     <option value="All" selected="@(currentSort == "All" ? "selected" : null)">All</option>
                                     <option value="Pending" selected="@(currentSort == "Pending" ? "selected" : null)">Pending</option>
                                     <option value="Acknowledged" selected="@(currentSort == "Acknowledged" ? "selected" : null)">Acknowledged</option>
@@ -42,7 +42,7 @@
                                 <label for="search_by">Search By: </label>
                             </div>
                             <div class="col-auto my-1">
-                                <select id="search_by" class="custom-select mr-sm-2">
+                                <select id="search_by" class="form-control form-control-sm">
                                     <option value="Collection_ID" selected="@(SearchBySession == "Collection_ID" ? "selected" : null)">Collection ID</option>
                                     <option value="Sales_Code" selected="@(SearchBySession == "Sales_Code" ? "selected" : null)">Sales Code</option>
                                     <option value="Area" selected="@(SearchBySession == "Area" ? "selected" : null)">Area</option>
@@ -50,15 +50,47 @@
                                 </select>
                             </div>
                             <div class="col-auto my-1">
-                                <input type="text" class="form-control" id="search_value" value="@SearchValueSession"/>
+                                <input type="text" class="form-control form-control-sm" id="search_value" value="@SearchValueSession" />
                             </div>
                             <div class="col-auto my-1">
-                                <button type="button" class="btn btn-primary" onclick="location.href='@Url.Action("CollectionHome", "Collection", new {type = "reset"})'">Reset</button>
+                                <button type="button" class="btn btn-primary btn-sm" onclick="location.href='@Url.Action("CollectionHome", "Collection", new {type = "reset"})'">Reset</button>
                             </div>
                         </div>
 
                     </div>
 
+
+                    @*<div style="padding-left:1%">
+
+                        <div class="form-row align-items-center">
+                            <div class="col-auto my-1">
+                                <label for="filter_by_date">Filter By Date: </label>
+                            </div>
+
+                            <div class="col-auto my-1">
+                                <label for="filter_by_date">&nbsp; From </label>
+                            </div>
+                            <div class="col-auto my-1">
+                                <input type="date" class="form-control form-control-sm" id="from_date"/>
+                            </div>
+
+                            <div class="col-auto my-1">
+                                <label for="filter_by_date">&nbsp; To </label>
+                            </div>
+                            <div class="col-auto my-1">
+                                <input type="date" class="form-control form-control-sm" id="to_date" />
+                            </div>
+
+                            <div class="col-auto my-1">
+                                <button type="button" class="btn btn-primary btn-sm" onclick="dateFilter()">Set Date</button>
+                            </div>
+
+                            <div class="col-auto my-1">
+                                <button type="button" class="btn btn-primary btn-sm" onclick="location.href='@Url.Action("DateFilter", "Collection", new {fromDate = DateTime.Now,  toDate= DateTime.Now})'">Reset Date</button>
+                            </div>
+                        </div>
+
+                    </div>*@
 
                 </div>
             </div>
@@ -72,6 +104,8 @@
         <div class="card">
             <div class="card-header">
                 <h4>Collection Requests</h4>
+                @*<h1>FROM Date: @Session["toDate"]</h1>
+                <h1>To Date: @Session["fromDate"]</h1>*@
             </div>
             <div class="card-body">
 
@@ -238,6 +272,24 @@
             url: '/Collection/sortAction',
             dataType: 'json',
             data: { sort: selected },
+            success: function (result) {
+                location.reload()
+            }
+        });
+    }
+
+
+    function dateFilter() {
+        var fromDate = new Date(document.getElementById("from_date").value);
+        var toDate = new Date(document.getElementById("to_date").value);
+
+        alert("From: " + fromDate + " To: " + toDate);
+
+        $.ajax({
+            type: 'POST',
+            url: '/Collection/DateFilter',
+            dataType: 'json',
+            data: { fromDate: '2022/01/01', toDate: '2022/01/01' },
             success: function (result) {
                 location.reload()
             }

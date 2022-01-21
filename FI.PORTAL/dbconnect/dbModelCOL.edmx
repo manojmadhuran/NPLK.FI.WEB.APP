@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="Collection_SYS_Model.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="Collection_SYS_Model.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="COLLECTION_TICKETS">
           <Key>
             <PropertyRef Name="ticket_id" />
@@ -13,12 +13,9 @@
           <Property Name="collection_id" Type="varchar" MaxLength="20" />
           <Property Name="status" Type="bit" Nullable="false" />
         </EntityType>
-        <!--Errors Found During Generation:
-warning 6002: The table/view 'FINANCE_GEN_SYS.dbo.COLLECTIONS' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="COLLECTIONS">
           <Key>
             <PropertyRef Name="id" />
-            <PropertyRef Name="acknowledge" />
           </Key>
           <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="collection_no" Type="varchar" MaxLength="50" />
@@ -70,20 +67,8 @@ warning 6002: The table/view 'FINANCE_GEN_SYS.dbo.PAYED_INVOICES' does not have 
         </Function>
         <EntityContainer Name="Collection_SYS_ModelStoreContainer">
           <EntitySet Name="COLLECTION_TICKETS" EntityType="Self.COLLECTION_TICKETS" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="COLLECTIONS" EntityType="Self.COLLECTIONS" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TICKET_MSGS" EntityType="Self.TICKET_MSGS" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="COLLECTIONS" EntityType="Self.COLLECTIONS" store:Type="Tables" store:Schema="dbo">
-            <DefiningQuery>SELECT 
-    [COLLECTIONS].[id] AS [id], 
-    [COLLECTIONS].[collection_no] AS [collection_no], 
-    [COLLECTIONS].[collection_date] AS [collection_date], 
-    [COLLECTIONS].[sales_code] AS [sales_code], 
-    [COLLECTIONS].[acknowledge] AS [acknowledge], 
-    [COLLECTIONS].[acknowledge_by] AS [acknowledge_by], 
-    [COLLECTIONS].[acknowledged_date] AS [acknowledged_date], 
-    [COLLECTIONS].[created_by] AS [created_by], 
-    [COLLECTIONS].[area_name] AS [area_name]
-    FROM [dbo].[COLLECTIONS] AS [COLLECTIONS]</DefiningQuery>
-          </EntitySet>
           <EntitySet Name="PAYED_INVOICES" EntityType="Self.PAYED_INVOICES" store:Type="Tables" store:Schema="dbo">
             <DefiningQuery>SELECT 
     [PAYED_INVOICES].[id] AS [id], 
@@ -103,8 +88,7 @@ warning 6002: The table/view 'FINANCE_GEN_SYS.dbo.PAYED_INVOICES' does not have 
     FROM [dbo].[PAYED_INVOICES] AS [PAYED_INVOICES]</DefiningQuery>
           </EntitySet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="Collection_SYS_Model" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -129,7 +113,6 @@ warning 6002: The table/view 'FINANCE_GEN_SYS.dbo.PAYED_INVOICES' does not have 
         <EntityType Name="COLLECTION">
           <Key>
             <PropertyRef Name="id" />
-            <PropertyRef Name="acknowledge" />
           </Key>
           <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="collection_no" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
@@ -166,7 +149,7 @@ warning 6002: The table/view 'FINANCE_GEN_SYS.dbo.PAYED_INVOICES' does not have 
           <EntitySet Name="COLLECTIONS" EntityType="Self.COLLECTION" />
           <EntitySet Name="PAYED_INVOICES" EntityType="Self.PAYED_INVOICES" />
           <FunctionImport Name="FullCollectionData" ReturnType="Collection(Collection_SYS_Model.FullCollectionData_Result)">
-            <Parameter Name="collectionID" Mode="In" Type="String" />
+          <Parameter Name="collectionID" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="UpdateInvoiceAcknowledge">
             <Parameter Name="invoice_id" Mode="In" Type="String" />

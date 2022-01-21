@@ -45,7 +45,9 @@ namespace FI.PORTAL.Controllers
                 Session["sorting"] = "All";
                 ViewBag.sortString = "All";
 
-                var result_collections = COL_dbObj.COLLECTIONS.ToList();
+                var date = new DateTime(2022, 1, 18);
+
+                var result_collections = COL_dbObj.COLLECTIONS.Where(c=> c.collection_date <= date).ToList();
 
              
                 var viewModel = new CollectionVM
@@ -66,7 +68,9 @@ namespace FI.PORTAL.Controllers
 
                 if (sorting.Equals("All"))
                 {
-                    result_collections = COL_dbObj.COLLECTIONS.ToList();
+                    var date = new DateTime(2022, 1, 18);
+
+                    result_collections = COL_dbObj.COLLECTIONS.Where(c => c.collection_date <= date).ToList();
                 }
                 else if (sorting.Equals("Pending"))
                 {
@@ -252,6 +256,14 @@ namespace FI.PORTAL.Controllers
             Session["selected_area"] = area;
             Session["selected_area_name"] = areaName;
             return Json(new { msg = area });
+        }
+
+        [HttpPost]
+        public ActionResult DateFilter(DateTime fromDate, DateTime toDate)
+        {
+            Session["fromDate"] = fromDate;
+            Session["toDate"] = toDate;
+            return Json(new { msg = "success" });
         }
 
         public JsonResult SearchData(string SearchBy, string SearchValue, int ? page)
