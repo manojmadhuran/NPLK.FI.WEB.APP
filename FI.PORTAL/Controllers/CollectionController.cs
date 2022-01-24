@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Globalization;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -18,10 +19,26 @@ namespace FI.PORTAL.Controllers
         int pageSize = 10;
         // GET: Collection
         Collection_SYSEntities COL_dbObj = new Collection_SYSEntities();
+        DateTime fromDateObj;
+        DateTime toDateObj;
         public ActionResult CollectionHome(string sortby, int? page, string type)
         {
+            if (Session["fromDate"] != null || Session["toDate"] != null)
+            {
+                String fromDate = Session["fromDate"].ToString();
+                String toDate = Session["toDate"].ToString();
+                fromDateObj = DateTime.ParseExact(fromDate, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+                toDateObj = DateTime.ParseExact(toDate, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+                toDateObj = toDateObj.AddHours(23).AddMinutes(59).AddSeconds(59);
+            }
+            else
+            {
+                fromDateObj = new DateTime(1990, 01, 01);
+                toDateObj = DateTime.Now;
+            }
 
-            if(Session["SearchBy"] == null)
+
+            if (Session["SearchBy"] == null)
             {
                 Session["SearchBy"] = "";
             }
@@ -31,32 +48,31 @@ namespace FI.PORTAL.Controllers
                 Session["SearchValue"] = "";
             }
 
-            if(type == "reset")
+            if (type == "reset")
             {
                 Session["SearchValue"] = "";
             }
 
             int pageNumber = (page ?? 1);
             //var result_areas = COL_dbObj.Area_Master.OrderBy(a => a.AreaName).ToList();
-            if (Session["sorting"] == null )
+            if (Session["sorting"] == null)
             {
                 //Session["selected_area"] = result_areas.FirstOrDefault().SalesCode;
                 //var area = Session["selected_area"].ToString();
                 Session["sorting"] = "All";
                 ViewBag.sortString = "All";
 
-                var date = new DateTime(2022, 1, 18);
 
-                var result_collections = COL_dbObj.COLLECTIONS.Where(c=> c.collection_date <= date).ToList();
+                var result_collections = COL_dbObj.COLLECTIONS.Where(c => c.collection_date <= toDateObj || toDateObj == null && c.collection_date >= fromDateObj || fromDateObj == null).ToList();
 
-             
+
                 var viewModel = new CollectionVM
                 {
                     collection = result_collections.ToPagedList(pageNumber, pageSize),
-                   
+
                 };
 
-              
+
                 return View(viewModel);
             }
             else
@@ -68,17 +84,19 @@ namespace FI.PORTAL.Controllers
 
                 if (sorting.Equals("All"))
                 {
-                    var date = new DateTime(2022, 1, 18);
-
-                    result_collections = COL_dbObj.COLLECTIONS.Where(c => c.collection_date <= date).ToList();
+                    result_collections = COL_dbObj.COLLECTIONS.Where(c => c.collection_date <= toDateObj && c.collection_date >= fromDateObj).ToList();
                 }
                 else if (sorting.Equals("Pending"))
                 {
-                    result_collections = COL_dbObj.COLLECTIONS.Where(c => c.acknowledge == false).ToList();
+                    result_collections = COL_dbObj.COLLECTIONS.Where(c => c.acknowledge == false && c.collection_date <= toDateObj && c.collection_date >= fromDateObj).ToList();
                 }
                 else if (sorting.Equals("Acknowledged"))
                 {
-                    result_collections = COL_dbObj.COLLECTIONS.Where(c => c.acknowledge == true).ToList();
+                    result_collections = COL_dbObj.COLLECTIONS.Where(c => c.acknowledge == true && c.collection_date <= toDateObj && c.collection_date >= fromDateObj).ToList();
+                }
+                else if (sorting.Equals("Closed"))
+                {
+                    result_collections = COL_dbObj.COLLECTIONS.Where(c => (c.acknowledge == true && c.entered_to_sap == true) && c.collection_date <= toDateObj && c.collection_date >= fromDateObj).ToList();
                 }
 
                 var viewModel = new CollectionVM
@@ -126,7 +144,7 @@ namespace FI.PORTAL.Controllers
         }
 
         [HttpPost]
-        public ActionResult AcknowledgeCollection(CollectionData model, int ? page)
+        public ActionResult AcknowledgeCollection(CollectionData model, int? page)
         {
             int pageNumber = (page ?? 1);
             var result = COL_dbObj.COLLECTIONS.Where(c => c.collection_no == model.Collection.collection_no).FirstOrDefault();
@@ -137,32 +155,37 @@ namespace FI.PORTAL.Controllers
 
             COL_dbObj.SaveChanges();
 
-            //var result_areas = COL_dbObj.Area_Master.OrderBy(a => a.AreaName).ToList();
-            ViewBag.sortString = Session["sorting"].ToString();
-            string sorting = Session["sorting"].ToString();
-            //var area = Session["selected_area"].ToString();
-            var result_collections = COL_dbObj.COLLECTIONS.ToList();
+            ////var result_areas = COL_dbObj.Area_Master.OrderBy(a => a.AreaName).ToList();
+            //ViewBag.sortString = Session["sorting"].ToString();
+            //string sorting = Session["sorting"].ToString();
+            ////var area = Session["selected_area"].ToString();
+            //var result_collections = COL_dbObj.COLLECTIONS.ToList();
 
-            if (sorting.Equals("All"))
-            {
-                result_collections = COL_dbObj.COLLECTIONS.ToList();
-            }
-            else if (sorting.Equals("Pending"))
-            {
-                result_collections = COL_dbObj.COLLECTIONS.Where(c => c.acknowledge == false).ToList();
-            }
-            else if (sorting.Equals("Acknowledged"))
-            {
-                result_collections = COL_dbObj.COLLECTIONS.Where(c => c.acknowledge == true).ToList();
-            }
+            //if (sorting.Equals("All"))
+            //{
+            //    result_collections = COL_dbObj.COLLECTIONS.Where(c => c.collection_date <= toDateObj && c.collection_date >= fromDateObj).ToList();
+            //}
+            //else if (sorting.Equals("Pending"))
+            //{
+            //    result_collections = COL_dbObj.COLLECTIONS.Where(c => c.acknowledge == false && c.collection_date <= toDateObj && c.collection_date >= fromDateObj).ToList();
+            //}
+            //else if (sorting.Equals("Acknowledged"))
+            //{
+            //    result_collections = COL_dbObj.COLLECTIONS.Where(c => c.acknowledge == true && c.collection_date <= toDateObj && c.collection_date >= fromDateObj).ToList();
+            //}
+            //else if (sorting.Equals("Closed"))
+            //{
+            //    result_collections = COL_dbObj.COLLECTIONS.Where(c => (c.acknowledge == true && c.entered_to_sap == true) && c.collection_date <= toDateObj && c.collection_date >= fromDateObj).ToList();
+            //}
 
-            var viewModel = new CollectionVM
-            {
-                collection = result_collections.ToPagedList(pageNumber, pageSize),
-                
-            };
 
-            return View("CollectionHome", viewModel);
+            //var viewModel = new CollectionVM
+            //{
+            //    collection = result_collections.ToPagedList(pageNumber, pageSize),
+
+            //};
+
+            return RedirectToAction("CollectionHome", "Collection");
         }
 
 
@@ -178,11 +201,11 @@ namespace FI.PORTAL.Controllers
 
             if (sorting.Equals("All"))
             {
-                result_collections = COL_dbObj.COLLECTIONS.Where(c => c.collection_no == search_query ).ToList();
+                result_collections = COL_dbObj.COLLECTIONS.Where(c => c.collection_no == search_query).ToList();
             }
             else if (sorting.Equals("Pending"))
             {
-                result_collections = COL_dbObj.COLLECTIONS.Where(c => c.acknowledge == false && c.collection_no == search_query ).ToList();
+                result_collections = COL_dbObj.COLLECTIONS.Where(c => c.acknowledge == false && c.collection_no == search_query).ToList();
             }
             else if (sorting.Equals("Acknowledged"))
             {
@@ -259,14 +282,23 @@ namespace FI.PORTAL.Controllers
         }
 
         [HttpPost]
-        public ActionResult DateFilter(DateTime fromDate, DateTime toDate)
+        public ActionResult DateFilter(DateTime fromDate, DateTime toDate, String type)
         {
-            Session["fromDate"] = fromDate;
-            Session["toDate"] = toDate;
+            if (type.Equals("reset"))
+            {
+                Session["fromDate"] = null;
+                Session["toDate"] = null;
+            }
+            else
+            {
+                Session["fromDate"] = fromDate.ToString("yyyy-MM-dd");
+                Session["toDate"] = toDate.ToString("yyyy-MM-dd");
+            }
+
             return Json(new { msg = "success" });
         }
 
-        public JsonResult SearchData(string SearchBy, string SearchValue, int ? page)
+        public JsonResult SearchData(string SearchBy, string SearchValue, int? page)
         {
             int pageNumber = (page ?? 1);
             Session["sorting"] = "All";
@@ -275,25 +307,44 @@ namespace FI.PORTAL.Controllers
             Session["SearchBy"] = SearchBy;
             Session["SearchValue"] = SearchValue;
 
-            if (SearchBy.Equals("Sales_Code"))
+            if (Session["fromDate"] != null || Session["toDate"] != null)
             {
-                var result_collections = COL_dbObj.COLLECTIONS.Where(c => c.sales_code == SearchValue || SearchValue == null).ToList();
-                return Json(result_collections.ToPagedList(pageNumber, pageSize), JsonRequestBehavior.AllowGet);
-            }
-            else if (SearchBy.Equals("Collection_ID"))
-            {
-                var result_collections = COL_dbObj.COLLECTIONS.Where(c => c.collection_no.Contains(SearchValue) || SearchValue == null).ToList();
-                return Json(result_collections.ToPagedList(pageNumber, pageSize), JsonRequestBehavior.AllowGet);
-            }
-            else if (SearchBy.Equals("Area"))
-            {
-                var result_collections = COL_dbObj.COLLECTIONS.Where(c => c.area_name.Contains(SearchValue) || SearchValue == null).ToList();
-                return Json(result_collections.ToPagedList(pageNumber, pageSize), JsonRequestBehavior.AllowGet);
+                String fromDate = Session["fromDate"].ToString();
+                String toDate = Session["toDate"].ToString();
+                fromDateObj = DateTime.ParseExact(fromDate, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+                toDateObj = DateTime.ParseExact(toDate, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+                toDateObj = toDateObj.AddHours(23).AddMinutes(59).AddSeconds(59);
             }
             else
             {
-                var result_collections = COL_dbObj.COLLECTIONS.Where(c => c.created_by.Contains(SearchValue) || SearchValue == null).ToList();
-                return Json(result_collections.ToPagedList(pageNumber, pageSize), JsonRequestBehavior.AllowGet);
+                fromDateObj = new DateTime(1990, 01, 01);
+                toDateObj = DateTime.Now;
+            }
+
+            if (SearchBy.Equals("Sales_Code"))
+            {
+                var result_collections = COL_dbObj.COLLECTIONS.Where(c => c.collection_date <= toDateObj && c.collection_date >= fromDateObj && c.sales_code == SearchValue || SearchValue == null).ToList();
+                return Json(result_collections);
+            }
+            else if (SearchBy.Equals("Collection_ID"))
+            {
+                var result_collections = COL_dbObj.COLLECTIONS.Where(c => c.collection_date <= toDateObj && c.collection_date >= fromDateObj && c.collection_no.Contains(SearchValue) || SearchValue == null).ToList();
+                return Json(result_collections);
+            }
+            else if (SearchBy.Equals("Area"))
+            {
+                var result_collections = COL_dbObj.COLLECTIONS.Where(c => c.collection_date <= toDateObj && c.collection_date >= fromDateObj && c.area_name.Contains(SearchValue) || SearchValue == null).ToList();
+                return Json(result_collections);
+            }
+            else if (SearchBy.Equals("Any"))
+            {
+                var result_collections = COL_dbObj.COLLECTIONS.Where(c => c.collection_date <= toDateObj && c.collection_date >= fromDateObj && c.area_name.Contains(SearchValue) || c.collection_no.Contains(SearchValue) || c.created_by.Contains(SearchValue) || SearchValue == null).ToList();
+                return Json(result_collections);
+            }
+            else
+            {
+                var result_collections = COL_dbObj.COLLECTIONS.Where(c => c.collection_date <= toDateObj && c.collection_date >= fromDateObj && c.created_by.Contains(SearchValue) || SearchValue == null).ToList();
+                return Json(result_collections);
             }
 
         }
@@ -356,6 +407,27 @@ namespace FI.PORTAL.Controllers
         }
 
 
+
+        [HttpPost]
+        public ActionResult SAPAction(COLLECTION collection)
+        {
+            Collection_SYSEntities COL_dbObj = new Collection_SYSEntities();
+            DateTime currentDateTime = DateTime.Now;
+
+            var result = COL_dbObj.COLLECTIONS.Where(t => t.collection_no == collection.collection_no).FirstOrDefault();
+            result.entered_to_sap = true;
+            result.entered_by = collection.entered_by;
+            result.sap_ref_no = collection.sap_ref_no;
+            result.entered_date = currentDateTime;
+         
+            COL_dbObj.SaveChanges();
+
+            return Json(new { msg = "Entered to SAP System Ref No" });
+
+
+        }
+
+
         public ActionResult GenerateReport(string CollectionID)
         {
             var data = COL_dbObj.FullCollectionData(CollectionID).ToList();
@@ -363,10 +435,10 @@ namespace FI.PORTAL.Controllers
             CollectionReport collectionReport = new CollectionReport();
             byte[] abytes = collectionReport.PrepareReport(data, uname);
 
-         
+
             AddPageNumber addPageNumber = new AddPageNumber();
 
-           
+
             return File(addPageNumber.PrepareReport(abytes), "application/pdf", "Collection_Report_" + data.FirstOrDefault().collection_no + ".pdf");
         }
     }

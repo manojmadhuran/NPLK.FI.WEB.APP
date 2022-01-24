@@ -22,6 +22,10 @@ namespace FI.PORTAL.dbconnect
         public Nullable<System.DateTime> acknowledged_date { get; set; }
         public string area_name { get; set; }
         public string created_by { get; set; }
+        public Nullable<bool> entered_to_sap { get; set; }
+        public string entered_by { get; set; }
+        public string sap_ref_no { get; set; }
+        public Nullable<System.DateTime> entered_date { get; set; }
         public string payment_collection_no { get; set; }
         public string customer_code { get; set; }
         public string cus_sales_group { get; set; }

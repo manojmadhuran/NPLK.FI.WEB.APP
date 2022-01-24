@@ -26,6 +26,10 @@
           <Property Name="acknowledged_date" Type="smalldatetime" />
           <Property Name="created_by" Type="varchar" MaxLength="50" />
           <Property Name="area_name" Type="varchar" MaxLength="50" />
+          <Property Name="entered_to_sap" Type="bit" Nullable="false" />
+          <Property Name="entered_by" Type="varchar" MaxLength="255" />
+          <Property Name="sap_ref_no" Type="varchar" MaxLength="255" />
+          <Property Name="entered_date" Type="smalldatetime" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'FINANCE_GEN_SYS.dbo.PAYED_INVOICES' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -123,6 +127,10 @@ warning 6002: The table/view 'FINANCE_GEN_SYS.dbo.PAYED_INVOICES' does not have 
           <Property Name="acknowledged_date" Type="DateTime" Precision="0" />
           <Property Name="created_by" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="area_name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="entered_to_sap" Type="Boolean" Nullable="false" />
+          <Property Name="entered_by" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="sap_ref_no" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="entered_date" Type="DateTime" Precision="0" />
         </EntityType>
         <EntityType Name="PAYED_INVOICES">
           <Key>
@@ -148,12 +156,12 @@ warning 6002: The table/view 'FINANCE_GEN_SYS.dbo.PAYED_INVOICES' does not have 
           <EntitySet Name="TICKET_MSGS" EntityType="Self.TICKET_MSGS" />
           <EntitySet Name="COLLECTIONS" EntityType="Self.COLLECTION" />
           <EntitySet Name="PAYED_INVOICES" EntityType="Self.PAYED_INVOICES" />
-          <FunctionImport Name="FullCollectionData" ReturnType="Collection(Collection_SYS_Model.FullCollectionData_Result)">
-          <Parameter Name="collectionID" Mode="In" Type="String" />
-          </FunctionImport>
           <FunctionImport Name="UpdateInvoiceAcknowledge">
             <Parameter Name="invoice_id" Mode="In" Type="String" />
             <Parameter Name="state" Mode="In" Type="Boolean" />
+          </FunctionImport>
+          <FunctionImport Name="FullCollectionData" ReturnType="Collection(Collection_SYS_Model.FullCollectionData_Result)">
+            <Parameter Name="collectionID" Mode="In" Type="String" />
           </FunctionImport>
         </EntityContainer>
         <ComplexType Name="FullCollectionData_Result">
@@ -166,6 +174,10 @@ warning 6002: The table/view 'FINANCE_GEN_SYS.dbo.PAYED_INVOICES' does not have 
           <Property Type="DateTime" Name="acknowledged_date" Nullable="true" Precision="16" />
           <Property Type="String" Name="area_name" Nullable="true" MaxLength="50" />
           <Property Type="String" Name="created_by" Nullable="true" MaxLength="50" />
+          <Property Type="Boolean" Name="entered_to_sap" Nullable="true" />
+          <Property Type="String" Name="entered_by" Nullable="true" MaxLength="255" />
+          <Property Type="String" Name="sap_ref_no" Nullable="true" MaxLength="255" />
+          <Property Type="DateTime" Name="entered_date" Nullable="true" Precision="16" />
           <Property Type="String" Name="payment_collection_no" Nullable="true" MaxLength="225" />
           <Property Type="String" Name="customer_code" Nullable="true" MaxLength="225" />
           <Property Type="String" Name="cus_sales_group" Nullable="true" MaxLength="225" />
@@ -227,6 +239,10 @@ warning 6002: The table/view 'FINANCE_GEN_SYS.dbo.PAYED_INVOICES' does not have 
           <EntitySetMapping Name="COLLECTIONS">
             <EntityTypeMapping TypeName="Collection_SYS_Model.COLLECTION">
               <MappingFragment StoreEntitySet="COLLECTIONS">
+                <ScalarProperty Name="entered_date" ColumnName="entered_date" />
+                <ScalarProperty Name="sap_ref_no" ColumnName="sap_ref_no" />
+                <ScalarProperty Name="entered_by" ColumnName="entered_by" />
+                <ScalarProperty Name="entered_to_sap" ColumnName="entered_to_sap" />
                 <ScalarProperty Name="id" ColumnName="id" />
                 <ScalarProperty Name="collection_no" ColumnName="collection_no" />
                 <ScalarProperty Name="collection_date" ColumnName="collection_date" />
@@ -259,6 +275,7 @@ warning 6002: The table/view 'FINANCE_GEN_SYS.dbo.PAYED_INVOICES' does not have 
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="UpdateInvoiceAcknowledge" FunctionName="Collection_SYS_Model.Store.UpdateInvoiceAcknowledge" />
           <FunctionImportMapping FunctionImportName="FullCollectionData" FunctionName="Collection_SYS_Model.Store.FullCollectionData">
             <ResultMapping>
               <ComplexTypeMapping TypeName="Collection_SYS_Model.FullCollectionData_Result">
@@ -271,6 +288,10 @@ warning 6002: The table/view 'FINANCE_GEN_SYS.dbo.PAYED_INVOICES' does not have 
                 <ScalarProperty Name="acknowledged_date" ColumnName="acknowledged_date" />
                 <ScalarProperty Name="area_name" ColumnName="area_name" />
                 <ScalarProperty Name="created_by" ColumnName="created_by" />
+                <ScalarProperty Name="entered_to_sap" ColumnName="entered_to_sap" />
+                <ScalarProperty Name="entered_by" ColumnName="entered_by" />
+                <ScalarProperty Name="sap_ref_no" ColumnName="sap_ref_no" />
+                <ScalarProperty Name="entered_date" ColumnName="entered_date" />
                 <ScalarProperty Name="payment_collection_no" ColumnName="payment_collection_no" />
                 <ScalarProperty Name="customer_code" ColumnName="customer_code" />
                 <ScalarProperty Name="cus_sales_group" ColumnName="cus_sales_group" />
@@ -305,7 +326,6 @@ warning 6002: The table/view 'FINANCE_GEN_SYS.dbo.PAYED_INVOICES' does not have 
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="UpdateInvoiceAcknowledge" FunctionName="Collection_SYS_Model.Store.UpdateInvoiceAcknowledge" />
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

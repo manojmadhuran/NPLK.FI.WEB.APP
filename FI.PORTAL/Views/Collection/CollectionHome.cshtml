@@ -27,6 +27,7 @@
                                     <option value="All" selected="@(currentSort == "All" ? "selected" : null)">All</option>
                                     <option value="Pending" selected="@(currentSort == "Pending" ? "selected" : null)">Pending</option>
                                     <option value="Acknowledged" selected="@(currentSort == "Acknowledged" ? "selected" : null)">Acknowledged</option>
+                                    <option value="Closed" selected="@(currentSort == "Closed" ? "selected" : null)">Closed</option>
                                 </select>
                             </div>
 
@@ -43,6 +44,7 @@
                             </div>
                             <div class="col-auto my-1">
                                 <select id="search_by" class="form-control form-control-sm">
+                                    <option value="Any" selected="@(SearchBySession == "Any" ? "selected" : null)">Any</option>
                                     <option value="Collection_ID" selected="@(SearchBySession == "Collection_ID" ? "selected" : null)">Collection ID</option>
                                     <option value="Sales_Code" selected="@(SearchBySession == "Sales_Code" ? "selected" : null)">Sales Code</option>
                                     <option value="Area" selected="@(SearchBySession == "Area" ? "selected" : null)">Area</option>
@@ -60,7 +62,7 @@
                     </div>
 
 
-                    @*<div style="padding-left:1%">
+                    <div style="padding-left:1%">
 
                         <div class="form-row align-items-center">
                             <div class="col-auto my-1">
@@ -71,26 +73,26 @@
                                 <label for="filter_by_date">&nbsp; From </label>
                             </div>
                             <div class="col-auto my-1">
-                                <input type="date" class="form-control form-control-sm" id="from_date"/>
+                                <input type="date" class="form-control form-control-sm" id="from_date" value="@Session["fromDate"]" />
                             </div>
 
                             <div class="col-auto my-1">
                                 <label for="filter_by_date">&nbsp; To </label>
                             </div>
                             <div class="col-auto my-1">
-                                <input type="date" class="form-control form-control-sm" id="to_date" />
+                                <input type="date" class="form-control form-control-sm" id="to_date" value="@Session["toDate"]" />
                             </div>
 
                             <div class="col-auto my-1">
-                                <button type="button" class="btn btn-primary btn-sm" onclick="dateFilter()">Set Date</button>
+                                <button type="button" class="btn btn-primary btn-sm" onclick="dateFilter('')">Set Date</button>
                             </div>
 
                             <div class="col-auto my-1">
-                                <button type="button" class="btn btn-primary btn-sm" onclick="location.href='@Url.Action("DateFilter", "Collection", new {fromDate = DateTime.Now,  toDate= DateTime.Now})'">Reset Date</button>
+                                <button type="button" class="btn btn-primary btn-sm" onclick="dateFilter('reset')">Reset Date</button>
                             </div>
                         </div>
 
-                    </div>*@
+                    </div>
 
                 </div>
             </div>
@@ -98,14 +100,24 @@
     </div>
 </div>
 
+@*<div class="modal fade loadingmodal"  id="loadingModal" tabindex="-1" role="dialog" aria-labelledby="loadingmodal" aria-hidden="true">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="d-flex justify-content-center" style="padding: 5%">
+                    <strong style="margin-right: 20px">Loading...</strong>
+                    <div class="spinner-grow text-dark" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>*@
 
 <div class="row">
     <div class="col-md-12">
         <div class="card">
             <div class="card-header">
                 <h4>Collection Requests</h4>
-                @*<h1>FROM Date: @Session["toDate"]</h1>
-                <h1>To Date: @Session["fromDate"]</h1>*@
             </div>
             <div class="card-body">
 
@@ -119,7 +131,7 @@
                                     <th>Sales Code</th>
                                     <th>Area Name</th>
                                     <th>Created By</th>
-                                    <th>Acknowledge</th>
+                                    <th>Status</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -141,8 +153,10 @@
                                             <td>@item.area_name</td>
                                             <td>@item.created_by</td>
                                             <td>
-                                                @if (item.acknowledge == true)
-                                                {<h6><span class="badge badge-success">Acknowledged</span></h6>}
+                                                @if (item.acknowledge == true && item.entered_to_sap == true)
+                                                {<h6><span class="badge badge-primary">Closed</span></h6>}
+                                                else if (item.acknowledge == true)
+                                                { <h6><span class="badge badge-success">Acknowledged</span></h6>}
                                                 else
                                                 { <h6><span class="badge badge-warning">Pending</span></h6>}
                                             </td>
@@ -199,9 +213,13 @@
                             var statusBadge;
                             var collection_view = "<a href='CollectionView?collection_no=" + value.collection_no + "' class='btn btn-success btn-sm'>View</a>"
 
-                            if (value.acknowledge) {
+                            if (value.acknowledge && value.entered_to_sap) {
+                                statusBadge = "<h6><span class='badge badge-primary'>Closed</span></h6>"
+                            }
+                            else if (value.acknowledge) {
                                 statusBadge = "<h6><span class='badge badge-success'>Acknowledged</span></h6>"
-                            } else {
+                            }
+                            else {
                                 statusBadge = "<h6><span class='badge badge-warning'>Pending</span></h6>"
                             };
 
@@ -228,6 +246,7 @@
             var SearchVal = $("#search_value").val();
             var SetData = $("#collections_data");
             SetData.html("");
+
             $.ajax({
                 type: "post",
                 url: "/Collection/SearchData?SearchBy=" + SearchBy + "&SearchValue=" + SearchVal,
@@ -236,15 +255,20 @@
                 success: function (result) {
                     if (result.length == 0) {
                         SetData.append('<tr><td colspan="7">No data found!</td></tr>')
+                        $('#loadingModal').modal('hide');
                     } else {
                         $.each(result, function (index, value) {
                             var date = new Date(parseInt(value.collection_date.substr(6)));
                             var statusBadge;
                             var collection_view = "<a href='CollectionView?collection_no=" + value.collection_no + "' class='btn btn-success btn-sm'>View</a>"
 
-                            if (value.acknowledge) {
+                            if (value.acknowledge && value.entered_to_sap) {
+                                statusBadge = "<h6><span class='badge badge-primary'>Closed</span></h6>"
+                            }
+                            else if (value.acknowledge) {
                                 statusBadge = "<h6><span class='badge badge-success'>Acknowledged</span></h6>"
-                            } else {
+                            }
+                            else {
                                 statusBadge = "<h6><span class='badge badge-warning'>Pending</span></h6>"
                             };
 
@@ -257,6 +281,8 @@
                                 "<td>" + statusBadge + "</td>" + "<td>" + collection_view + "</td>" + "</tr>"
 
                             SetData.append(Data)
+
+
                         })
                     }
                 }
@@ -279,21 +305,24 @@
     }
 
 
-    function dateFilter() {
-        var fromDate = new Date(document.getElementById("from_date").value);
-        var toDate = new Date(document.getElementById("to_date").value);
+    function dateFilter(type) {
+        var fromDateTime = new Date(document.getElementById("from_date").value);
+        var toDateTime = new Date(document.getElementById("to_date").value);
 
-        alert("From: " + fromDate + " To: " + toDate);
+        let fromDate = (fromDateTime.getUTCFullYear()) + "/" + (fromDateTime.getMonth() + 1) + "/" + (fromDateTime.getUTCDate());
+        let toDate = (toDateTime.getUTCFullYear()) + "/" + (toDateTime.getMonth() + 1) + "/" + (toDateTime.getUTCDate());
 
         $.ajax({
             type: 'POST',
             url: '/Collection/DateFilter',
             dataType: 'json',
-            data: { fromDate: '2022/01/01', toDate: '2022/01/01' },
+            data: { fromDate: fromDate, toDate: toDate, type: type },
             success: function (result) {
                 location.reload()
             }
         });
+
+        $('#loadingModal').modal('hide');
     }
 
     function areaChange(sel) {

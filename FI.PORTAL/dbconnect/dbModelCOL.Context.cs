@@ -32,15 +32,6 @@ namespace FI.PORTAL.dbconnect
         public virtual DbSet<COLLECTION> COLLECTIONS { get; set; }
         public virtual DbSet<PAYED_INVOICES> PAYED_INVOICES { get; set; }
     
-        public virtual ObjectResult<FullCollectionData_Result> FullCollectionData(string collectionID)
-        {
-            var collectionIDParameter = collectionID != null ?
-                new ObjectParameter("collectionID", collectionID) :
-                new ObjectParameter("collectionID", typeof(string));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FullCollectionData_Result>("FullCollectionData", collectionIDParameter);
-        }
-    
         public virtual int UpdateInvoiceAcknowledge(string invoice_id, Nullable<bool> state)
         {
             var invoice_idParameter = invoice_id != null ?
@@ -52,6 +43,15 @@ namespace FI.PORTAL.dbconnect
                 new ObjectParameter("state", typeof(bool));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("UpdateInvoiceAcknowledge", invoice_idParameter, stateParameter);
+        }
+    
+        public virtual ObjectResult<FullCollectionData_Result> FullCollectionData(string collectionID)
+        {
+            var collectionIDParameter = collectionID != null ?
+                new ObjectParameter("collectionID", collectionID) :
+                new ObjectParameter("collectionID", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FullCollectionData_Result>("FullCollectionData", collectionIDParameter);
         }
     }
 }
