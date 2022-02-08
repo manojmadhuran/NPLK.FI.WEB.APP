@@ -368,7 +368,15 @@
                                 <tbody style="overflow:auto">
                                     @foreach (var item in Model.FullCollectionData)
                                     {
-                                        invoiceAmountTotal = invoiceAmountTotal + (decimal)item.invoice_amount; osBalanceTotal = osBalanceTotal + (decimal)item.os_balance; settledTotal = settledTotal + (decimal)item.invoice_allocated; if (currentCustomerCode.Equals(item.customer_code) && paymentKey.Equals(item.payment_key)) { same = 1; } else { same = 0; }
+                                        if (item.invoice_amount != null)
+                                        {
+                                            invoiceAmountTotal = invoiceAmountTotal + (decimal)item.invoice_amount; 
+                                            osBalanceTotal = osBalanceTotal + (decimal)item.os_balance; 
+                                            settledTotal = settledTotal + (decimal)item.invoice_allocated; 
+                                            if (currentCustomerCode.Equals(item.customer_code) && paymentKey.Equals(item.payment_key)) { same = 1; } else { same = 0; }
+
+                                        }
+
                                         currentCustomerCode = item.customer_code; paymentKey = item.payment_key;
                                         Sales_code = item.sales_code;
 
@@ -443,9 +451,9 @@
                                                 <td>@(item.invoice_date != null ? item.invoice_date.Value.ToShortDateString() : null)</td>
                                                 <td>@item.invoice_no</td>
                                                 <td>@item.payment_term</td>
-                                                <td id="amounts">@Convert.ToDecimal(item.invoice_amount.Value).ToString("#,##0.00")</td>
-                                                <td id="amounts">@Convert.ToDecimal(item.os_balance.Value).ToString("#,##0.00")</td>
-                                                <td id="amounts">@Convert.ToDecimal(item.invoice_allocated.Value).ToString("#,##0.00")</td>
+                                                <td id="amounts">@(item.invoice_amount != null ? Convert.ToDecimal(item.invoice_amount.Value).ToString("#,##0.00") : null)</td>
+                                                <td id="amounts">@(item.os_balance != null ? Convert.ToDecimal(item.os_balance.Value).ToString("#,##0.00") : null)</td>
+                                                <td id="amounts">@(item.invoice_allocated != null ? Convert.ToDecimal(item.invoice_allocated.Value).ToString("#,##0.00") : null)</td>
                                                 <td>@item.nod</td>
                                                 <td>@item.remarks</td>
                                                 <td>
@@ -538,10 +546,14 @@
                                 <tbody style="overflow:auto">
                                     @foreach (var item in Model.FullCollectionData)
                                     {
-                                        invoiceAmountTotal = invoiceAmountTotal + (decimal)item.invoice_amount;
-                                        osBalanceTotal = osBalanceTotal + (decimal)item.os_balance;
-                                        settledTotal = settledTotal + (decimal)item.invoice_allocated;
-                                        if (currentCustomerCode.Equals(item.customer_code) && paymentKey.Equals(item.payment_key)) { same = 1; } else { same = 0; }
+                                        if (item.invoice_amount != null)
+                                        {
+                                            invoiceAmountTotal = invoiceAmountTotal + (decimal)item.invoice_amount;
+                                            osBalanceTotal = osBalanceTotal + (decimal)item.os_balance;
+                                            settledTotal = settledTotal + (decimal)item.invoice_allocated;
+                                            if (currentCustomerCode.Equals(item.customer_code) && paymentKey.Equals(item.payment_key)) { same = 1; } else { same = 0; }
+                                        }
+
                                         currentCustomerCode = item.customer_code; paymentKey = item.payment_key;
                                         Sales_code = item.sales_code;
 
@@ -551,87 +563,87 @@
                                             SubAcknowledge = false;
                                         }
 
-                                        <tr>
-                                            @if (same == 1)
+                                    <tr>
+                                        @if (same == 1)
+                                        {
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td>@item.invoice_date.Value.ToShortDateString()</td>
+                                            <td>@item.invoice_no</td>
+                                            <td>@item.payment_term</td>
+                                            <td id="amounts">@Convert.ToDecimal(item.invoice_amount.Value).ToString("#,##0.00")</td>
+                                            <td id="amounts">@Convert.ToDecimal(item.os_balance.Value).ToString("#,##0.00")</td>
+                                            <td id="amounts">@Convert.ToDecimal(item.invoice_allocated.Value).ToString("#,##0.00")</td>
+                                            <td>@item.nod</td>
+                                            <td>@item.remarks</td>
+                                            <td>
+                                                @(item.invoice_acknowledge == true ? "Yes" : "No")
+                                            </td>
+                                            <td></td>
+
+                                            if (!MainAcknowledge)
                                             {
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td>@item.invoice_date.Value.ToShortDateString()</td>
-                                                <td>@item.invoice_no</td>
-                                                <td>@item.payment_term</td>
-                                                <td id="amounts">@Convert.ToDecimal(item.invoice_amount.Value).ToString("#,##0.00")</td>
-                                                <td id="amounts">@Convert.ToDecimal(item.os_balance.Value).ToString("#,##0.00")</td>
-                                                <td id="amounts">@Convert.ToDecimal(item.invoice_allocated.Value).ToString("#,##0.00")</td>
-                                                <td>@item.nod</td>
-                                                <td>@item.remarks</td>
                                                 <td>
-                                                    @(item.invoice_acknowledge == true ? "Yes" : "No")
+                                                    @if (item.invoice_acknowledge == false)
+                                                    {<input type="button" class="btn btn-secondary btn-xs" value="Acknowledge" onclick="location.href='@Url.Action("updateinvoice", "Collection", new {invid = item.primary_key, update = !item.invoice_acknowledge, collection_id = CollectionNo})'" />}
+                                                    else
+                                                    {<input type="button" class="btn btn-warning btn-xs" value="Reverse" onclick="location.href='@Url.Action("updateinvoice", "Collection", new {invid = item.primary_key, update = !item.invoice_acknowledge,  collection_id = CollectionNo})'">}
                                                 </td>
-                                                <td></td>
-
-                                                if (!MainAcknowledge)
-                                                {
-                                                    <td>
-                                                        @if (item.invoice_acknowledge == false)
-                                                        {<input type="button" class="btn btn-secondary btn-xs" value="Acknowledge" onclick="location.href='@Url.Action("updateinvoice", "Collection", new {invid = item.primary_key, update = !item.invoice_acknowledge, collection_id = CollectionNo})'" />}
-                                                        else
-                                                        {<input type="button" class="btn btn-warning btn-xs" value="Reverse" onclick="location.href='@Url.Action("updateinvoice", "Collection", new {invid = item.primary_key, update = !item.invoice_acknowledge,  collection_id = CollectionNo})'">}
-                                                    </td>
-                                                }
-
-
-
                                             }
-                                            else
+
+
+
+                                        }
+                                        else
+                                        {
+                                            amountTotal = amountTotal + (decimal)item.payment_amount;
+                                            unallocatedAmountTotal = unallocatedAmountTotal + (decimal)item.unallocated_amount;
+                                            <td style="text-align:left">@item.customer_code</td>
+                                            <td>@item.CusName</td>
+                                            <td>@item.payment_type</td>
+                                            <td>@item.cheque_no</td>
+                                            <td>@item.issued_bank</td>
+                                            <td>@item.issued_branch</td>
+                                            <td>@(item.banking_date != null ? item.banking_date.Value.ToShortDateString() : null)</td>
+                                            <td>@item.deposited_bank</td>
+                                            <td>@item.deposited_branch</td>
+                                            <td>@item.receipt_no</td>
+                                            <td id="amounts">@Convert.ToDecimal(item.payment_amount.Value).ToString("#,##0.00")</td>
+                                            <td id="amounts">@Convert.ToDecimal(item.unallocated_amount.Value).ToString("#,##0.00")</td>
+                                            <td>@(item.invoice_date != null ? item.invoice_date.Value.ToShortDateString() : null)</td>
+                                            <td>@item.invoice_no</td>
+                                            <td>@item.payment_term</td>
+                                            <td id="amounts">@(item.invoice_amount != null ? Convert.ToDecimal(item.invoice_amount.Value).ToString("#,##0.00") : null)</td>
+                                            <td id="amounts">@(item.os_balance != null ? Convert.ToDecimal(item.os_balance.Value).ToString("#,##0.00") : null)</td>
+                                            <td id="amounts">@(item.invoice_allocated != null ? Convert.ToDecimal(item.invoice_allocated.Value).ToString("#,##0.00") : null)</td>
+                                            <td>@item.nod</td>
+                                            <td>@item.remarks</td>
+                                            <td>
+                                                @(item.invoice_acknowledge == true ? "Yes" : "No")
+                                            </td>
+                                            if (!MainAcknowledge)
                                             {
-                                                amountTotal = amountTotal + (decimal)item.payment_amount;
-                                                unallocatedAmountTotal = unallocatedAmountTotal + (decimal)item.unallocated_amount;
-                                                <td style="text-align:left">@item.customer_code</td>
-                                                <td>@item.CusName</td>
-                                                <td>@item.payment_type</td>
-                                                <td>@item.cheque_no</td>
-                                                <td>@item.issued_bank</td>
-                                                <td>@item.issued_branch</td>
-                                                <td>@(item.banking_date != null ? item.banking_date.Value.ToShortDateString() : null)</td>
-                                                <td>@item.deposited_bank</td>
-                                                <td>@item.deposited_branch</td>
-                                                <td>@item.receipt_no</td>
-                                                <td id="amounts">@Convert.ToDecimal(item.payment_amount.Value).ToString("#,##0.00")</td>
-                                                <td id="amounts">@Convert.ToDecimal(item.unallocated_amount.Value).ToString("#,##0.00")</td>
-                                                <td>@(item.invoice_date != null ? item.invoice_date.Value.ToShortDateString() : null)</td>
-                                                <td>@item.invoice_no</td>
-                                                <td>@item.payment_term</td>
-                                                <td id="amounts">@Convert.ToDecimal(item.invoice_amount.Value).ToString("#,##0.00")</td>
-                                                <td id="amounts">@Convert.ToDecimal(item.os_balance.Value).ToString("#,##0.00")</td>
-                                                <td id="amounts">@Convert.ToDecimal(item.invoice_allocated.Value).ToString("#,##0.00")</td>
-                                                <td>@item.nod</td>
-                                                <td>@item.remarks</td>
                                                 <td>
-                                                    @(item.invoice_acknowledge == true ? "Yes" : "No")
+                                                    @if (item.invoice_acknowledge == false)
+                                                    {<input type="button" class="btn btn-secondary btn-xs" onclick="location.href='@Url.Action("updateinvoice", "Collection", new {invid = item.primary_key, update = !item.invoice_acknowledge,  collection_id = CollectionNo})'" )'" value="Acknowledge" />}
+                                                    else
+                                                    {<input type="button" class="btn btn-warning btn-xs" onclick="location.href='@Url.Action("updateinvoice", "Collection", new {invid = item.primary_key, update = !item.invoice_acknowledge,  collection_id = CollectionNo})'" )'" value="Reverse" />}
                                                 </td>
-                                                if (!MainAcknowledge)
-                                                {
-                                                    <td>
-                                                        @if (item.invoice_acknowledge == false)
-                                                        {<input type="button" class="btn btn-secondary btn-xs" onclick="location.href='@Url.Action("updateinvoice", "Collection", new {invid = item.primary_key, update = !item.invoice_acknowledge,  collection_id = CollectionNo})'" )'" value="Acknowledge" />}
-                                                        else
-                                                        {<input type="button" class="btn btn-warning btn-xs" onclick="location.href='@Url.Action("updateinvoice", "Collection", new {invid = item.primary_key, update = !item.invoice_acknowledge,  collection_id = CollectionNo})'" )'" value="Reverse" />}
-                                                    </td>
-                                                }
-                                                <td></td>
-
                                             }
-                                        </tr>
+                                            <td></td>
+
+                                        }
+                                    </tr>
                                     }
                                     <tr style="background:beige; font-weight:700; font-size: 20px">
                                         <td colspan="3">Total</td>
