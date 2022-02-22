@@ -13,16 +13,16 @@ namespace FI.PORTAL.dbconnect
     
     public partial class FullCollectionData_Result
     {
-        public Nullable<int> id { get; set; }
+        public int id { get; set; }
         public string collection_no { get; set; }
         public Nullable<System.DateTime> collection_date { get; set; }
         public string sales_code { get; set; }
-        public Nullable<bool> acknowledge { get; set; }
+        public bool acknowledge { get; set; }
         public string acknowledge_by { get; set; }
         public Nullable<System.DateTime> acknowledged_date { get; set; }
         public string area_name { get; set; }
         public string created_by { get; set; }
-        public Nullable<bool> entered_to_sap { get; set; }
+        public bool entered_to_sap { get; set; }
         public string entered_by { get; set; }
         public string sap_ref_no { get; set; }
         public Nullable<System.DateTime> entered_date { get; set; }
@@ -57,5 +57,7 @@ namespace FI.PORTAL.dbconnect
         public string remarks { get; set; }
         public string CusName { get; set; }
         public Nullable<bool> invoice_acknowledge { get; set; }
+        public Nullable<int> PAYMENTS_COUNT { get; set; }
+        public string Counted_Payment_Key { get; set; }
     }
 }

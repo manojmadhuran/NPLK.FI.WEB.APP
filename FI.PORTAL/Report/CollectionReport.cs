@@ -470,7 +470,9 @@ namespace FI.PORTAL.Report
             decimal invoiceAmountTotal = 0;
             decimal osBalanceTotal = 0;
             decimal settledTotal = 0;
-
+            List<String> multiplePaymentKeyList = new List<string> { };
+            List<String> multiplePaymentCheques = new List<string> { };
+            List<String> multiplePaymentInvoices = new List<string> { };
 
             if (data.Count() > 0)
             {
@@ -480,378 +482,1162 @@ namespace FI.PORTAL.Report
                     if (currentCustomerCode.Equals(item.customer_code) && paymentKey.Equals(item.payment_key)) { same = 1; } else { same = 0; }
                     currentCustomerCode = item.customer_code; paymentKey = item.payment_key;
 
-                    invoiceAmountTotal = invoiceAmountTotal + (decimal)item.invoice_amount;
-                    osBalanceTotal = osBalanceTotal + (decimal)item.os_balance;
-                    settledTotal = settledTotal + (decimal)item.invoice_allocated;
-
-                    if (same == 1)
+                    if (item.PAYMENTS_COUNT > 1)
                     {
-                        pdfPCell = new PdfPCell(new Phrase("", fontStyle));
-                        pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
-                        pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
-                        pdfPCell.BackgroundColor = BaseColor.WHITE;
-                        pdfPCell.Padding = headerCellPadding;
-                        pdfPCell.ExtraParagraphSpace = 0;
-                        main_table.AddCell(pdfPCell);
+                        if (!multiplePaymentKeyList.Contains(item.payment_key))
+                        {
+                            pdfPCell = new PdfPCell(new Phrase("MULTIPLE PAYMENT", fontStyle));
+                            pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
+                            pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                            pdfPCell.BackgroundColor = BaseColor.WHITE;
+                            pdfPCell.Padding = headerCellPadding;
+                            pdfPCell.ExtraParagraphSpace = 0;
+                            pdfPCell.Colspan = 23;
+                            main_table.AddCell(pdfPCell);
+                            main_table.CompleteRow();
 
-                        pdfPCell = new PdfPCell(new Phrase("", fontStyle));
-                        pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
-                        pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
-                        pdfPCell.BackgroundColor = BaseColor.WHITE;
-                        pdfPCell.Padding = headerCellPadding;
-                        pdfPCell.ExtraParagraphSpace = 0;
-                        main_table.AddCell(pdfPCell);
+                            if (!multiplePaymentCheques.Contains(item.cheque_no))
+                            {
+                                pdfPCell = new PdfPCell(new Phrase(item.customer_code == null ? "" : item.customer_code, fontStyle));
+                                pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
+                                pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                                pdfPCell.BackgroundColor = BaseColor.WHITE;
+                                pdfPCell.Padding = headerCellPadding;
+                                pdfPCell.ExtraParagraphSpace = 0;
+                                main_table.AddCell(pdfPCell);
 
-                        pdfPCell = new PdfPCell(new Phrase("", fontStyle));
-                        pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
-                        pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
-                        pdfPCell.BackgroundColor = BaseColor.WHITE;
-                        pdfPCell.Padding = headerCellPadding;
-                        pdfPCell.ExtraParagraphSpace = 0;
-                        main_table.AddCell(pdfPCell);
+                                pdfPCell = new PdfPCell(new Phrase(item.CusName == null ? "" : item.CusName, fontStyle));
+                                pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
+                                pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                                pdfPCell.BackgroundColor = BaseColor.WHITE;
+                                pdfPCell.Padding = headerCellPadding;
+                                pdfPCell.ExtraParagraphSpace = 0;
+                                main_table.AddCell(pdfPCell);
 
-                        pdfPCell = new PdfPCell(new Phrase("", fontStyle));
-                        pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
-                        pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
-                        pdfPCell.BackgroundColor = BaseColor.WHITE;
-                        pdfPCell.Padding = headerCellPadding;
-                        pdfPCell.ExtraParagraphSpace = 0;
-                        main_table.AddCell(pdfPCell);
+                                pdfPCell = new PdfPCell(new Phrase(item.payment_type == null ? "" : item.payment_type, fontStyle));
+                                pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
+                                pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                                pdfPCell.BackgroundColor = BaseColor.WHITE;
+                                pdfPCell.Padding = headerCellPadding;
+                                pdfPCell.ExtraParagraphSpace = 0;
+                                main_table.AddCell(pdfPCell);
 
-                        pdfPCell = new PdfPCell(new Phrase("", fontStyle));
-                        pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
-                        pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
-                        pdfPCell.BackgroundColor = BaseColor.WHITE;
-                        pdfPCell.Padding = headerCellPadding;
-                        pdfPCell.ExtraParagraphSpace = 0;
-                        main_table.AddCell(pdfPCell);
+                                pdfPCell = new PdfPCell(new Phrase(item.cheque_no == null ? "" : item.cheque_no, fontStyle));
+                                pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
+                                pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                                pdfPCell.BackgroundColor = BaseColor.WHITE;
+                                pdfPCell.Padding = headerCellPadding;
+                                pdfPCell.ExtraParagraphSpace = 0;
+                                main_table.AddCell(pdfPCell);
 
-                        pdfPCell = new PdfPCell(new Phrase("", fontStyle));
-                        pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
-                        pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
-                        pdfPCell.BackgroundColor = BaseColor.WHITE;
-                        pdfPCell.Padding = headerCellPadding;
-                        pdfPCell.ExtraParagraphSpace = 0;
-                        main_table.AddCell(pdfPCell);
+                                pdfPCell = new PdfPCell(new Phrase(item.issued_bank == null ? "" : item.issued_bank, fontStyle));
+                                pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
+                                pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                                pdfPCell.BackgroundColor = BaseColor.WHITE;
+                                pdfPCell.Padding = headerCellPadding;
+                                pdfPCell.ExtraParagraphSpace = 0;
+                                main_table.AddCell(pdfPCell);
 
-                        pdfPCell = new PdfPCell(new Phrase("", fontStyle));
-                        pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
-                        pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
-                        pdfPCell.BackgroundColor = BaseColor.WHITE;
-                        pdfPCell.Padding = headerCellPadding;
-                        pdfPCell.ExtraParagraphSpace = 0;
-                        main_table.AddCell(pdfPCell);
+                                pdfPCell = new PdfPCell(new Phrase(item.issued_branch == null ? "" : item.issued_branch, fontStyle));
+                                pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
+                                pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                                pdfPCell.BackgroundColor = BaseColor.WHITE;
+                                pdfPCell.Padding = headerCellPadding;
+                                pdfPCell.ExtraParagraphSpace = 0;
+                                main_table.AddCell(pdfPCell);
 
-                        pdfPCell = new PdfPCell(new Phrase("", fontStyle));
-                        pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
-                        pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
-                        pdfPCell.BackgroundColor = BaseColor.WHITE;
-                        pdfPCell.Padding = headerCellPadding;
-                        pdfPCell.ExtraParagraphSpace = 0;
-                        main_table.AddCell(pdfPCell);
+                                pdfPCell = new PdfPCell(new Phrase(item.banking_date == null ? "" : item.banking_date.Value.ToShortDateString(), fontStyle));
+                                pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
+                                pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                                pdfPCell.BackgroundColor = BaseColor.WHITE;
+                                pdfPCell.Padding = headerCellPadding;
+                                pdfPCell.ExtraParagraphSpace = 0;
+                                main_table.AddCell(pdfPCell);
 
-                        pdfPCell = new PdfPCell(new Phrase("", fontStyle));
-                        pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
-                        pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
-                        pdfPCell.BackgroundColor = BaseColor.WHITE;
-                        pdfPCell.Padding = headerCellPadding;
-                        pdfPCell.ExtraParagraphSpace = 0;
-                        main_table.AddCell(pdfPCell);
+                                pdfPCell = new PdfPCell(new Phrase(item.deposited_bank == null ? "" : item.deposited_bank, fontStyle));
+                                pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
+                                pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                                pdfPCell.BackgroundColor = BaseColor.WHITE;
+                                pdfPCell.Padding = headerCellPadding;
+                                pdfPCell.ExtraParagraphSpace = 0;
+                                main_table.AddCell(pdfPCell);
 
-                        pdfPCell = new PdfPCell(new Phrase("", fontStyle));
-                        pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
-                        pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
-                        pdfPCell.BackgroundColor = BaseColor.WHITE;
-                        pdfPCell.Padding = headerCellPadding;
-                        pdfPCell.ExtraParagraphSpace = 0;
-                        main_table.AddCell(pdfPCell);
+                                pdfPCell = new PdfPCell(new Phrase(item.deposited_branch == null ? "" : item.deposited_branch, fontStyle));
+                                pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
+                                pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                                pdfPCell.BackgroundColor = BaseColor.WHITE;
+                                pdfPCell.Padding = headerCellPadding;
+                                pdfPCell.ExtraParagraphSpace = 0;
+                                main_table.AddCell(pdfPCell);
 
-                        pdfPCell = new PdfPCell(new Phrase("", fontStyle));
-                        pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
-                        pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
-                        pdfPCell.BackgroundColor = BaseColor.WHITE;
-                        pdfPCell.Padding = headerCellPadding;
-                        pdfPCell.ExtraParagraphSpace = 0;
-                        main_table.AddCell(pdfPCell);
+                                pdfPCell = new PdfPCell(new Phrase(item.receipt_no == null ? "" : item.receipt_no, fontStyle));
+                                pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
+                                pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                                pdfPCell.BackgroundColor = BaseColor.WHITE;
+                                pdfPCell.Padding = headerCellPadding;
+                                pdfPCell.ExtraParagraphSpace = 0;
+                                main_table.AddCell(pdfPCell);
 
-                        pdfPCell = new PdfPCell(new Phrase("", fontStyle));
-                        pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
-                        pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
-                        pdfPCell.BackgroundColor = BaseColor.WHITE;
-                        pdfPCell.Padding = headerCellPadding;
-                        pdfPCell.ExtraParagraphSpace = 0;
-                        main_table.AddCell(pdfPCell);
+                                pdfPCell = new PdfPCell(new Phrase(item.payment_amount == null ? "" : Convert.ToDecimal(item.payment_amount.Value).ToString("#,##0.00"), fontStyle));
+                                pdfPCell.HorizontalAlignment = Element.ALIGN_RIGHT;
+                                pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                                pdfPCell.BackgroundColor = BaseColor.WHITE;
+                                pdfPCell.Padding = headerCellPadding;
+                                pdfPCell.ExtraParagraphSpace = 0;
+                                main_table.AddCell(pdfPCell);
 
-                        pdfPCell = new PdfPCell(new Phrase(item.invoice_date == null ? "" : item.invoice_date.Value.ToShortDateString(), fontStyle));
-                        pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
-                        pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
-                        pdfPCell.BackgroundColor = BaseColor.WHITE;
-                        pdfPCell.Padding = headerCellPadding;
-                        pdfPCell.ExtraParagraphSpace = 0;
-                        main_table.AddCell(pdfPCell);
+                                pdfPCell = new PdfPCell(new Phrase(item.unallocated_amount == null ? "" : Convert.ToDecimal(item.unallocated_amount.Value).ToString("#,##0.00"), fontStyle));
+                                pdfPCell.HorizontalAlignment = Element.ALIGN_RIGHT;
+                                pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                                pdfPCell.BackgroundColor = BaseColor.WHITE;
+                                pdfPCell.Padding = headerCellPadding;
+                                pdfPCell.ExtraParagraphSpace = 0;
+                                main_table.AddCell(pdfPCell);
 
-                        pdfPCell = new PdfPCell(new Phrase(item.invoice_no == null ? "" : item.invoice_no, fontStyle));
-                        pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
-                        pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
-                        pdfPCell.BackgroundColor = BaseColor.WHITE;
-                        pdfPCell.Padding = headerCellPadding;
-                        pdfPCell.ExtraParagraphSpace = 0;
-                        main_table.AddCell(pdfPCell);
+                                pdfPCell = new PdfPCell(new Phrase(item.invoice_date == null ? "" : item.invoice_date.Value.ToShortDateString(), fontStyle));
+                                pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
+                                pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                                pdfPCell.BackgroundColor = BaseColor.WHITE;
+                                pdfPCell.Padding = headerCellPadding;
+                                pdfPCell.ExtraParagraphSpace = 0;
+                                main_table.AddCell(pdfPCell);
 
-                        pdfPCell = new PdfPCell(new Phrase(item.payment_term == null ? "" : item.payment_term, fontStyle));
-                        pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
-                        pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
-                        pdfPCell.BackgroundColor = BaseColor.WHITE;
-                        pdfPCell.Padding = headerCellPadding;
-                        pdfPCell.ExtraParagraphSpace = 0;
-                        main_table.AddCell(pdfPCell);
+                                pdfPCell = new PdfPCell(new Phrase(item.invoice_no == null ? "" : item.invoice_no, fontStyle));
+                                pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
+                                pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                                pdfPCell.BackgroundColor = BaseColor.WHITE;
+                                pdfPCell.Padding = headerCellPadding;
+                                pdfPCell.ExtraParagraphSpace = 0;
+                                main_table.AddCell(pdfPCell);
 
-                        pdfPCell = new PdfPCell(new Phrase(item.invoice_amount == null ? "" : Convert.ToDecimal(item.invoice_amount.Value).ToString("#,##0.00"), fontStyle));
-                        pdfPCell.HorizontalAlignment = Element.ALIGN_RIGHT;
-                        pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
-                        pdfPCell.BackgroundColor = BaseColor.WHITE;
-                        pdfPCell.Padding = headerCellPadding;
-                        pdfPCell.ExtraParagraphSpace = 0;
-                        main_table.AddCell(pdfPCell);
+                                pdfPCell = new PdfPCell(new Phrase(item.payment_term == null ? "" : item.payment_term, fontStyle));
+                                pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
+                                pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                                pdfPCell.BackgroundColor = BaseColor.WHITE;
+                                pdfPCell.Padding = headerCellPadding;
+                                pdfPCell.ExtraParagraphSpace = 0;
+                                main_table.AddCell(pdfPCell);
 
-                        pdfPCell = new PdfPCell(new Phrase(item.os_balance == null ? "" : Convert.ToDecimal(item.os_balance.Value).ToString("#,##0.00"), fontStyle));
-                        pdfPCell.HorizontalAlignment = Element.ALIGN_RIGHT;
-                        pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
-                        pdfPCell.BackgroundColor = BaseColor.WHITE;
-                        pdfPCell.Padding = headerCellPadding;
-                        pdfPCell.ExtraParagraphSpace = 0;
-                        main_table.AddCell(pdfPCell);
+                                pdfPCell = new PdfPCell(new Phrase(item.invoice_amount == null ? "" : Convert.ToDecimal(item.invoice_amount.Value).ToString("#,##0.00"), fontStyle));
+                                pdfPCell.HorizontalAlignment = Element.ALIGN_RIGHT;
+                                pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                                pdfPCell.BackgroundColor = BaseColor.WHITE;
+                                pdfPCell.Padding = headerCellPadding;
+                                pdfPCell.ExtraParagraphSpace = 0;
+                                main_table.AddCell(pdfPCell);
 
-                        pdfPCell = new PdfPCell(new Phrase(item.invoice_allocated == null ? "" : Convert.ToDecimal(item.invoice_allocated.Value).ToString("#,##0.00"), fontStyle));
-                        pdfPCell.HorizontalAlignment = Element.ALIGN_RIGHT;
-                        pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
-                        pdfPCell.BackgroundColor = BaseColor.WHITE;
-                        pdfPCell.Padding = headerCellPadding;
-                        pdfPCell.ExtraParagraphSpace = 0;
-                        main_table.AddCell(pdfPCell);
+                                pdfPCell = new PdfPCell(new Phrase(item.os_balance == null ? "" : Convert.ToDecimal(item.os_balance.Value).ToString("#,##0.00"), fontStyle));
+                                pdfPCell.HorizontalAlignment = Element.ALIGN_RIGHT;
+                                pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                                pdfPCell.BackgroundColor = BaseColor.WHITE;
+                                pdfPCell.Padding = headerCellPadding;
+                                pdfPCell.ExtraParagraphSpace = 0;
+                                main_table.AddCell(pdfPCell);
 
-                        pdfPCell = new PdfPCell(new Phrase(item.nod == null ? "" : item.nod.ToString(), fontStyle));
-                        pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
-                        pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
-                        pdfPCell.BackgroundColor = BaseColor.WHITE;
-                        pdfPCell.Padding = headerCellPadding;
-                        pdfPCell.ExtraParagraphSpace = 0;
-                        main_table.AddCell(pdfPCell);
+                                pdfPCell = new PdfPCell(new Phrase(item.invoice_allocated == null ? "" : Convert.ToDecimal(item.invoice_allocated.Value).ToString("#,##0.00"), fontStyle));
+                                pdfPCell.HorizontalAlignment = Element.ALIGN_RIGHT;
+                                pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                                pdfPCell.BackgroundColor = BaseColor.WHITE;
+                                pdfPCell.Padding = headerCellPadding;
+                                pdfPCell.ExtraParagraphSpace = 0;
+                                main_table.AddCell(pdfPCell);
 
-                        pdfPCell = new PdfPCell(new Phrase(item.remarks == null ? "" : item.remarks, fontStyle));
-                        pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
-                        pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
-                        pdfPCell.BackgroundColor = BaseColor.WHITE;
-                        pdfPCell.Padding = headerCellPadding;
-                        pdfPCell.ExtraParagraphSpace = 0;
-                        main_table.AddCell(pdfPCell);
+                                pdfPCell = new PdfPCell(new Phrase(item.nod == null ? "" : item.nod.ToString(), fontStyle));
+                                pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
+                                pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                                pdfPCell.BackgroundColor = BaseColor.WHITE;
+                                pdfPCell.Padding = headerCellPadding;
+                                pdfPCell.ExtraParagraphSpace = 0;
+                                main_table.AddCell(pdfPCell);
 
-                        pdfPCell = new PdfPCell(new Phrase(item.invoice_acknowledge == true ? "Yes" : "No", fontStyle));
-                        pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
-                        pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
-                        pdfPCell.BackgroundColor = BaseColor.WHITE;
-                        pdfPCell.Padding = headerCellPadding;
-                        pdfPCell.ExtraParagraphSpace = 0;
-                        main_table.AddCell(pdfPCell);
+                                pdfPCell = new PdfPCell(new Phrase(item.remarks == null ? "" : item.remarks, fontStyle));
+                                pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
+                                pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                                pdfPCell.BackgroundColor = BaseColor.WHITE;
+                                pdfPCell.Padding = headerCellPadding;
+                                pdfPCell.ExtraParagraphSpace = 0;
+                                main_table.AddCell(pdfPCell);
 
-                        pdfPCell = new PdfPCell(new Phrase("", fontStyle));
-                        pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
-                        pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
-                        pdfPCell.BackgroundColor = BaseColor.WHITE;
-                        pdfPCell.Padding = headerCellPadding;
-                        pdfPCell.ExtraParagraphSpace = 0;
-                        main_table.AddCell(pdfPCell);
+                                pdfPCell = new PdfPCell(new Phrase(item.invoice_acknowledge == true ? "Yes" : "No", fontStyle));
+                                pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
+                                pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                                pdfPCell.BackgroundColor = BaseColor.WHITE;
+                                pdfPCell.Padding = headerCellPadding;
+                                pdfPCell.ExtraParagraphSpace = 0;
+                                main_table.AddCell(pdfPCell);
 
-                        main_table.CompleteRow();
+                                pdfPCell = new PdfPCell(new Phrase("", fontStyle));
+                                pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
+                                pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                                pdfPCell.BackgroundColor = BaseColor.WHITE;
+                                pdfPCell.Padding = headerCellPadding;
+                                pdfPCell.ExtraParagraphSpace = 0;
+                                main_table.AddCell(pdfPCell);
+
+                                main_table.CompleteRow();
+
+                                amountTotal = amountTotal + Convert.ToDecimal(item.payment_amount);
+
+                            }
+                            else
+                            {
+                                pdfPCell = new PdfPCell(new Phrase("", fontStyle));
+                                pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
+                                pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                                pdfPCell.BackgroundColor = BaseColor.WHITE;
+                                pdfPCell.Padding = headerCellPadding;
+                                pdfPCell.ExtraParagraphSpace = 0;
+                                main_table.AddCell(pdfPCell);
+
+                                pdfPCell = new PdfPCell(new Phrase("", fontStyle));
+                                pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
+                                pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                                pdfPCell.BackgroundColor = BaseColor.WHITE;
+                                pdfPCell.Padding = headerCellPadding;
+                                pdfPCell.ExtraParagraphSpace = 0;
+                                main_table.AddCell(pdfPCell);
+
+                                pdfPCell = new PdfPCell(new Phrase("", fontStyle));
+                                pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
+                                pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                                pdfPCell.BackgroundColor = BaseColor.WHITE;
+                                pdfPCell.Padding = headerCellPadding;
+                                pdfPCell.ExtraParagraphSpace = 0;
+                                main_table.AddCell(pdfPCell);
+
+                                pdfPCell = new PdfPCell(new Phrase("", fontStyle));
+                                pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
+                                pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                                pdfPCell.BackgroundColor = BaseColor.WHITE;
+                                pdfPCell.Padding = headerCellPadding;
+                                pdfPCell.ExtraParagraphSpace = 0;
+                                main_table.AddCell(pdfPCell);
+
+                                pdfPCell = new PdfPCell(new Phrase("", fontStyle));
+                                pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
+                                pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                                pdfPCell.BackgroundColor = BaseColor.WHITE;
+                                pdfPCell.Padding = headerCellPadding;
+                                pdfPCell.ExtraParagraphSpace = 0;
+                                main_table.AddCell(pdfPCell);
+
+                                pdfPCell = new PdfPCell(new Phrase("", fontStyle));
+                                pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
+                                pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                                pdfPCell.BackgroundColor = BaseColor.WHITE;
+                                pdfPCell.Padding = headerCellPadding;
+                                pdfPCell.ExtraParagraphSpace = 0;
+                                main_table.AddCell(pdfPCell);
+
+                                pdfPCell = new PdfPCell(new Phrase("", fontStyle));
+                                pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
+                                pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                                pdfPCell.BackgroundColor = BaseColor.WHITE;
+                                pdfPCell.Padding = headerCellPadding;
+                                pdfPCell.ExtraParagraphSpace = 0;
+                                main_table.AddCell(pdfPCell);
+
+                                pdfPCell = new PdfPCell(new Phrase("", fontStyle));
+                                pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
+                                pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                                pdfPCell.BackgroundColor = BaseColor.WHITE;
+                                pdfPCell.Padding = headerCellPadding;
+                                pdfPCell.ExtraParagraphSpace = 0;
+                                main_table.AddCell(pdfPCell);
+
+                                pdfPCell = new PdfPCell(new Phrase("", fontStyle));
+                                pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
+                                pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                                pdfPCell.BackgroundColor = BaseColor.WHITE;
+                                pdfPCell.Padding = headerCellPadding;
+                                pdfPCell.ExtraParagraphSpace = 0;
+                                main_table.AddCell(pdfPCell);
+
+                                pdfPCell = new PdfPCell(new Phrase("", fontStyle));
+                                pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
+                                pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                                pdfPCell.BackgroundColor = BaseColor.WHITE;
+                                pdfPCell.Padding = headerCellPadding;
+                                pdfPCell.ExtraParagraphSpace = 0;
+                                main_table.AddCell(pdfPCell);
+
+                                pdfPCell = new PdfPCell(new Phrase("", fontStyle));
+                                pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
+                                pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                                pdfPCell.BackgroundColor = BaseColor.WHITE;
+                                pdfPCell.Padding = headerCellPadding;
+                                pdfPCell.ExtraParagraphSpace = 0;
+                                main_table.AddCell(pdfPCell);
+
+                                pdfPCell = new PdfPCell(new Phrase("", fontStyle));
+                                pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
+                                pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                                pdfPCell.BackgroundColor = BaseColor.WHITE;
+                                pdfPCell.Padding = headerCellPadding;
+                                pdfPCell.ExtraParagraphSpace = 0;
+                                main_table.AddCell(pdfPCell);
+
+                                pdfPCell = new PdfPCell(new Phrase(item.invoice_date == null ? "" : item.invoice_date.Value.ToShortDateString(), fontStyle));
+                                pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
+                                pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                                pdfPCell.BackgroundColor = BaseColor.WHITE;
+                                pdfPCell.Padding = headerCellPadding;
+                                pdfPCell.ExtraParagraphSpace = 0;
+                                main_table.AddCell(pdfPCell);
+
+                                pdfPCell = new PdfPCell(new Phrase(item.invoice_no == null ? "" : item.invoice_no, fontStyle));
+                                pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
+                                pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                                pdfPCell.BackgroundColor = BaseColor.WHITE;
+                                pdfPCell.Padding = headerCellPadding;
+                                pdfPCell.ExtraParagraphSpace = 0;
+                                main_table.AddCell(pdfPCell);
+
+                                pdfPCell = new PdfPCell(new Phrase(item.payment_term == null ? "" : item.payment_term, fontStyle));
+                                pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
+                                pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                                pdfPCell.BackgroundColor = BaseColor.WHITE;
+                                pdfPCell.Padding = headerCellPadding;
+                                pdfPCell.ExtraParagraphSpace = 0;
+                                main_table.AddCell(pdfPCell);
+
+                                pdfPCell = new PdfPCell(new Phrase(item.invoice_amount == null ? "" : Convert.ToDecimal(item.invoice_amount.Value).ToString("#,##0.00"), fontStyle));
+                                pdfPCell.HorizontalAlignment = Element.ALIGN_RIGHT;
+                                pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                                pdfPCell.BackgroundColor = BaseColor.WHITE;
+                                pdfPCell.Padding = headerCellPadding;
+                                pdfPCell.ExtraParagraphSpace = 0;
+                                main_table.AddCell(pdfPCell);
+
+                                pdfPCell = new PdfPCell(new Phrase(item.os_balance == null ? "" : Convert.ToDecimal(item.os_balance.Value).ToString("#,##0.00"), fontStyle));
+                                pdfPCell.HorizontalAlignment = Element.ALIGN_RIGHT;
+                                pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                                pdfPCell.BackgroundColor = BaseColor.WHITE;
+                                pdfPCell.Padding = headerCellPadding;
+                                pdfPCell.ExtraParagraphSpace = 0;
+                                main_table.AddCell(pdfPCell);
+
+                                pdfPCell = new PdfPCell(new Phrase(item.invoice_allocated == null ? "" : Convert.ToDecimal(item.invoice_allocated.Value).ToString("#,##0.00"), fontStyle));
+                                pdfPCell.HorizontalAlignment = Element.ALIGN_RIGHT;
+                                pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                                pdfPCell.BackgroundColor = BaseColor.WHITE;
+                                pdfPCell.Padding = headerCellPadding;
+                                pdfPCell.ExtraParagraphSpace = 0;
+                                main_table.AddCell(pdfPCell);
+
+                                pdfPCell = new PdfPCell(new Phrase(item.nod == null ? "" : item.nod.ToString(), fontStyle));
+                                pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
+                                pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                                pdfPCell.BackgroundColor = BaseColor.WHITE;
+                                pdfPCell.Padding = headerCellPadding;
+                                pdfPCell.ExtraParagraphSpace = 0;
+                                main_table.AddCell(pdfPCell);
+
+                                pdfPCell = new PdfPCell(new Phrase(item.remarks == null ? "" : item.remarks, fontStyle));
+                                pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
+                                pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                                pdfPCell.BackgroundColor = BaseColor.WHITE;
+                                pdfPCell.Padding = headerCellPadding;
+                                pdfPCell.ExtraParagraphSpace = 0;
+                                main_table.AddCell(pdfPCell);
+
+                                pdfPCell = new PdfPCell(new Phrase(item.invoice_acknowledge == true ? "Yes" : "No", fontStyle));
+                                pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
+                                pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                                pdfPCell.BackgroundColor = BaseColor.WHITE;
+                                pdfPCell.Padding = headerCellPadding;
+                                pdfPCell.ExtraParagraphSpace = 0;
+                                main_table.AddCell(pdfPCell);
+
+                                pdfPCell = new PdfPCell(new Phrase("", fontStyle));
+                                pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
+                                pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                                pdfPCell.BackgroundColor = BaseColor.WHITE;
+                                pdfPCell.Padding = headerCellPadding;
+                                pdfPCell.ExtraParagraphSpace = 0;
+                                main_table.AddCell(pdfPCell);
+
+                                main_table.CompleteRow();
+                            }
+                            
+                            multiplePaymentKeyList.Add(item.payment_key);
+                            multiplePaymentCheques.Add(item.cheque_no);
+
+
+                        }
+                        else
+                        {
+                            if (!multiplePaymentCheques.Contains(item.cheque_no))
+                            {
+                                pdfPCell = new PdfPCell(new Phrase(item.customer_code == null ? "" : item.customer_code, fontStyle));
+                                pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
+                                pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                                pdfPCell.BackgroundColor = BaseColor.WHITE;
+                                pdfPCell.Padding = headerCellPadding;
+                                pdfPCell.ExtraParagraphSpace = 0;
+                                main_table.AddCell(pdfPCell);
+
+                                pdfPCell = new PdfPCell(new Phrase(item.CusName == null ? "" : item.CusName, fontStyle));
+                                pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
+                                pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                                pdfPCell.BackgroundColor = BaseColor.WHITE;
+                                pdfPCell.Padding = headerCellPadding;
+                                pdfPCell.ExtraParagraphSpace = 0;
+                                main_table.AddCell(pdfPCell);
+
+                                pdfPCell = new PdfPCell(new Phrase(item.payment_type == null ? "" : item.payment_type, fontStyle));
+                                pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
+                                pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                                pdfPCell.BackgroundColor = BaseColor.WHITE;
+                                pdfPCell.Padding = headerCellPadding;
+                                pdfPCell.ExtraParagraphSpace = 0;
+                                main_table.AddCell(pdfPCell);
+
+                                pdfPCell = new PdfPCell(new Phrase(item.cheque_no == null ? "" : item.cheque_no, fontStyle));
+                                pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
+                                pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                                pdfPCell.BackgroundColor = BaseColor.WHITE;
+                                pdfPCell.Padding = headerCellPadding;
+                                pdfPCell.ExtraParagraphSpace = 0;
+                                main_table.AddCell(pdfPCell);
+
+                                pdfPCell = new PdfPCell(new Phrase(item.issued_bank == null ? "" : item.issued_bank, fontStyle));
+                                pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
+                                pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                                pdfPCell.BackgroundColor = BaseColor.WHITE;
+                                pdfPCell.Padding = headerCellPadding;
+                                pdfPCell.ExtraParagraphSpace = 0;
+                                main_table.AddCell(pdfPCell);
+
+                                pdfPCell = new PdfPCell(new Phrase(item.issued_branch == null ? "" : item.issued_branch, fontStyle));
+                                pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
+                                pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                                pdfPCell.BackgroundColor = BaseColor.WHITE;
+                                pdfPCell.Padding = headerCellPadding;
+                                pdfPCell.ExtraParagraphSpace = 0;
+                                main_table.AddCell(pdfPCell);
+
+                                pdfPCell = new PdfPCell(new Phrase(item.banking_date == null ? "" : item.banking_date.Value.ToShortDateString(), fontStyle));
+                                pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
+                                pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                                pdfPCell.BackgroundColor = BaseColor.WHITE;
+                                pdfPCell.Padding = headerCellPadding;
+                                pdfPCell.ExtraParagraphSpace = 0;
+                                main_table.AddCell(pdfPCell);
+
+                                pdfPCell = new PdfPCell(new Phrase(item.deposited_bank == null ? "" : item.deposited_bank, fontStyle));
+                                pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
+                                pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                                pdfPCell.BackgroundColor = BaseColor.WHITE;
+                                pdfPCell.Padding = headerCellPadding;
+                                pdfPCell.ExtraParagraphSpace = 0;
+                                main_table.AddCell(pdfPCell);
+
+                                pdfPCell = new PdfPCell(new Phrase(item.deposited_branch == null ? "" : item.deposited_branch, fontStyle));
+                                pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
+                                pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                                pdfPCell.BackgroundColor = BaseColor.WHITE;
+                                pdfPCell.Padding = headerCellPadding;
+                                pdfPCell.ExtraParagraphSpace = 0;
+                                main_table.AddCell(pdfPCell);
+
+                                pdfPCell = new PdfPCell(new Phrase(item.receipt_no == null ? "" : item.receipt_no, fontStyle));
+                                pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
+                                pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                                pdfPCell.BackgroundColor = BaseColor.WHITE;
+                                pdfPCell.Padding = headerCellPadding;
+                                pdfPCell.ExtraParagraphSpace = 0;
+                                main_table.AddCell(pdfPCell);
+
+                                pdfPCell = new PdfPCell(new Phrase(item.payment_amount == null ? "" : Convert.ToDecimal(item.payment_amount.Value).ToString("#,##0.00"), fontStyle));
+                                pdfPCell.HorizontalAlignment = Element.ALIGN_RIGHT;
+                                pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                                pdfPCell.BackgroundColor = BaseColor.WHITE;
+                                pdfPCell.Padding = headerCellPadding;
+                                pdfPCell.ExtraParagraphSpace = 0;
+                                main_table.AddCell(pdfPCell);
+
+                                pdfPCell = new PdfPCell(new Phrase(item.unallocated_amount == null ? "" : Convert.ToDecimal(item.unallocated_amount.Value).ToString("#,##0.00"), fontStyle));
+                                pdfPCell.HorizontalAlignment = Element.ALIGN_RIGHT;
+                                pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                                pdfPCell.BackgroundColor = BaseColor.WHITE;
+                                pdfPCell.Padding = headerCellPadding;
+                                pdfPCell.ExtraParagraphSpace = 0;
+                                main_table.AddCell(pdfPCell);
+
+                                pdfPCell = new PdfPCell(new Phrase(item.invoice_date == null ? "" : item.invoice_date.Value.ToShortDateString(), fontStyle));
+                                pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
+                                pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                                pdfPCell.BackgroundColor = BaseColor.WHITE;
+                                pdfPCell.Padding = headerCellPadding;
+                                pdfPCell.ExtraParagraphSpace = 0;
+                                main_table.AddCell(pdfPCell);
+
+                                pdfPCell = new PdfPCell(new Phrase(item.invoice_no == null ? "" : item.invoice_no, fontStyle));
+                                pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
+                                pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                                pdfPCell.BackgroundColor = BaseColor.WHITE;
+                                pdfPCell.Padding = headerCellPadding;
+                                pdfPCell.ExtraParagraphSpace = 0;
+                                main_table.AddCell(pdfPCell);
+
+                                pdfPCell = new PdfPCell(new Phrase(item.payment_term == null ? "" : item.payment_term, fontStyle));
+                                pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
+                                pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                                pdfPCell.BackgroundColor = BaseColor.WHITE;
+                                pdfPCell.Padding = headerCellPadding;
+                                pdfPCell.ExtraParagraphSpace = 0;
+                                main_table.AddCell(pdfPCell);
+
+                                pdfPCell = new PdfPCell(new Phrase(item.invoice_amount == null ? "" : Convert.ToDecimal(item.invoice_amount.Value).ToString("#,##0.00"), fontStyle));
+                                pdfPCell.HorizontalAlignment = Element.ALIGN_RIGHT;
+                                pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                                pdfPCell.BackgroundColor = BaseColor.WHITE;
+                                pdfPCell.Padding = headerCellPadding;
+                                pdfPCell.ExtraParagraphSpace = 0;
+                                main_table.AddCell(pdfPCell);
+
+                                pdfPCell = new PdfPCell(new Phrase(item.os_balance == null ? "" : Convert.ToDecimal(item.os_balance.Value).ToString("#,##0.00"), fontStyle));
+                                pdfPCell.HorizontalAlignment = Element.ALIGN_RIGHT;
+                                pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                                pdfPCell.BackgroundColor = BaseColor.WHITE;
+                                pdfPCell.Padding = headerCellPadding;
+                                pdfPCell.ExtraParagraphSpace = 0;
+                                main_table.AddCell(pdfPCell);
+
+                                pdfPCell = new PdfPCell(new Phrase(item.invoice_allocated == null ? "" : Convert.ToDecimal(item.invoice_allocated.Value).ToString("#,##0.00"), fontStyle));
+                                pdfPCell.HorizontalAlignment = Element.ALIGN_RIGHT;
+                                pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                                pdfPCell.BackgroundColor = BaseColor.WHITE;
+                                pdfPCell.Padding = headerCellPadding;
+                                pdfPCell.ExtraParagraphSpace = 0;
+                                main_table.AddCell(pdfPCell);
+
+                                pdfPCell = new PdfPCell(new Phrase(item.nod == null ? "" : item.nod.ToString(), fontStyle));
+                                pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
+                                pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                                pdfPCell.BackgroundColor = BaseColor.WHITE;
+                                pdfPCell.Padding = headerCellPadding;
+                                pdfPCell.ExtraParagraphSpace = 0;
+                                main_table.AddCell(pdfPCell);
+
+                                pdfPCell = new PdfPCell(new Phrase(item.remarks == null ? "" : item.remarks, fontStyle));
+                                pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
+                                pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                                pdfPCell.BackgroundColor = BaseColor.WHITE;
+                                pdfPCell.Padding = headerCellPadding;
+                                pdfPCell.ExtraParagraphSpace = 0;
+                                main_table.AddCell(pdfPCell);
+
+                                pdfPCell = new PdfPCell(new Phrase(item.invoice_acknowledge == true ? "Yes" : "No", fontStyle));
+                                pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
+                                pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                                pdfPCell.BackgroundColor = BaseColor.WHITE;
+                                pdfPCell.Padding = headerCellPadding;
+                                pdfPCell.ExtraParagraphSpace = 0;
+                                main_table.AddCell(pdfPCell);
+
+                                pdfPCell = new PdfPCell(new Phrase("", fontStyle));
+                                pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
+                                pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                                pdfPCell.BackgroundColor = BaseColor.WHITE;
+                                pdfPCell.Padding = headerCellPadding;
+                                pdfPCell.ExtraParagraphSpace = 0;
+                                main_table.AddCell(pdfPCell);
+
+                                main_table.CompleteRow();
+
+                                amountTotal = amountTotal + Convert.ToDecimal(item.payment_amount);
+
+                            }
+                            else
+                            {
+                                pdfPCell = new PdfPCell(new Phrase("", fontStyle));
+                                pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
+                                pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                                pdfPCell.BackgroundColor = BaseColor.WHITE;
+                                pdfPCell.Padding = headerCellPadding;
+                                pdfPCell.ExtraParagraphSpace = 0;
+                                main_table.AddCell(pdfPCell);
+
+                                pdfPCell = new PdfPCell(new Phrase("", fontStyle));
+                                pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
+                                pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                                pdfPCell.BackgroundColor = BaseColor.WHITE;
+                                pdfPCell.Padding = headerCellPadding;
+                                pdfPCell.ExtraParagraphSpace = 0;
+                                main_table.AddCell(pdfPCell);
+
+                                pdfPCell = new PdfPCell(new Phrase("", fontStyle));
+                                pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
+                                pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                                pdfPCell.BackgroundColor = BaseColor.WHITE;
+                                pdfPCell.Padding = headerCellPadding;
+                                pdfPCell.ExtraParagraphSpace = 0;
+                                main_table.AddCell(pdfPCell);
+
+                                pdfPCell = new PdfPCell(new Phrase("", fontStyle));
+                                pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
+                                pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                                pdfPCell.BackgroundColor = BaseColor.WHITE;
+                                pdfPCell.Padding = headerCellPadding;
+                                pdfPCell.ExtraParagraphSpace = 0;
+                                main_table.AddCell(pdfPCell);
+
+                                pdfPCell = new PdfPCell(new Phrase("", fontStyle));
+                                pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
+                                pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                                pdfPCell.BackgroundColor = BaseColor.WHITE;
+                                pdfPCell.Padding = headerCellPadding;
+                                pdfPCell.ExtraParagraphSpace = 0;
+                                main_table.AddCell(pdfPCell);
+
+                                pdfPCell = new PdfPCell(new Phrase("", fontStyle));
+                                pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
+                                pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                                pdfPCell.BackgroundColor = BaseColor.WHITE;
+                                pdfPCell.Padding = headerCellPadding;
+                                pdfPCell.ExtraParagraphSpace = 0;
+                                main_table.AddCell(pdfPCell);
+
+                                pdfPCell = new PdfPCell(new Phrase("", fontStyle));
+                                pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
+                                pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                                pdfPCell.BackgroundColor = BaseColor.WHITE;
+                                pdfPCell.Padding = headerCellPadding;
+                                pdfPCell.ExtraParagraphSpace = 0;
+                                main_table.AddCell(pdfPCell);
+
+                                pdfPCell = new PdfPCell(new Phrase("", fontStyle));
+                                pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
+                                pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                                pdfPCell.BackgroundColor = BaseColor.WHITE;
+                                pdfPCell.Padding = headerCellPadding;
+                                pdfPCell.ExtraParagraphSpace = 0;
+                                main_table.AddCell(pdfPCell);
+
+                                pdfPCell = new PdfPCell(new Phrase("", fontStyle));
+                                pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
+                                pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                                pdfPCell.BackgroundColor = BaseColor.WHITE;
+                                pdfPCell.Padding = headerCellPadding;
+                                pdfPCell.ExtraParagraphSpace = 0;
+                                main_table.AddCell(pdfPCell);
+
+                                pdfPCell = new PdfPCell(new Phrase("", fontStyle));
+                                pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
+                                pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                                pdfPCell.BackgroundColor = BaseColor.WHITE;
+                                pdfPCell.Padding = headerCellPadding;
+                                pdfPCell.ExtraParagraphSpace = 0;
+                                main_table.AddCell(pdfPCell);
+
+                                pdfPCell = new PdfPCell(new Phrase("", fontStyle));
+                                pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
+                                pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                                pdfPCell.BackgroundColor = BaseColor.WHITE;
+                                pdfPCell.Padding = headerCellPadding;
+                                pdfPCell.ExtraParagraphSpace = 0;
+                                main_table.AddCell(pdfPCell);
+
+                                pdfPCell = new PdfPCell(new Phrase("", fontStyle));
+                                pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
+                                pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                                pdfPCell.BackgroundColor = BaseColor.WHITE;
+                                pdfPCell.Padding = headerCellPadding;
+                                pdfPCell.ExtraParagraphSpace = 0;
+                                main_table.AddCell(pdfPCell);
+
+                                pdfPCell = new PdfPCell(new Phrase(item.invoice_date == null ? "" : item.invoice_date.Value.ToShortDateString(), fontStyle));
+                                pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
+                                pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                                pdfPCell.BackgroundColor = BaseColor.WHITE;
+                                pdfPCell.Padding = headerCellPadding;
+                                pdfPCell.ExtraParagraphSpace = 0;
+                                main_table.AddCell(pdfPCell);
+
+                                pdfPCell = new PdfPCell(new Phrase(item.invoice_no == null ? "" : item.invoice_no, fontStyle));
+                                pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
+                                pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                                pdfPCell.BackgroundColor = BaseColor.WHITE;
+                                pdfPCell.Padding = headerCellPadding;
+                                pdfPCell.ExtraParagraphSpace = 0;
+                                main_table.AddCell(pdfPCell);
+
+                                pdfPCell = new PdfPCell(new Phrase(item.payment_term == null ? "" : item.payment_term, fontStyle));
+                                pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
+                                pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                                pdfPCell.BackgroundColor = BaseColor.WHITE;
+                                pdfPCell.Padding = headerCellPadding;
+                                pdfPCell.ExtraParagraphSpace = 0;
+                                main_table.AddCell(pdfPCell);
+
+                                pdfPCell = new PdfPCell(new Phrase(item.invoice_amount == null ? "" : Convert.ToDecimal(item.invoice_amount.Value).ToString("#,##0.00"), fontStyle));
+                                pdfPCell.HorizontalAlignment = Element.ALIGN_RIGHT;
+                                pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                                pdfPCell.BackgroundColor = BaseColor.WHITE;
+                                pdfPCell.Padding = headerCellPadding;
+                                pdfPCell.ExtraParagraphSpace = 0;
+                                main_table.AddCell(pdfPCell);
+
+                                pdfPCell = new PdfPCell(new Phrase(item.os_balance == null ? "" : Convert.ToDecimal(item.os_balance.Value).ToString("#,##0.00"), fontStyle));
+                                pdfPCell.HorizontalAlignment = Element.ALIGN_RIGHT;
+                                pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                                pdfPCell.BackgroundColor = BaseColor.WHITE;
+                                pdfPCell.Padding = headerCellPadding;
+                                pdfPCell.ExtraParagraphSpace = 0;
+                                main_table.AddCell(pdfPCell);
+
+                                pdfPCell = new PdfPCell(new Phrase(item.invoice_allocated == null ? "" : Convert.ToDecimal(item.invoice_allocated.Value).ToString("#,##0.00"), fontStyle));
+                                pdfPCell.HorizontalAlignment = Element.ALIGN_RIGHT;
+                                pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                                pdfPCell.BackgroundColor = BaseColor.WHITE;
+                                pdfPCell.Padding = headerCellPadding;
+                                pdfPCell.ExtraParagraphSpace = 0;
+                                main_table.AddCell(pdfPCell);
+
+                                pdfPCell = new PdfPCell(new Phrase(item.nod == null ? "" : item.nod.ToString(), fontStyle));
+                                pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
+                                pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                                pdfPCell.BackgroundColor = BaseColor.WHITE;
+                                pdfPCell.Padding = headerCellPadding;
+                                pdfPCell.ExtraParagraphSpace = 0;
+                                main_table.AddCell(pdfPCell);
+
+                                pdfPCell = new PdfPCell(new Phrase(item.remarks == null ? "" : item.remarks, fontStyle));
+                                pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
+                                pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                                pdfPCell.BackgroundColor = BaseColor.WHITE;
+                                pdfPCell.Padding = headerCellPadding;
+                                pdfPCell.ExtraParagraphSpace = 0;
+                                main_table.AddCell(pdfPCell);
+
+                                pdfPCell = new PdfPCell(new Phrase(item.invoice_acknowledge == true ? "Yes" : "No", fontStyle));
+                                pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
+                                pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                                pdfPCell.BackgroundColor = BaseColor.WHITE;
+                                pdfPCell.Padding = headerCellPadding;
+                                pdfPCell.ExtraParagraphSpace = 0;
+                                main_table.AddCell(pdfPCell);
+
+                                pdfPCell = new PdfPCell(new Phrase("", fontStyle));
+                                pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
+                                pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                                pdfPCell.BackgroundColor = BaseColor.WHITE;
+                                pdfPCell.Padding = headerCellPadding;
+                                pdfPCell.ExtraParagraphSpace = 0;
+                                main_table.AddCell(pdfPCell);
+
+                                main_table.CompleteRow();
+                            }
+
+                            multiplePaymentCheques.Add(item.cheque_no);
+
+
+                        }
+
+                        if (!multiplePaymentInvoices.Contains(item.invoice_no))
+                        {
+                            invoiceAmountTotal = invoiceAmountTotal + Convert.ToDecimal(item.invoice_amount);
+                            osBalanceTotal = osBalanceTotal + Convert.ToDecimal(item.os_balance);
+                            settledTotal = settledTotal + Convert.ToDecimal(item.invoice_allocated);
+                        }
+
+                        multiplePaymentInvoices.Add(item.invoice_no);
 
                     }
                     else
                     {
 
-                        amountTotal = amountTotal + (decimal)item.payment_amount;
-                        unallocatedAmountTotal = unallocatedAmountTotal + (decimal)item.unallocated_amount;
+                        if (!multiplePaymentInvoices.Contains(item.invoice_no))
+                        {
+                            invoiceAmountTotal = invoiceAmountTotal + Convert.ToDecimal(item.invoice_amount);
+                            osBalanceTotal = osBalanceTotal + Convert.ToDecimal(item.os_balance);
+                            settledTotal = settledTotal + Convert.ToDecimal(item.invoice_allocated);
+                        }
 
-                        pdfPCell = new PdfPCell(new Phrase(item.customer_code == null ? "" : item.customer_code, fontStyle));
-                        pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
-                        pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
-                        pdfPCell.BackgroundColor = BaseColor.WHITE;
-                        pdfPCell.Padding = headerCellPadding;
-                        pdfPCell.ExtraParagraphSpace = 0;
-                        main_table.AddCell(pdfPCell);
+                        if (same == 1)
+                        {
+                            pdfPCell = new PdfPCell(new Phrase("", fontStyle));
+                            pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
+                            pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                            pdfPCell.BackgroundColor = BaseColor.WHITE;
+                            pdfPCell.Padding = headerCellPadding;
+                            pdfPCell.ExtraParagraphSpace = 0;
+                            main_table.AddCell(pdfPCell);
 
-                        pdfPCell = new PdfPCell(new Phrase(item.CusName == null ? "" : item.CusName, fontStyle));
-                        pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
-                        pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
-                        pdfPCell.BackgroundColor = BaseColor.WHITE;
-                        pdfPCell.Padding = headerCellPadding;
-                        pdfPCell.ExtraParagraphSpace = 0;
-                        main_table.AddCell(pdfPCell);
+                            pdfPCell = new PdfPCell(new Phrase("", fontStyle));
+                            pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
+                            pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                            pdfPCell.BackgroundColor = BaseColor.WHITE;
+                            pdfPCell.Padding = headerCellPadding;
+                            pdfPCell.ExtraParagraphSpace = 0;
+                            main_table.AddCell(pdfPCell);
 
-                        pdfPCell = new PdfPCell(new Phrase(item.payment_type == null ? "" : item.payment_type, fontStyle));
-                        pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
-                        pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
-                        pdfPCell.BackgroundColor = BaseColor.WHITE;
-                        pdfPCell.Padding = headerCellPadding;
-                        pdfPCell.ExtraParagraphSpace = 0;
-                        main_table.AddCell(pdfPCell);
+                            pdfPCell = new PdfPCell(new Phrase("", fontStyle));
+                            pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
+                            pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                            pdfPCell.BackgroundColor = BaseColor.WHITE;
+                            pdfPCell.Padding = headerCellPadding;
+                            pdfPCell.ExtraParagraphSpace = 0;
+                            main_table.AddCell(pdfPCell);
 
-                        pdfPCell = new PdfPCell(new Phrase(item.cheque_no == null ? "" : item.cheque_no, fontStyle));
-                        pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
-                        pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
-                        pdfPCell.BackgroundColor = BaseColor.WHITE;
-                        pdfPCell.Padding = headerCellPadding;
-                        pdfPCell.ExtraParagraphSpace = 0;
-                        main_table.AddCell(pdfPCell);
+                            pdfPCell = new PdfPCell(new Phrase("", fontStyle));
+                            pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
+                            pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                            pdfPCell.BackgroundColor = BaseColor.WHITE;
+                            pdfPCell.Padding = headerCellPadding;
+                            pdfPCell.ExtraParagraphSpace = 0;
+                            main_table.AddCell(pdfPCell);
 
-                        pdfPCell = new PdfPCell(new Phrase(item.issued_bank == null ? "" : item.issued_bank, fontStyle));
-                        pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
-                        pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
-                        pdfPCell.BackgroundColor = BaseColor.WHITE;
-                        pdfPCell.Padding = headerCellPadding;
-                        pdfPCell.ExtraParagraphSpace = 0;
-                        main_table.AddCell(pdfPCell);
+                            pdfPCell = new PdfPCell(new Phrase("", fontStyle));
+                            pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
+                            pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                            pdfPCell.BackgroundColor = BaseColor.WHITE;
+                            pdfPCell.Padding = headerCellPadding;
+                            pdfPCell.ExtraParagraphSpace = 0;
+                            main_table.AddCell(pdfPCell);
 
-                        pdfPCell = new PdfPCell(new Phrase(item.issued_branch == null ? "" : item.issued_branch, fontStyle));
-                        pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
-                        pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
-                        pdfPCell.BackgroundColor = BaseColor.WHITE;
-                        pdfPCell.Padding = headerCellPadding;
-                        pdfPCell.ExtraParagraphSpace = 0;
-                        main_table.AddCell(pdfPCell);
+                            pdfPCell = new PdfPCell(new Phrase("", fontStyle));
+                            pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
+                            pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                            pdfPCell.BackgroundColor = BaseColor.WHITE;
+                            pdfPCell.Padding = headerCellPadding;
+                            pdfPCell.ExtraParagraphSpace = 0;
+                            main_table.AddCell(pdfPCell);
 
-                        pdfPCell = new PdfPCell(new Phrase(item.banking_date == null ? "" : item.banking_date.Value.ToShortDateString(), fontStyle));
-                        pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
-                        pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
-                        pdfPCell.BackgroundColor = BaseColor.WHITE;
-                        pdfPCell.Padding = headerCellPadding;
-                        pdfPCell.ExtraParagraphSpace = 0;
-                        main_table.AddCell(pdfPCell);
+                            pdfPCell = new PdfPCell(new Phrase("", fontStyle));
+                            pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
+                            pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                            pdfPCell.BackgroundColor = BaseColor.WHITE;
+                            pdfPCell.Padding = headerCellPadding;
+                            pdfPCell.ExtraParagraphSpace = 0;
+                            main_table.AddCell(pdfPCell);
 
-                        pdfPCell = new PdfPCell(new Phrase(item.deposited_bank == null ? "" : item.deposited_bank, fontStyle));
-                        pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
-                        pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
-                        pdfPCell.BackgroundColor = BaseColor.WHITE;
-                        pdfPCell.Padding = headerCellPadding;
-                        pdfPCell.ExtraParagraphSpace = 0;
-                        main_table.AddCell(pdfPCell);
+                            pdfPCell = new PdfPCell(new Phrase("", fontStyle));
+                            pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
+                            pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                            pdfPCell.BackgroundColor = BaseColor.WHITE;
+                            pdfPCell.Padding = headerCellPadding;
+                            pdfPCell.ExtraParagraphSpace = 0;
+                            main_table.AddCell(pdfPCell);
 
-                        pdfPCell = new PdfPCell(new Phrase(item.deposited_branch == null ? "" : item.deposited_branch, fontStyle));
-                        pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
-                        pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
-                        pdfPCell.BackgroundColor = BaseColor.WHITE;
-                        pdfPCell.Padding = headerCellPadding;
-                        pdfPCell.ExtraParagraphSpace = 0;
-                        main_table.AddCell(pdfPCell);
+                            pdfPCell = new PdfPCell(new Phrase("", fontStyle));
+                            pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
+                            pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                            pdfPCell.BackgroundColor = BaseColor.WHITE;
+                            pdfPCell.Padding = headerCellPadding;
+                            pdfPCell.ExtraParagraphSpace = 0;
+                            main_table.AddCell(pdfPCell);
 
-                        pdfPCell = new PdfPCell(new Phrase(item.receipt_no == null ? "" : item.receipt_no, fontStyle));
-                        pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
-                        pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
-                        pdfPCell.BackgroundColor = BaseColor.WHITE;
-                        pdfPCell.Padding = headerCellPadding;
-                        pdfPCell.ExtraParagraphSpace = 0;
-                        main_table.AddCell(pdfPCell);
+                            pdfPCell = new PdfPCell(new Phrase("", fontStyle));
+                            pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
+                            pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                            pdfPCell.BackgroundColor = BaseColor.WHITE;
+                            pdfPCell.Padding = headerCellPadding;
+                            pdfPCell.ExtraParagraphSpace = 0;
+                            main_table.AddCell(pdfPCell);
 
-                        pdfPCell = new PdfPCell(new Phrase(item.payment_amount == null ? "" : Convert.ToDecimal(item.payment_amount.Value).ToString("#,##0.00"), fontStyle));
-                        pdfPCell.HorizontalAlignment = Element.ALIGN_RIGHT;
-                        pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
-                        pdfPCell.BackgroundColor = BaseColor.WHITE;
-                        pdfPCell.Padding = headerCellPadding;
-                        pdfPCell.ExtraParagraphSpace = 0;
-                        main_table.AddCell(pdfPCell);
+                            pdfPCell = new PdfPCell(new Phrase("", fontStyle));
+                            pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
+                            pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                            pdfPCell.BackgroundColor = BaseColor.WHITE;
+                            pdfPCell.Padding = headerCellPadding;
+                            pdfPCell.ExtraParagraphSpace = 0;
+                            main_table.AddCell(pdfPCell);
 
-                        pdfPCell = new PdfPCell(new Phrase(item.unallocated_amount == null ? "" : Convert.ToDecimal(item.unallocated_amount.Value).ToString("#,##0.00"), fontStyle));
-                        pdfPCell.HorizontalAlignment = Element.ALIGN_RIGHT;
-                        pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
-                        pdfPCell.BackgroundColor = BaseColor.WHITE;
-                        pdfPCell.Padding = headerCellPadding;
-                        pdfPCell.ExtraParagraphSpace = 0;
-                        main_table.AddCell(pdfPCell);
+                            pdfPCell = new PdfPCell(new Phrase("", fontStyle));
+                            pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
+                            pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                            pdfPCell.BackgroundColor = BaseColor.WHITE;
+                            pdfPCell.Padding = headerCellPadding;
+                            pdfPCell.ExtraParagraphSpace = 0;
+                            main_table.AddCell(pdfPCell);
 
-                        pdfPCell = new PdfPCell(new Phrase(item.invoice_date == null ? "" : item.invoice_date.Value.ToShortDateString(), fontStyle));
-                        pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
-                        pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
-                        pdfPCell.BackgroundColor = BaseColor.WHITE;
-                        pdfPCell.Padding = headerCellPadding;
-                        pdfPCell.ExtraParagraphSpace = 0;
-                        main_table.AddCell(pdfPCell);
+                            pdfPCell = new PdfPCell(new Phrase(item.invoice_date == null ? "" : item.invoice_date.Value.ToShortDateString(), fontStyle));
+                            pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
+                            pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                            pdfPCell.BackgroundColor = BaseColor.WHITE;
+                            pdfPCell.Padding = headerCellPadding;
+                            pdfPCell.ExtraParagraphSpace = 0;
+                            main_table.AddCell(pdfPCell);
 
-                        pdfPCell = new PdfPCell(new Phrase(item.invoice_no == null ? "" : item.invoice_no, fontStyle));
-                        pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
-                        pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
-                        pdfPCell.BackgroundColor = BaseColor.WHITE;
-                        pdfPCell.Padding = headerCellPadding;
-                        pdfPCell.ExtraParagraphSpace = 0;
-                        main_table.AddCell(pdfPCell);
+                            pdfPCell = new PdfPCell(new Phrase(item.invoice_no == null ? "" : item.invoice_no, fontStyle));
+                            pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
+                            pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                            pdfPCell.BackgroundColor = BaseColor.WHITE;
+                            pdfPCell.Padding = headerCellPadding;
+                            pdfPCell.ExtraParagraphSpace = 0;
+                            main_table.AddCell(pdfPCell);
 
-                        pdfPCell = new PdfPCell(new Phrase(item.payment_term == null ? "" : item.payment_term, fontStyle));
-                        pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
-                        pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
-                        pdfPCell.BackgroundColor = BaseColor.WHITE;
-                        pdfPCell.Padding = headerCellPadding;
-                        pdfPCell.ExtraParagraphSpace = 0;
-                        main_table.AddCell(pdfPCell);
+                            pdfPCell = new PdfPCell(new Phrase(item.payment_term == null ? "" : item.payment_term, fontStyle));
+                            pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
+                            pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                            pdfPCell.BackgroundColor = BaseColor.WHITE;
+                            pdfPCell.Padding = headerCellPadding;
+                            pdfPCell.ExtraParagraphSpace = 0;
+                            main_table.AddCell(pdfPCell);
 
-                        pdfPCell = new PdfPCell(new Phrase(item.invoice_amount == null ? "" : Convert.ToDecimal(item.invoice_amount.Value).ToString("#,##0.00"), fontStyle));
-                        pdfPCell.HorizontalAlignment = Element.ALIGN_RIGHT;
-                        pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
-                        pdfPCell.BackgroundColor = BaseColor.WHITE;
-                        pdfPCell.Padding = headerCellPadding;
-                        pdfPCell.ExtraParagraphSpace = 0;
-                        main_table.AddCell(pdfPCell);
+                            pdfPCell = new PdfPCell(new Phrase(item.invoice_amount == null ? "" : Convert.ToDecimal(item.invoice_amount.Value).ToString("#,##0.00"), fontStyle));
+                            pdfPCell.HorizontalAlignment = Element.ALIGN_RIGHT;
+                            pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                            pdfPCell.BackgroundColor = BaseColor.WHITE;
+                            pdfPCell.Padding = headerCellPadding;
+                            pdfPCell.ExtraParagraphSpace = 0;
+                            main_table.AddCell(pdfPCell);
 
-                        pdfPCell = new PdfPCell(new Phrase(item.os_balance == null ? "" : Convert.ToDecimal(item.os_balance.Value).ToString("#,##0.00"), fontStyle));
-                        pdfPCell.HorizontalAlignment = Element.ALIGN_RIGHT;
-                        pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
-                        pdfPCell.BackgroundColor = BaseColor.WHITE;
-                        pdfPCell.Padding = headerCellPadding;
-                        pdfPCell.ExtraParagraphSpace = 0;
-                        main_table.AddCell(pdfPCell);
+                            pdfPCell = new PdfPCell(new Phrase(item.os_balance == null ? "" : Convert.ToDecimal(item.os_balance.Value).ToString("#,##0.00"), fontStyle));
+                            pdfPCell.HorizontalAlignment = Element.ALIGN_RIGHT;
+                            pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                            pdfPCell.BackgroundColor = BaseColor.WHITE;
+                            pdfPCell.Padding = headerCellPadding;
+                            pdfPCell.ExtraParagraphSpace = 0;
+                            main_table.AddCell(pdfPCell);
 
-                        pdfPCell = new PdfPCell(new Phrase(item.invoice_allocated == null ? "" : Convert.ToDecimal(item.invoice_allocated.Value).ToString("#,##0.00"), fontStyle));
-                        pdfPCell.HorizontalAlignment = Element.ALIGN_RIGHT;
-                        pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
-                        pdfPCell.BackgroundColor = BaseColor.WHITE;
-                        pdfPCell.Padding = headerCellPadding;
-                        pdfPCell.ExtraParagraphSpace = 0;
-                        main_table.AddCell(pdfPCell);
+                            pdfPCell = new PdfPCell(new Phrase(item.invoice_allocated == null ? "" : Convert.ToDecimal(item.invoice_allocated.Value).ToString("#,##0.00"), fontStyle));
+                            pdfPCell.HorizontalAlignment = Element.ALIGN_RIGHT;
+                            pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                            pdfPCell.BackgroundColor = BaseColor.WHITE;
+                            pdfPCell.Padding = headerCellPadding;
+                            pdfPCell.ExtraParagraphSpace = 0;
+                            main_table.AddCell(pdfPCell);
 
-                        pdfPCell = new PdfPCell(new Phrase(item.nod == null ? "" : item.nod.ToString(), fontStyle));
-                        pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
-                        pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
-                        pdfPCell.BackgroundColor = BaseColor.WHITE;
-                        pdfPCell.Padding = headerCellPadding;
-                        pdfPCell.ExtraParagraphSpace = 0;
-                        main_table.AddCell(pdfPCell);
+                            pdfPCell = new PdfPCell(new Phrase(item.nod == null ? "" : item.nod.ToString(), fontStyle));
+                            pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
+                            pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                            pdfPCell.BackgroundColor = BaseColor.WHITE;
+                            pdfPCell.Padding = headerCellPadding;
+                            pdfPCell.ExtraParagraphSpace = 0;
+                            main_table.AddCell(pdfPCell);
 
-                        pdfPCell = new PdfPCell(new Phrase(item.remarks == null ? "" : item.remarks, fontStyle));
-                        pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
-                        pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
-                        pdfPCell.BackgroundColor = BaseColor.WHITE;
-                        pdfPCell.Padding = headerCellPadding;
-                        pdfPCell.ExtraParagraphSpace = 0;
-                        main_table.AddCell(pdfPCell);
+                            pdfPCell = new PdfPCell(new Phrase(item.remarks == null ? "" : item.remarks, fontStyle));
+                            pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
+                            pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                            pdfPCell.BackgroundColor = BaseColor.WHITE;
+                            pdfPCell.Padding = headerCellPadding;
+                            pdfPCell.ExtraParagraphSpace = 0;
+                            main_table.AddCell(pdfPCell);
 
-                        pdfPCell = new PdfPCell(new Phrase(item.invoice_acknowledge == true ? "Yes" : "No", fontStyle));
-                        pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
-                        pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
-                        pdfPCell.BackgroundColor = BaseColor.WHITE;
-                        pdfPCell.Padding = headerCellPadding;
-                        pdfPCell.ExtraParagraphSpace = 0;
-                        main_table.AddCell(pdfPCell);
+                            pdfPCell = new PdfPCell(new Phrase(item.invoice_acknowledge == true ? "Yes" : "No", fontStyle));
+                            pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
+                            pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                            pdfPCell.BackgroundColor = BaseColor.WHITE;
+                            pdfPCell.Padding = headerCellPadding;
+                            pdfPCell.ExtraParagraphSpace = 0;
+                            main_table.AddCell(pdfPCell);
 
-                        pdfPCell = new PdfPCell(new Phrase("", fontStyle));
-                        pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
-                        pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
-                        pdfPCell.BackgroundColor = BaseColor.WHITE;
-                        pdfPCell.Padding = headerCellPadding;
-                        pdfPCell.ExtraParagraphSpace = 0;
-                        main_table.AddCell(pdfPCell);
+                            pdfPCell = new PdfPCell(new Phrase("", fontStyle));
+                            pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
+                            pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                            pdfPCell.BackgroundColor = BaseColor.WHITE;
+                            pdfPCell.Padding = headerCellPadding;
+                            pdfPCell.ExtraParagraphSpace = 0;
+                            main_table.AddCell(pdfPCell);
 
-                        main_table.CompleteRow();
+                            main_table.CompleteRow();
 
+                        }
+                        else
+                        {
+                            pdfPCell = new PdfPCell(new Phrase("SINGLE PAYMENT", fontStyle));
+                            pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
+                            pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                            pdfPCell.BackgroundColor = BaseColor.WHITE;
+                            pdfPCell.Padding = headerCellPadding;
+                            pdfPCell.ExtraParagraphSpace = 0;
+                            pdfPCell.Colspan = 23;
+                            main_table.AddCell(pdfPCell);
+                            main_table.CompleteRow();
+
+                            
+                            amountTotal = amountTotal + (decimal)item.payment_amount;
+                            unallocatedAmountTotal = unallocatedAmountTotal + (decimal)item.unallocated_amount;
+
+                            pdfPCell = new PdfPCell(new Phrase(item.customer_code == null ? "" : item.customer_code, fontStyle));
+                            pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
+                            pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                            pdfPCell.BackgroundColor = BaseColor.WHITE;
+                            pdfPCell.Padding = headerCellPadding;
+                            pdfPCell.ExtraParagraphSpace = 0;
+                            main_table.AddCell(pdfPCell);
+
+                            pdfPCell = new PdfPCell(new Phrase(item.CusName == null ? "" : item.CusName, fontStyle));
+                            pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
+                            pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                            pdfPCell.BackgroundColor = BaseColor.WHITE;
+                            pdfPCell.Padding = headerCellPadding;
+                            pdfPCell.ExtraParagraphSpace = 0;
+                            main_table.AddCell(pdfPCell);
+
+                            pdfPCell = new PdfPCell(new Phrase(item.payment_type == null ? "" : item.payment_type, fontStyle));
+                            pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
+                            pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                            pdfPCell.BackgroundColor = BaseColor.WHITE;
+                            pdfPCell.Padding = headerCellPadding;
+                            pdfPCell.ExtraParagraphSpace = 0;
+                            main_table.AddCell(pdfPCell);
+
+                            pdfPCell = new PdfPCell(new Phrase(item.cheque_no == null ? "" : item.cheque_no, fontStyle));
+                            pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
+                            pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                            pdfPCell.BackgroundColor = BaseColor.WHITE;
+                            pdfPCell.Padding = headerCellPadding;
+                            pdfPCell.ExtraParagraphSpace = 0;
+                            main_table.AddCell(pdfPCell);
+
+                            pdfPCell = new PdfPCell(new Phrase(item.issued_bank == null ? "" : item.issued_bank, fontStyle));
+                            pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
+                            pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                            pdfPCell.BackgroundColor = BaseColor.WHITE;
+                            pdfPCell.Padding = headerCellPadding;
+                            pdfPCell.ExtraParagraphSpace = 0;
+                            main_table.AddCell(pdfPCell);
+
+                            pdfPCell = new PdfPCell(new Phrase(item.issued_branch == null ? "" : item.issued_branch, fontStyle));
+                            pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
+                            pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                            pdfPCell.BackgroundColor = BaseColor.WHITE;
+                            pdfPCell.Padding = headerCellPadding;
+                            pdfPCell.ExtraParagraphSpace = 0;
+                            main_table.AddCell(pdfPCell);
+
+                            pdfPCell = new PdfPCell(new Phrase(item.banking_date == null ? "" : item.banking_date.Value.ToShortDateString(), fontStyle));
+                            pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
+                            pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                            pdfPCell.BackgroundColor = BaseColor.WHITE;
+                            pdfPCell.Padding = headerCellPadding;
+                            pdfPCell.ExtraParagraphSpace = 0;
+                            main_table.AddCell(pdfPCell);
+
+                            pdfPCell = new PdfPCell(new Phrase(item.deposited_bank == null ? "" : item.deposited_bank, fontStyle));
+                            pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
+                            pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                            pdfPCell.BackgroundColor = BaseColor.WHITE;
+                            pdfPCell.Padding = headerCellPadding;
+                            pdfPCell.ExtraParagraphSpace = 0;
+                            main_table.AddCell(pdfPCell);
+
+                            pdfPCell = new PdfPCell(new Phrase(item.deposited_branch == null ? "" : item.deposited_branch, fontStyle));
+                            pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
+                            pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                            pdfPCell.BackgroundColor = BaseColor.WHITE;
+                            pdfPCell.Padding = headerCellPadding;
+                            pdfPCell.ExtraParagraphSpace = 0;
+                            main_table.AddCell(pdfPCell);
+
+                            pdfPCell = new PdfPCell(new Phrase(item.receipt_no == null ? "" : item.receipt_no, fontStyle));
+                            pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
+                            pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                            pdfPCell.BackgroundColor = BaseColor.WHITE;
+                            pdfPCell.Padding = headerCellPadding;
+                            pdfPCell.ExtraParagraphSpace = 0;
+                            main_table.AddCell(pdfPCell);
+
+                            pdfPCell = new PdfPCell(new Phrase(item.payment_amount == null ? "" : Convert.ToDecimal(item.payment_amount.Value).ToString("#,##0.00"), fontStyle));
+                            pdfPCell.HorizontalAlignment = Element.ALIGN_RIGHT;
+                            pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                            pdfPCell.BackgroundColor = BaseColor.WHITE;
+                            pdfPCell.Padding = headerCellPadding;
+                            pdfPCell.ExtraParagraphSpace = 0;
+                            main_table.AddCell(pdfPCell);
+
+                            pdfPCell = new PdfPCell(new Phrase(item.unallocated_amount == null ? "" : Convert.ToDecimal(item.unallocated_amount.Value).ToString("#,##0.00"), fontStyle));
+                            pdfPCell.HorizontalAlignment = Element.ALIGN_RIGHT;
+                            pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                            pdfPCell.BackgroundColor = BaseColor.WHITE;
+                            pdfPCell.Padding = headerCellPadding;
+                            pdfPCell.ExtraParagraphSpace = 0;
+                            main_table.AddCell(pdfPCell);
+
+                            pdfPCell = new PdfPCell(new Phrase(item.invoice_date == null ? "" : item.invoice_date.Value.ToShortDateString(), fontStyle));
+                            pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
+                            pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                            pdfPCell.BackgroundColor = BaseColor.WHITE;
+                            pdfPCell.Padding = headerCellPadding;
+                            pdfPCell.ExtraParagraphSpace = 0;
+                            main_table.AddCell(pdfPCell);
+
+                            pdfPCell = new PdfPCell(new Phrase(item.invoice_no == null ? "" : item.invoice_no, fontStyle));
+                            pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
+                            pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                            pdfPCell.BackgroundColor = BaseColor.WHITE;
+                            pdfPCell.Padding = headerCellPadding;
+                            pdfPCell.ExtraParagraphSpace = 0;
+                            main_table.AddCell(pdfPCell);
+
+                            pdfPCell = new PdfPCell(new Phrase(item.payment_term == null ? "" : item.payment_term, fontStyle));
+                            pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
+                            pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                            pdfPCell.BackgroundColor = BaseColor.WHITE;
+                            pdfPCell.Padding = headerCellPadding;
+                            pdfPCell.ExtraParagraphSpace = 0;
+                            main_table.AddCell(pdfPCell);
+
+                            pdfPCell = new PdfPCell(new Phrase(item.invoice_amount == null ? "" : Convert.ToDecimal(item.invoice_amount.Value).ToString("#,##0.00"), fontStyle));
+                            pdfPCell.HorizontalAlignment = Element.ALIGN_RIGHT;
+                            pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                            pdfPCell.BackgroundColor = BaseColor.WHITE;
+                            pdfPCell.Padding = headerCellPadding;
+                            pdfPCell.ExtraParagraphSpace = 0;
+                            main_table.AddCell(pdfPCell);
+
+                            pdfPCell = new PdfPCell(new Phrase(item.os_balance == null ? "" : Convert.ToDecimal(item.os_balance.Value).ToString("#,##0.00"), fontStyle));
+                            pdfPCell.HorizontalAlignment = Element.ALIGN_RIGHT;
+                            pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                            pdfPCell.BackgroundColor = BaseColor.WHITE;
+                            pdfPCell.Padding = headerCellPadding;
+                            pdfPCell.ExtraParagraphSpace = 0;
+                            main_table.AddCell(pdfPCell);
+
+                            pdfPCell = new PdfPCell(new Phrase(item.invoice_allocated == null ? "" : Convert.ToDecimal(item.invoice_allocated.Value).ToString("#,##0.00"), fontStyle));
+                            pdfPCell.HorizontalAlignment = Element.ALIGN_RIGHT;
+                            pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                            pdfPCell.BackgroundColor = BaseColor.WHITE;
+                            pdfPCell.Padding = headerCellPadding;
+                            pdfPCell.ExtraParagraphSpace = 0;
+                            main_table.AddCell(pdfPCell);
+
+                            pdfPCell = new PdfPCell(new Phrase(item.nod == null ? "" : item.nod.ToString(), fontStyle));
+                            pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
+                            pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                            pdfPCell.BackgroundColor = BaseColor.WHITE;
+                            pdfPCell.Padding = headerCellPadding;
+                            pdfPCell.ExtraParagraphSpace = 0;
+                            main_table.AddCell(pdfPCell);
+
+                            pdfPCell = new PdfPCell(new Phrase(item.remarks == null ? "" : item.remarks, fontStyle));
+                            pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
+                            pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                            pdfPCell.BackgroundColor = BaseColor.WHITE;
+                            pdfPCell.Padding = headerCellPadding;
+                            pdfPCell.ExtraParagraphSpace = 0;
+                            main_table.AddCell(pdfPCell);
+
+                            pdfPCell = new PdfPCell(new Phrase(item.invoice_acknowledge == true ? "Yes" : "No", fontStyle));
+                            pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
+                            pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                            pdfPCell.BackgroundColor = BaseColor.WHITE;
+                            pdfPCell.Padding = headerCellPadding;
+                            pdfPCell.ExtraParagraphSpace = 0;
+                            main_table.AddCell(pdfPCell);
+
+                            pdfPCell = new PdfPCell(new Phrase("", fontStyle));
+                            pdfPCell.HorizontalAlignment = Element.ALIGN_LEFT;
+                            pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                            pdfPCell.BackgroundColor = BaseColor.WHITE;
+                            pdfPCell.Padding = headerCellPadding;
+                            pdfPCell.ExtraParagraphSpace = 0;
+                            main_table.AddCell(pdfPCell);
+
+                            main_table.CompleteRow();
+
+                        }
                     }
+                    
                 }
                 #endregion
+
+                unallocatedAmountTotal = amountTotal - settledTotal;
 
                 fontStyle = FontFactory.GetFont("Tahoma", 7f, 1);
 
@@ -962,10 +1748,7 @@ namespace FI.PORTAL.Report
 
                 main_table.CompleteRow();
             }
-
         }
-
-
    }
 
 }

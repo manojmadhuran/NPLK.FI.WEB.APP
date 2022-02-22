@@ -202,7 +202,7 @@ namespace FI.PORTAL.Report
                     }
                     catch (Exception e)
                     {
-
+                        x = 0;
                     }
 
                     pdfPCell = new PdfPCell(new Phrase(x.ToString("0.00"), fontStyle));

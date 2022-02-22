@@ -165,16 +165,16 @@ warning 6002: The table/view 'FINANCE_GEN_SYS.dbo.PAYED_INVOICES' does not have 
           </FunctionImport>
         </EntityContainer>
         <ComplexType Name="FullCollectionData_Result">
-          <Property Type="Int32" Name="id" Nullable="true" />
+          <Property Type="Int32" Name="id" Nullable="false" />
           <Property Type="String" Name="collection_no" Nullable="true" MaxLength="50" />
           <Property Type="DateTime" Name="collection_date" Nullable="true" Precision="16" />
           <Property Type="String" Name="sales_code" Nullable="true" MaxLength="10" />
-          <Property Type="Boolean" Name="acknowledge" Nullable="true" />
+          <Property Type="Boolean" Name="acknowledge" Nullable="false" />
           <Property Type="String" Name="acknowledge_by" Nullable="true" MaxLength="50" />
           <Property Type="DateTime" Name="acknowledged_date" Nullable="true" Precision="16" />
           <Property Type="String" Name="area_name" Nullable="true" MaxLength="50" />
           <Property Type="String" Name="created_by" Nullable="true" MaxLength="50" />
-          <Property Type="Boolean" Name="entered_to_sap" Nullable="true" />
+          <Property Type="Boolean" Name="entered_to_sap" Nullable="false" />
           <Property Type="String" Name="entered_by" Nullable="true" MaxLength="255" />
           <Property Type="String" Name="sap_ref_no" Nullable="true" MaxLength="255" />
           <Property Type="DateTime" Name="entered_date" Nullable="true" Precision="16" />
@@ -209,6 +209,8 @@ warning 6002: The table/view 'FINANCE_GEN_SYS.dbo.PAYED_INVOICES' does not have 
           <Property Type="String" Name="remarks" Nullable="true" MaxLength="2000" />
           <Property Type="String" Name="CusName" Nullable="true" MaxLength="50" />
           <Property Type="Boolean" Name="invoice_acknowledge" Nullable="true" />
+          <Property Type="Int32" Name="PAYMENTS_COUNT" Nullable="true" />
+          <Property Type="String" Name="Counted_Payment_Key" Nullable="true" MaxLength="225" />
         </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
@@ -323,6 +325,8 @@ warning 6002: The table/view 'FINANCE_GEN_SYS.dbo.PAYED_INVOICES' does not have 
                 <ScalarProperty Name="remarks" ColumnName="remarks" />
                 <ScalarProperty Name="CusName" ColumnName="CusName" />
                 <ScalarProperty Name="invoice_acknowledge" ColumnName="invoice_acknowledge" />
+                <ScalarProperty Name="PAYMENTS_COUNT" ColumnName="PAYMENTS_COUNT" />
+                <ScalarProperty Name="Counted_Payment_Key" ColumnName="Counted_Payment_Key" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
