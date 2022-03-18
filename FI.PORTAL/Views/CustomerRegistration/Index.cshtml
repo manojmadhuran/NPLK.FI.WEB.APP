@@ -1,0 +1,267 @@
+﻿@model List<FI.PORTAL.dbconnect.viewNEW_CUS_HEADER>
+
+@{ ViewBag.Title = "Index";
+    String currentFind = ViewBag.findString; }
+
+<link href="~/Content/jquery.dataTables.min.css" rel="stylesheet" />
+<script src="~/Scripts/jquery.dataTables.min.js"></script>
+<script src="~/Scripts/jquery-3.3.1.min.js"></script>
+<!-- JS For DataTables -->
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+
+            <div class="card-header">
+                <div class="row">
+                    <form action="@Url.Action("", "CustomerRegistration")" method="get">
+                        <div class="form-row align-items-center">
+                            <div class="col-auto my-1">
+                                <select class="custom-select mr-sm-2" name="findby">
+                                    @if (currentFind == "All")
+                                    {
+                                        <option value="All" selected>All</option>
+                                        <option value="Pending">Pending</option>
+                                        <option value="Approved">Approved</option>
+                                        <option value="Declined">Declined</option>
+                                        }
+                                     else if (currentFind == "Pending")
+                                     {
+                                        <option value="All">All</option>
+                                        <option value="Pending" selected>Pending</option>
+                                        <option value="Approved">Approved</option>
+                                        <option value="Declined">Declined</option>
+                                        }
+                                     else if (currentFind == "Approved")
+                                     {
+                                        <option value="All">All</option>
+                                        <option value="Pending">Pending</option>
+                                        <option value="Approved" selected>Approved</option>
+                                        <option value="Declined">Declined</option>
+                                     }else if (currentFind == "Declined")
+                                     {
+                                        <option value="All">All</option>
+                                        <option value="Pending">Pending</option>
+                                        <option value="Approved">Approved</option>
+                                        <option value="Declined" selected>Declined</option>
+                                        }
+                                     else
+                                     {
+                                         <option value="All" selected>All</option>
+                                         <option value="Pending">Pending</option>
+                                         <option value="Approved">Approved</option>
+                                         <option value="Declined">Declined</option>
+                                        }
+
+                                </select>
+                            </div>
+                            <div class="col-auto my-1">
+                                <button type="submit" class="btn btn-primary">Find</button>
+                            </div>
+                        </div>
+                    </form>
+                    <div style="margin-left: 2%">
+                        <div class="form-row align-items-center">
+                            <div class="col-auto my-1">
+                                <label for="search_by">Search By: </label>
+                            </div>
+                            <div class="col-auto my-1">
+                                <select id="search_by" class="custom-select mr-sm-2">
+                                    <option value="Sales_Code">Sales Code</option>
+                                    <option value="Area">Area</option>
+                                    <option value="Rep_Name">REP Name</option>
+                                </select>
+                            </div>
+                            <div class="col-auto my-1">
+                                <input type="text" class="form-control" id="search_value" />
+                            </div>
+                            <div class="col-auto my-1">
+                                <button type="button" class="btn btn-primary" onclick="location.href='@Url.Action("Index", "CustomerRegistration")'">Reset</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex align-items-center" style="margin-left: 2%;">
+                        <div style="display:none" id="loading_spinner">
+                            <strong>Loading...</strong>
+                            <div class="spinner-grow spinner-grow-sm ml-auto"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+        </div>
+    </div>
+</div>
+
+
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h4>Customer Registration Requests</h4>
+            </div>
+            <div class="card-body">
+
+                <div id="secposts" class="row">
+                    <div class="col-md-12">
+                        <table class="table table-bordered small" style="width:100%" id="myTable">
+                            <thead>
+                                <tr>
+                                    <th>Request ID</th>
+                                    <th>Current Status</th>
+                                    <th>Customer Name</th>
+                                    <th>Sales Area Code</th>
+                                    <th>Sales Area Name</th>
+                                    <th>Created By</th>
+                                    <th>Created Date</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="customer_reg">
+                                @if (Model.Count == 0)
+                                {
+                    <tr>
+                        <td colspan="8">No Records Found!</td>
+                    </tr>
+ }
+                else
+                {
+                    foreach (var item in Model)
+                    {
+    <tr>
+        <td>@item.CusReqID</td>
+        <td>@item.CurrentStat</td>
+        <td>@item.CusName</td>
+        <td>@item.SalesCode</td>
+        <td>@item.SalesAreaName</td>
+        <td>@item.REPName</td>
+        <td>@item.CreatedDate</td>
+
+        <td>
+            <a href="@Url.Action("CustomerRequestFormView", new { item.CusReqID})" class="btn btn-success btn-sm">View</a>
+        </td>
+    </tr>
+}
+}
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#myTable').DataTable();
+    });
+</script>
+
+
+<script src="~/Scripts/jquery-3.3.1.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        $("#search_value").on('input', function () {
+            $("#loading_spinner").show();
+            var SearchBy = $("#search_by").val();
+            var SearchVal = $("#search_value").val();
+            var SetData = $("#customer_reg");
+            SetData.html("");
+            $.ajax({
+                type: "post",
+                url: "/CustomerRegistration/SearchData?SearchBy=" + SearchBy + "&SearchValue=" + SearchVal,
+                contentType: "html",
+                async: false,
+                success: function (result) {
+                    if (result.isRedirect) {
+                        window.location.href = json.redirectUrl;
+                    } else {
+                        if (result.length == 0) {
+                            SetData.append('<tr><td colspan="8">No data found!</td></tr>')
+                        } else {
+                            $.each(result, function (index, value) {
+                                var date = new Date(parseInt(value.CreatedDate.substr(6)));
+                                var customer_req_view = "<a href='CustomerRequestFormView?CusReqID=" + value.CusReqID + "' class='btn btn-success btn-sm'>View</a>"
+                                console.log(value);
+                                var Data = "<tr>" +
+                                    "<td>" + value.CusReqID + "</td>" +
+                                    "<td>" + value.CurrentStat + "</td>" +
+                                    "<td>" + value.CusName + "</td>" +
+                                    "<td>" + value.SalesCode + "</td>" +
+                                    "<td>" + value.SalesAreaName + "</td>" +
+                                    "<td>" + value.REPName + "</td>" +
+                                    "<td>" + date.toLocaleString() + "</td>" +
+                                    "<td>" + customer_req_view + "</td>" +
+                                    "</tr>"
+
+                                SetData.append(Data)
+                            })
+                        }
+                    }
+                },
+                complete: function () {
+                    $("#loading_spinner").hide();
+                }
+            })
+        })
+    })
+
+</script>
+
+<script>
+
+    $(document).ready(function () {
+        var SearchVal = $("#search_value").val();
+        if (SearchVal != "") {
+        $("#loading_spinner").show();
+        var SearchBy = $("#search_by").val();
+        var SetData = $("#customer_reg");
+        SetData.html("");
+        $.ajax({
+            type: "post",
+            url: "/CustomerRegistration/SearchData?SearchBy=" + SearchBy + "&SearchValue=" + SearchVal,
+            contentType: "html",
+            async: false,
+            success: function (result) {
+                if (result.isRedirect) {
+                    window.location.href = json.redirectUrl;
+                } else {
+                    if (result.length == 0) {
+                        SetData.append('<tr><td colspan="8">No data found!</td></tr>')
+                    } else {
+                        $.each(result, function (index, value) {
+                            var date = new Date(parseInt(value.CreatedDate.substr(6)));
+                            var customer_req_view = "<a href='CustomerRequestFormView?CusReqID=" + value.CusReqID + "' class='btn btn-success btn-sm'>View</a>"
+                            console.log(value);
+                            var Data = "<tr>" +
+                                "<td>" + value.CusReqID + "</td>" +
+                                "<td>" + value.CurrentStat + "</td>" +
+                                "<td>" + value.CusName + "</td>" +
+                                "<td>" + value.SalesCode + "</td>" +
+                                "<td>" + value.SalesAreaName + "</td>" +
+                                "<td>" + value.REPName + "</td>" +
+                                "<td>" + date.toLocaleString() + "</td>" +
+                                "<td>" + customer_req_view + "</td>" +
+                                "</tr>"
+
+                            SetData.append(Data)
+                        })
+                    }
+                }
+            },
+            complete: function () {
+                $("#loading_spinner").hide();
+            }
+        })
+    }
+    });
+</script>

@@ -1,0 +1,402 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="SAP_SYSModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'SAP_SYS.dbo.CustomerMaster' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="CustomerMaster">
+          <Key>
+            <PropertyRef Name="CusID" />
+          </Key>
+          <Property Name="CusID" Type="numeric" Precision="10" Scale="0" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CusCode" Type="varchar" MaxLength="50" />
+          <Property Name="CusName" Type="varchar" MaxLength="50" />
+          <Property Name="CusSearchTerm" Type="varchar" MaxLength="50" />
+          <Property Name="CusAddress1" Type="varchar" MaxLength="50" />
+          <Property Name="CusAddress2" Type="varchar" MaxLength="50" />
+          <Property Name="CusAddress3" Type="varchar" MaxLength="50" />
+          <Property Name="CusCity" Type="varchar" MaxLength="50" />
+          <Property Name="CusDeliveryPlant" Type="varchar" MaxLength="50" />
+          <Property Name="CusSalesOffice" Type="varchar" MaxLength="50" />
+          <Property Name="CusSODescription" Type="varchar" MaxLength="50" />
+          <Property Name="CusSalesGroup" Type="varchar" MaxLength="50" />
+          <Property Name="CusSGDescription" Type="varchar" MaxLength="50" />
+          <Property Name="CusREPCode" Type="varchar" MaxLength="50" />
+          <Property Name="CusREPFirstName" Type="varchar" MaxLength="50" />
+          <Property Name="CusREPLastName" Type="varchar" MaxLength="50" />
+          <Property Name="CusGroup" Type="varchar" MaxLength="50" />
+          <Property Name="CusContactPerson" Type="varchar" MaxLength="50" />
+          <Property Name="CusBusinessRegNo" Type="varchar" MaxLength="75" />
+          <Property Name="CusComments" Type="varchar" MaxLength="50" />
+          <Property Name="CusTelNo" Type="varchar" MaxLength="50" />
+          <Property Name="CusFaxNo" Type="varchar" MaxLength="50" />
+          <Property Name="CusStatus" Type="varchar" MaxLength="50" />
+          <Property Name="CompanyCode" Type="varchar" MaxLength="50" />
+          <Property Name="CusTimeStamp" Type="timestamp" StoreGeneratedPattern="Computed" />
+          <Property Name="CusSyncStatus" Type="varchar" MaxLength="50" />
+          <Property Name="CusCreatedDate" Type="varchar" MaxLength="50" />
+          <Property Name="UploadedDate" Type="datetime" />
+          <Property Name="ChangedDate" Type="datetime" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'SAP_SYS.dbo.CustomerOutstanding' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="CustomerOutstanding">
+          <Key>
+            <PropertyRef Name="OutID" />
+          </Key>
+          <Property Name="OutID" Type="numeric" Precision="10" Scale="0" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CusCode" Type="varchar" MaxLength="50" />
+          <Property Name="CusName" Type="varchar" MaxLength="50" />
+          <Property Name="CreditPeriod" Type="varchar" MaxLength="50" />
+          <Property Name="CreditLimit" Type="varchar" MaxLength="50" />
+          <Property Name="TotOutstanding" Type="varchar" MaxLength="50" />
+          <Property Name="CurrentValue" Type="varchar" MaxLength="50" />
+          <Property Name="1-30Days" Type="varchar" MaxLength="50" />
+          <Property Name="31-60Days" Type="varchar" MaxLength="50" />
+          <Property Name="61-90Days" Type="varchar" MaxLength="50" />
+          <Property Name="91-120Days" Type="varchar" MaxLength="50" />
+          <Property Name="121-180Days" Type="varchar" MaxLength="50" />
+          <Property Name="181-360Days" Type="varchar" MaxLength="50" />
+          <Property Name="Over361Days" Type="varchar" MaxLength="50" />
+          <Property Name="UploadedDate" Type="datetime" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'SAP_SYS.dbo.SalesOrderMaster' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="SalesOrderMaster">
+          <Key>
+            <PropertyRef Name="DocID" />
+          </Key>
+          <Property Name="DocID" Type="numeric" Precision="10" Scale="0" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="OrderType" Type="varchar" MaxLength="50" />
+          <Property Name="SalesOrg" Type="varchar" MaxLength="50" />
+          <Property Name="DChannel" Type="varchar" MaxLength="50" />
+          <Property Name="Division" Type="varchar" MaxLength="50" />
+          <Property Name="CusCode" Type="varchar" MaxLength="50" />
+          <Property Name="CreatedDate" Type="datetime" />
+          <Property Name="CreatedBy" Type="varchar" MaxLength="50" />
+          <Property Name="Status" Type="varchar" MaxLength="50" />
+          <Property Name="SAPDocID" Type="varchar" MaxLength="50" />
+          <Property Name="PaymentTerm" Type="varchar" MaxLength="50" />
+          <Property Name="TimeStamp" Type="timestamp" StoreGeneratedPattern="Computed" />
+          <Property Name="UpdatedDate" Type="datetime" />
+          <Property Name="UpdatedBy" Type="varchar" MaxLength="50" />
+          <Property Name="LockedBy" Type="varchar" MaxLength="50" />
+          <Property Name="Longitude" Type="varchar" MaxLength="50" />
+          <Property Name="Latitude" Type="varchar" MaxLength="50" />
+          <Property Name="Remarks" Type="varchar" MaxLength="70" />
+          <Property Name="AreaName" Type="varchar" MaxLength="50" />
+          <Property Name="VisitStatus" Type="varchar" MaxLength="50" />
+          <Property Name="DeliveryNote" Type="varchar" MaxLength="50" />
+          <Property Name="SalesCode" Type="varchar" MaxLength="50" />
+          <Property Name="AddDiscount" Type="varchar" MaxLength="50" />
+          <Property Name="OrderCategory" Type="varchar" MaxLength="50" />
+          <Property Name="OrderText" Type="varchar" MaxLength="50" />
+          <Property Name="KeyState" Type="varchar" MaxLength="10" />
+          <Property Name="CusDisGroup" Type="varchar" MaxLength="25" />
+          <Property Name="OrderReason" Type="varchar" MaxLength="25" />
+        </EntityType>
+        <EntityContainer Name="SAP_SYSModelStoreContainer">
+          <EntitySet Name="CustomerMaster" EntityType="Self.CustomerMaster" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [CustomerMaster].[CusID] AS [CusID], 
+    [CustomerMaster].[CusCode] AS [CusCode], 
+    [CustomerMaster].[CusName] AS [CusName], 
+    [CustomerMaster].[CusSearchTerm] AS [CusSearchTerm], 
+    [CustomerMaster].[CusAddress1] AS [CusAddress1], 
+    [CustomerMaster].[CusAddress2] AS [CusAddress2], 
+    [CustomerMaster].[CusAddress3] AS [CusAddress3], 
+    [CustomerMaster].[CusCity] AS [CusCity], 
+    [CustomerMaster].[CusDeliveryPlant] AS [CusDeliveryPlant], 
+    [CustomerMaster].[CusSalesOffice] AS [CusSalesOffice], 
+    [CustomerMaster].[CusSODescription] AS [CusSODescription], 
+    [CustomerMaster].[CusSalesGroup] AS [CusSalesGroup], 
+    [CustomerMaster].[CusSGDescription] AS [CusSGDescription], 
+    [CustomerMaster].[CusREPCode] AS [CusREPCode], 
+    [CustomerMaster].[CusREPFirstName] AS [CusREPFirstName], 
+    [CustomerMaster].[CusREPLastName] AS [CusREPLastName], 
+    [CustomerMaster].[CusGroup] AS [CusGroup], 
+    [CustomerMaster].[CusContactPerson] AS [CusContactPerson], 
+    [CustomerMaster].[CusBusinessRegNo] AS [CusBusinessRegNo], 
+    [CustomerMaster].[CusComments] AS [CusComments], 
+    [CustomerMaster].[CusTelNo] AS [CusTelNo], 
+    [CustomerMaster].[CusFaxNo] AS [CusFaxNo], 
+    [CustomerMaster].[CusStatus] AS [CusStatus], 
+    [CustomerMaster].[CompanyCode] AS [CompanyCode], 
+    [CustomerMaster].[CusTimeStamp] AS [CusTimeStamp], 
+    [CustomerMaster].[CusSyncStatus] AS [CusSyncStatus], 
+    [CustomerMaster].[CusCreatedDate] AS [CusCreatedDate], 
+    [CustomerMaster].[UploadedDate] AS [UploadedDate], 
+    [CustomerMaster].[ChangedDate] AS [ChangedDate]
+    FROM [dbo].[CustomerMaster] AS [CustomerMaster]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="CustomerOutstanding" EntityType="Self.CustomerOutstanding" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [CustomerOutstanding].[OutID] AS [OutID], 
+    [CustomerOutstanding].[CusCode] AS [CusCode], 
+    [CustomerOutstanding].[CusName] AS [CusName], 
+    [CustomerOutstanding].[CreditPeriod] AS [CreditPeriod], 
+    [CustomerOutstanding].[CreditLimit] AS [CreditLimit], 
+    [CustomerOutstanding].[TotOutstanding] AS [TotOutstanding], 
+    [CustomerOutstanding].[CurrentValue] AS [CurrentValue], 
+    [CustomerOutstanding].[1-30Days] AS [1-30Days], 
+    [CustomerOutstanding].[31-60Days] AS [31-60Days], 
+    [CustomerOutstanding].[61-90Days] AS [61-90Days], 
+    [CustomerOutstanding].[91-120Days] AS [91-120Days], 
+    [CustomerOutstanding].[121-180Days] AS [121-180Days], 
+    [CustomerOutstanding].[181-360Days] AS [181-360Days], 
+    [CustomerOutstanding].[Over361Days] AS [Over361Days], 
+    [CustomerOutstanding].[UploadedDate] AS [UploadedDate]
+    FROM [dbo].[CustomerOutstanding] AS [CustomerOutstanding]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="SalesOrderMaster" EntityType="Self.SalesOrderMaster" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [SalesOrderMaster].[DocID] AS [DocID], 
+    [SalesOrderMaster].[OrderType] AS [OrderType], 
+    [SalesOrderMaster].[SalesOrg] AS [SalesOrg], 
+    [SalesOrderMaster].[DChannel] AS [DChannel], 
+    [SalesOrderMaster].[Division] AS [Division], 
+    [SalesOrderMaster].[CusCode] AS [CusCode], 
+    [SalesOrderMaster].[CreatedDate] AS [CreatedDate], 
+    [SalesOrderMaster].[CreatedBy] AS [CreatedBy], 
+    [SalesOrderMaster].[Status] AS [Status], 
+    [SalesOrderMaster].[SAPDocID] AS [SAPDocID], 
+    [SalesOrderMaster].[PaymentTerm] AS [PaymentTerm], 
+    [SalesOrderMaster].[TimeStamp] AS [TimeStamp], 
+    [SalesOrderMaster].[UpdatedDate] AS [UpdatedDate], 
+    [SalesOrderMaster].[UpdatedBy] AS [UpdatedBy], 
+    [SalesOrderMaster].[LockedBy] AS [LockedBy], 
+    [SalesOrderMaster].[Longitude] AS [Longitude], 
+    [SalesOrderMaster].[Latitude] AS [Latitude], 
+    [SalesOrderMaster].[Remarks] AS [Remarks], 
+    [SalesOrderMaster].[AreaName] AS [AreaName], 
+    [SalesOrderMaster].[VisitStatus] AS [VisitStatus], 
+    [SalesOrderMaster].[DeliveryNote] AS [DeliveryNote], 
+    [SalesOrderMaster].[SalesCode] AS [SalesCode], 
+    [SalesOrderMaster].[AddDiscount] AS [AddDiscount], 
+    [SalesOrderMaster].[OrderCategory] AS [OrderCategory], 
+    [SalesOrderMaster].[OrderText] AS [OrderText], 
+    [SalesOrderMaster].[KeyState] AS [KeyState], 
+    [SalesOrderMaster].[CusDisGroup] AS [CusDisGroup], 
+    [SalesOrderMaster].[OrderReason] AS [OrderReason]
+    FROM [dbo].[SalesOrderMaster] AS [SalesOrderMaster]</DefiningQuery>
+          </EntitySet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="SAP_SYSModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="CustomerMaster">
+          <Key>
+            <PropertyRef Name="CusID" />
+          </Key>
+          <Property Name="CusID" Type="Decimal" Precision="10" Scale="0" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CusCode" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="CusName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="CusSearchTerm" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="CusAddress1" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="CusAddress2" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="CusAddress3" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="CusCity" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="CusDeliveryPlant" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="CusSalesOffice" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="CusSODescription" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="CusSalesGroup" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="CusSGDescription" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="CusREPCode" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="CusREPFirstName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="CusREPLastName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="CusGroup" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="CusContactPerson" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="CusBusinessRegNo" Type="String" MaxLength="75" FixedLength="false" Unicode="false" />
+          <Property Name="CusComments" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="CusTelNo" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="CusFaxNo" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="CusStatus" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="CompanyCode" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="CusTimeStamp" Type="Binary" MaxLength="8" FixedLength="true" annotation:StoreGeneratedPattern="Computed" />
+          <Property Name="CusSyncStatus" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="CusCreatedDate" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="UploadedDate" Type="DateTime" Precision="3" />
+          <Property Name="ChangedDate" Type="DateTime" Precision="3" />
+        </EntityType>
+        <EntityType Name="SalesOrderMaster">
+          <Key>
+            <PropertyRef Name="DocID" />
+          </Key>
+          <Property Name="DocID" Type="Decimal" Precision="10" Scale="0" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="OrderType" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="SalesOrg" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="DChannel" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Division" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="CusCode" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
+          <Property Name="CreatedBy" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Status" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="SAPDocID" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="PaymentTerm" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="TimeStamp" Type="Binary" MaxLength="8" FixedLength="true" annotation:StoreGeneratedPattern="Computed" />
+          <Property Name="UpdatedDate" Type="DateTime" Precision="3" />
+          <Property Name="UpdatedBy" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="LockedBy" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Longitude" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Latitude" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Remarks" Type="String" MaxLength="70" FixedLength="false" Unicode="false" />
+          <Property Name="AreaName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="VisitStatus" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="DeliveryNote" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="SalesCode" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="AddDiscount" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="OrderCategory" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="OrderText" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="KeyState" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="CusDisGroup" Type="String" MaxLength="25" FixedLength="false" Unicode="false" />
+          <Property Name="OrderReason" Type="String" MaxLength="25" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityContainer Name="SAP_SYSEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="CustomerMasters" EntityType="Self.CustomerMaster" />
+          <EntitySet Name="SalesOrderMasters" EntityType="Self.SalesOrderMaster" />
+          <EntitySet Name="CustomerOutstandings" EntityType="SAP_SYSModel.CustomerOutstanding" />
+        </EntityContainer>
+        <EntityType Name="CustomerOutstanding">
+          <Key>
+            <PropertyRef Name="OutID" />
+          </Key>
+          <Property Name="OutID" Type="Decimal" Nullable="false" Precision="10" Scale="0" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CusCode" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="CusName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="CreditPeriod" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="CreditLimit" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="TotOutstanding" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="CurrentValue" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="C1_30Days" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="C31_60Days" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="C61_90Days" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="C91_120Days" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="C121_180Days" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="C181_360Days" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Over361Days" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="UploadedDate" Type="DateTime" Precision="3" />
+        </EntityType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="SAP_SYSModelStoreContainer" CdmEntityContainer="SAP_SYSEntities">
+          <EntitySetMapping Name="CustomerMasters">
+            <EntityTypeMapping TypeName="SAP_SYSModel.CustomerMaster">
+              <MappingFragment StoreEntitySet="CustomerMaster">
+                <ScalarProperty Name="CusID" ColumnName="CusID" />
+                <ScalarProperty Name="CusCode" ColumnName="CusCode" />
+                <ScalarProperty Name="CusName" ColumnName="CusName" />
+                <ScalarProperty Name="CusSearchTerm" ColumnName="CusSearchTerm" />
+                <ScalarProperty Name="CusAddress1" ColumnName="CusAddress1" />
+                <ScalarProperty Name="CusAddress2" ColumnName="CusAddress2" />
+                <ScalarProperty Name="CusAddress3" ColumnName="CusAddress3" />
+                <ScalarProperty Name="CusCity" ColumnName="CusCity" />
+                <ScalarProperty Name="CusDeliveryPlant" ColumnName="CusDeliveryPlant" />
+                <ScalarProperty Name="CusSalesOffice" ColumnName="CusSalesOffice" />
+                <ScalarProperty Name="CusSODescription" ColumnName="CusSODescription" />
+                <ScalarProperty Name="CusSalesGroup" ColumnName="CusSalesGroup" />
+                <ScalarProperty Name="CusSGDescription" ColumnName="CusSGDescription" />
+                <ScalarProperty Name="CusREPCode" ColumnName="CusREPCode" />
+                <ScalarProperty Name="CusREPFirstName" ColumnName="CusREPFirstName" />
+                <ScalarProperty Name="CusREPLastName" ColumnName="CusREPLastName" />
+                <ScalarProperty Name="CusGroup" ColumnName="CusGroup" />
+                <ScalarProperty Name="CusContactPerson" ColumnName="CusContactPerson" />
+                <ScalarProperty Name="CusBusinessRegNo" ColumnName="CusBusinessRegNo" />
+                <ScalarProperty Name="CusComments" ColumnName="CusComments" />
+                <ScalarProperty Name="CusTelNo" ColumnName="CusTelNo" />
+                <ScalarProperty Name="CusFaxNo" ColumnName="CusFaxNo" />
+                <ScalarProperty Name="CusStatus" ColumnName="CusStatus" />
+                <ScalarProperty Name="CompanyCode" ColumnName="CompanyCode" />
+                <ScalarProperty Name="CusTimeStamp" ColumnName="CusTimeStamp" />
+                <ScalarProperty Name="CusSyncStatus" ColumnName="CusSyncStatus" />
+                <ScalarProperty Name="CusCreatedDate" ColumnName="CusCreatedDate" />
+                <ScalarProperty Name="UploadedDate" ColumnName="UploadedDate" />
+                <ScalarProperty Name="ChangedDate" ColumnName="ChangedDate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SalesOrderMasters">
+            <EntityTypeMapping TypeName="SAP_SYSModel.SalesOrderMaster">
+              <MappingFragment StoreEntitySet="SalesOrderMaster">
+                <ScalarProperty Name="DocID" ColumnName="DocID" />
+                <ScalarProperty Name="OrderType" ColumnName="OrderType" />
+                <ScalarProperty Name="SalesOrg" ColumnName="SalesOrg" />
+                <ScalarProperty Name="DChannel" ColumnName="DChannel" />
+                <ScalarProperty Name="Division" ColumnName="Division" />
+                <ScalarProperty Name="CusCode" ColumnName="CusCode" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="SAPDocID" ColumnName="SAPDocID" />
+                <ScalarProperty Name="PaymentTerm" ColumnName="PaymentTerm" />
+                <ScalarProperty Name="TimeStamp" ColumnName="TimeStamp" />
+                <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />
+                <ScalarProperty Name="UpdatedBy" ColumnName="UpdatedBy" />
+                <ScalarProperty Name="LockedBy" ColumnName="LockedBy" />
+                <ScalarProperty Name="Longitude" ColumnName="Longitude" />
+                <ScalarProperty Name="Latitude" ColumnName="Latitude" />
+                <ScalarProperty Name="Remarks" ColumnName="Remarks" />
+                <ScalarProperty Name="AreaName" ColumnName="AreaName" />
+                <ScalarProperty Name="VisitStatus" ColumnName="VisitStatus" />
+                <ScalarProperty Name="DeliveryNote" ColumnName="DeliveryNote" />
+                <ScalarProperty Name="SalesCode" ColumnName="SalesCode" />
+                <ScalarProperty Name="AddDiscount" ColumnName="AddDiscount" />
+                <ScalarProperty Name="OrderCategory" ColumnName="OrderCategory" />
+                <ScalarProperty Name="OrderText" ColumnName="OrderText" />
+                <ScalarProperty Name="KeyState" ColumnName="KeyState" />
+                <ScalarProperty Name="CusDisGroup" ColumnName="CusDisGroup" />
+                <ScalarProperty Name="OrderReason" ColumnName="OrderReason" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CustomerOutstandings">
+            <EntityTypeMapping TypeName="SAP_SYSModel.CustomerOutstanding">
+              <MappingFragment StoreEntitySet="CustomerOutstanding">
+                <ScalarProperty Name="UploadedDate" ColumnName="UploadedDate" />
+                <ScalarProperty Name="Over361Days" ColumnName="Over361Days" />
+                <ScalarProperty Name="C181_360Days" ColumnName="181-360Days" />
+                <ScalarProperty Name="C121_180Days" ColumnName="121-180Days" />
+                <ScalarProperty Name="C91_120Days" ColumnName="91-120Days" />
+                <ScalarProperty Name="C61_90Days" ColumnName="61-90Days" />
+                <ScalarProperty Name="C31_60Days" ColumnName="31-60Days" />
+                <ScalarProperty Name="C1_30Days" ColumnName="1-30Days" />
+                <ScalarProperty Name="CurrentValue" ColumnName="CurrentValue" />
+                <ScalarProperty Name="TotOutstanding" ColumnName="TotOutstanding" />
+                <ScalarProperty Name="CreditLimit" ColumnName="CreditLimit" />
+                <ScalarProperty Name="CreditPeriod" ColumnName="CreditPeriod" />
+                <ScalarProperty Name="CusName" ColumnName="CusName" />
+                <ScalarProperty Name="CusCode" ColumnName="CusCode" />
+                <ScalarProperty Name="OutID" ColumnName="OutID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

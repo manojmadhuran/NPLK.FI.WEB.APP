@@ -1,0 +1,207 @@
+﻿
+@{
+    ViewBag.Title = "Requests";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+
+<br />
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h4>Requests</h4>
+            </div>
+
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <input id="txtcuscode" type="text" maxlength="10" class="form-control" placeholder="Customer Code" />
+                        </div>
+                    </div>
+                    <div class="col-md-1">
+                        <select id="year" class="form-control">
+                            <option value="2019">2019</option>
+                            <option value="2020">2020</option>
+                            <option value="2021">2021</option>
+                            <option value="2022">2022</option>
+                            <option value="2023">2023</option>
+                        </select>
+                    </div>
+                    <div class="col-md-1">
+                        <select id="month" class="form-control">
+                            <option value="1">JAN</option>
+                            <option value="2">FEB</option>
+                            <option value="3">MAR</option>
+                            <option value="4">APR</option>
+                            <option value="5">MAY</option>
+                            <option value="6">JUN</option>
+                            <option value="7">JUL</option>
+                            <option value="8">AUG</option>
+                            <option value="9">SEP</option>
+                            <option value="10">OCT</option>
+                            <option value="11">NOV</option>
+                            <option value="12">DEC</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <select id="status" class="form-control">
+                            <option value="1">My Pending</option>
+                            <option value="2">All Request - PENDING</option>
+                            <option value="3">All Request - COMPLETED</option>
+                            <option value="4">All Request - HOLD</option>
+                            <option value="5">All Request - NOT-REQUIRED</option>
+                        </select>
+                    </div>
+                    <div id="divbtn" class="col-md-3">
+                        <input id="btnsearch" type="button" class="btn btn-info" value="Submit" />
+                    </div>
+                </div>
+
+
+                <div id="secposts" class="row">
+                    <div class="col-md-12">
+                        <table id="tblrequest" class="table table-bordered small" style="width:100%">
+                            <thead>
+                                <tr>
+                                    <th width="11%">Request ID</th>
+                                    <th width="11%">Customer Code</th>
+                                    <th>Customer Name</th>
+                                    <th>Sales Area</th>
+
+                                    <th>Existing C/L</th>
+                                    <th>Updated C/L</th>
+                                    <th width="14%">Created Date</th>
+                                    <th width="10%">Current Level</th>
+                                    <th width="5%">File</th>
+                                    <th width="5%"> </th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+</div>
+@Scripts.Render("~/Content/scripts")
+<script src="/Content/plugins/jquery/jquery.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        var date = new Date();
+        var month = date.getMonth();
+        var year = date.getFullYear();
+        $('#year').val(year);
+        document.getElementById("month").options.selectedIndex = month;
+
+        var table = $('#tblrequest');
+        table.DataTable({
+            "serverSide": "true",
+            "autoWidth": true,
+            "pageLength": 10,
+            "processing": "true",
+            "language": {
+                "processing": "Processing Data..."
+            },
+            "ajax": {
+                "type": "POST",
+                "url": "/Home/ViewRequests_",
+                "datatype": "json",
+                "data": function (d) {
+                    d.cuscode = $("#txtcuscode").val() == "" ? 0 : $("#txtcuscode").val();
+                    d.year = $("#year").val();
+                    d.month = $("#month").val();
+                    d.status = $("#status").val();
+                }
+            },
+            "columns": [
+                {
+                    "data": "Reqid", "autoWidth": true, "visible": true, "searchable": false
+                }
+                ,
+                {
+
+                    "data": "Cuscode", "autoWidth": true, "orderable": false
+                },
+                {
+
+                    "data": "Cusname", "autoWidth": true, "orderable": false
+                },
+                {
+
+                    "data": "SaleCode", "autoWidth": true, "orderable": false
+                },
+                {
+
+                    "data": "Crdlimit", "autoWidth": true, "orderable": false, "render": $.fn.dataTable.render.number(',', '.', 2)
+                },
+                {
+                    "data": "SAPlimit", "autoWidth": true, "orderable": false, "render": $.fn.dataTable.render.number(',', '.', 2)
+                },
+                {
+                    "data": "Date", "autoWidth": true, "orderable": false
+                },
+                {
+                    "data": "Curstatus", "autoWidth": true, "orderable": false
+                },
+                {
+                    "targets": -1,
+                    "data": null,
+                    "orderable": false,
+                    "defaultContent": "<img src='../Content/dist/img/attach.png' style='width: 30px; height: 30px; cursor: pointer;' />"
+                },
+                {
+                    "targets": -1,
+                    "data": null,
+                    "orderable": false,
+                    "defaultContent": "<button class='btn btn-info'>View</button>"
+                },
+            ],
+        });
+
+        $("#btnsearch").click(function () {
+            $('#tblrequest').DataTable().clear().draw();
+            //$.ajax({
+            //    type: "POST",
+            //    url: "/Home/ViewRequests_",
+            //    datatype: "json",
+            //    data: { cuscode: $("#txtcuscode").val() ? '' : 0, year: $("#year").val(), month: $("#month").val(), status: $("#status").val() }
+            //}).done(function (result) {
+
+            //    $('#tblrequest').DataTable().clear().draw();
+            //});
+        });
+
+        $('#tblrequest tbody').on('click', 'img', function () {
+            var data = $('#tblrequest').DataTable().row($(this).parents('tr')).data();
+            var file = data.FileName;
+            window.open("//192.168.101.131/CMP/Content/uploaded/" + file + "", '_blank');
+        });
+
+        $('#tblrequest tbody').on('click', 'button', function () {
+            var data = $('#tblrequest').DataTable().row($(this).parents('tr')).data();
+            var ReqID = data.Reqid;
+            var statusID = data.StatusID;
+            var reqStatus = data.Reqstatus;
+
+            //window.open("/Home/ViewComments?reqID=" + ReqID + "&SID=" + statusID + "", '_blank');
+            window.location.href = "/Home/ViewComments?reqID=" + ReqID + "&SID=" + statusID + "&TID=" + reqStatus;
+
+        });
+
+
+
+
+    });
+
+
+
+
+
+</script>

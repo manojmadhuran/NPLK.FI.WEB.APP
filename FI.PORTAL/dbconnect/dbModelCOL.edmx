@@ -1,0 +1,356 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="Collection_SYS_Model.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="COLLECTION_TICKETS">
+          <Key>
+            <PropertyRef Name="ticket_id" />
+          </Key>
+          <Property Name="ticket_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="collection_id" Type="varchar" MaxLength="20" />
+          <Property Name="status" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="COLLECTIONS">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="collection_no" Type="varchar" MaxLength="50" />
+          <Property Name="collection_date" Type="smalldatetime" />
+          <Property Name="sales_code" Type="varchar" MaxLength="10" />
+          <Property Name="acknowledge" Type="bit" Nullable="false" />
+          <Property Name="acknowledge_by" Type="varchar" MaxLength="50" />
+          <Property Name="acknowledged_date" Type="smalldatetime" />
+          <Property Name="created_by" Type="varchar" MaxLength="50" />
+          <Property Name="area_name" Type="varchar" MaxLength="50" />
+          <Property Name="entered_to_sap" Type="bit" Nullable="false" />
+          <Property Name="entered_by" Type="varchar" MaxLength="255" />
+          <Property Name="sap_ref_no" Type="varchar" MaxLength="255" />
+          <Property Name="entered_date" Type="smalldatetime" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'FINANCE_GEN_SYS.dbo.PAYED_INVOICES' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="PAYED_INVOICES">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="collection_no" Type="varchar" MaxLength="225" />
+          <Property Name="payment_key" Type="varchar" MaxLength="225" />
+          <Property Name="invoice_no" Type="varchar" MaxLength="225" />
+          <Property Name="customer_id" Type="varchar" MaxLength="225" />
+          <Property Name="sales_code" Type="varchar" MaxLength="10" />
+          <Property Name="invoice_amount" Type="decimal" Precision="19" Scale="2" />
+          <Property Name="invoice_allocated" Type="decimal" Precision="19" Scale="2" />
+          <Property Name="payment_term" Type="varchar" MaxLength="100" />
+          <Property Name="os_balance" Type="decimal" Precision="19" Scale="2" />
+          <Property Name="nod" Type="int" />
+          <Property Name="invoice_date" Type="smalldatetime" />
+          <Property Name="remarks" Type="varchar" MaxLength="2000" />
+          <Property Name="acknowledge" Type="bit" />
+        </EntityType>
+        <EntityType Name="TICKET_MSGS">
+          <Key>
+            <PropertyRef Name="msg_id" />
+          </Key>
+          <Property Name="msg_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ticket_id" Type="int" />
+          <Property Name="msg" Type="nvarchar(max)" />
+          <Property Name="msg_from" Type="varchar" MaxLength="100" />
+          <Property Name="date_time" Type="smalldatetime" />
+        </EntityType>
+        <Function Name="FullCollectionData" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="collectionID" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="UpdateInvoiceAcknowledge" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="invoice_id" Type="varchar" Mode="In" />
+          <Parameter Name="state" Type="bit" Mode="In" />
+        </Function>
+        <EntityContainer Name="Collection_SYS_ModelStoreContainer">
+          <EntitySet Name="COLLECTION_TICKETS" EntityType="Self.COLLECTION_TICKETS" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="COLLECTIONS" EntityType="Self.COLLECTIONS" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TICKET_MSGS" EntityType="Self.TICKET_MSGS" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PAYED_INVOICES" EntityType="Self.PAYED_INVOICES" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [PAYED_INVOICES].[id] AS [id], 
+    [PAYED_INVOICES].[collection_no] AS [collection_no], 
+    [PAYED_INVOICES].[payment_key] AS [payment_key], 
+    [PAYED_INVOICES].[invoice_no] AS [invoice_no], 
+    [PAYED_INVOICES].[customer_id] AS [customer_id], 
+    [PAYED_INVOICES].[sales_code] AS [sales_code], 
+    [PAYED_INVOICES].[invoice_amount] AS [invoice_amount], 
+    [PAYED_INVOICES].[invoice_allocated] AS [invoice_allocated], 
+    [PAYED_INVOICES].[payment_term] AS [payment_term], 
+    [PAYED_INVOICES].[os_balance] AS [os_balance], 
+    [PAYED_INVOICES].[nod] AS [nod], 
+    [PAYED_INVOICES].[invoice_date] AS [invoice_date], 
+    [PAYED_INVOICES].[remarks] AS [remarks], 
+    [PAYED_INVOICES].[acknowledge] AS [acknowledge]
+    FROM [dbo].[PAYED_INVOICES] AS [PAYED_INVOICES]</DefiningQuery>
+          </EntitySet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="Collection_SYS_Model" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="COLLECTION_TICKETS">
+          <Key>
+            <PropertyRef Name="ticket_id" />
+          </Key>
+          <Property Name="ticket_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="collection_id" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="status" Type="Boolean" Nullable="false" />
+        </EntityType>
+        <EntityType Name="TICKET_MSGS">
+          <Key>
+            <PropertyRef Name="msg_id" />
+          </Key>
+          <Property Name="msg_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ticket_id" Type="Int32" />
+          <Property Name="msg" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="msg_from" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="date_time" Type="DateTime" Precision="0" />
+        </EntityType>
+        <EntityType Name="COLLECTION">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="collection_no" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="collection_date" Type="DateTime" Precision="0" />
+          <Property Name="sales_code" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="acknowledge" Type="Boolean" Nullable="false" />
+          <Property Name="acknowledge_by" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="acknowledged_date" Type="DateTime" Precision="0" />
+          <Property Name="created_by" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="area_name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="entered_to_sap" Type="Boolean" Nullable="false" />
+          <Property Name="entered_by" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="sap_ref_no" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="entered_date" Type="DateTime" Precision="0" />
+        </EntityType>
+        <EntityType Name="PAYED_INVOICES">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="collection_no" Type="String" MaxLength="225" FixedLength="false" Unicode="false" />
+          <Property Name="payment_key" Type="String" MaxLength="225" FixedLength="false" Unicode="false" />
+          <Property Name="invoice_no" Type="String" MaxLength="225" FixedLength="false" Unicode="false" />
+          <Property Name="customer_id" Type="String" MaxLength="225" FixedLength="false" Unicode="false" />
+          <Property Name="sales_code" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="invoice_amount" Type="Decimal" Precision="19" Scale="2" />
+          <Property Name="invoice_allocated" Type="Decimal" Precision="19" Scale="2" />
+          <Property Name="payment_term" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="os_balance" Type="Decimal" Precision="19" Scale="2" />
+          <Property Name="nod" Type="Int32" />
+          <Property Name="invoice_date" Type="DateTime" Precision="0" />
+          <Property Name="remarks" Type="String" MaxLength="2000" FixedLength="false" Unicode="false" />
+          <Property Name="acknowledge" Type="Boolean" />
+        </EntityType>
+        <EntityContainer Name="Collection_SYSEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="COLLECTION_TICKETS" EntityType="Self.COLLECTION_TICKETS" />
+          <EntitySet Name="TICKET_MSGS" EntityType="Self.TICKET_MSGS" />
+          <EntitySet Name="COLLECTIONS" EntityType="Self.COLLECTION" />
+          <EntitySet Name="PAYED_INVOICES" EntityType="Self.PAYED_INVOICES" />
+          <FunctionImport Name="UpdateInvoiceAcknowledge">
+            <Parameter Name="invoice_id" Mode="In" Type="String" />
+            <Parameter Name="state" Mode="In" Type="Boolean" />
+          </FunctionImport>
+          <FunctionImport Name="FullCollectionData" ReturnType="Collection(Collection_SYS_Model.FullCollectionData_Result)">
+            <Parameter Name="collectionID" Mode="In" Type="String" />
+          </FunctionImport>
+        </EntityContainer>
+        <ComplexType Name="FullCollectionData_Result">
+          <Property Type="Int32" Name="id" Nullable="false" />
+          <Property Type="String" Name="collection_no" Nullable="true" MaxLength="50" />
+          <Property Type="DateTime" Name="collection_date" Nullable="true" Precision="16" />
+          <Property Type="String" Name="sales_code" Nullable="true" MaxLength="10" />
+          <Property Type="Boolean" Name="acknowledge" Nullable="false" />
+          <Property Type="String" Name="acknowledge_by" Nullable="true" MaxLength="50" />
+          <Property Type="DateTime" Name="acknowledged_date" Nullable="true" Precision="16" />
+          <Property Type="String" Name="area_name" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="created_by" Nullable="true" MaxLength="50" />
+          <Property Type="Boolean" Name="entered_to_sap" Nullable="false" />
+          <Property Type="String" Name="entered_by" Nullable="true" MaxLength="255" />
+          <Property Type="String" Name="sap_ref_no" Nullable="true" MaxLength="255" />
+          <Property Type="DateTime" Name="entered_date" Nullable="true" Precision="16" />
+          <Property Type="String" Name="payment_collection_no" Nullable="true" MaxLength="225" />
+          <Property Type="String" Name="customer_code" Nullable="true" MaxLength="225" />
+          <Property Type="String" Name="cus_sales_group" Nullable="true" MaxLength="225" />
+          <Property Type="String" Name="payment_key" Nullable="true" MaxLength="225" />
+          <Property Type="String" Name="payment_type" Nullable="true" MaxLength="225" />
+          <Property Type="String" Name="cheque_no" Nullable="true" MaxLength="225" />
+          <Property Type="String" Name="cheque_type" Nullable="true" MaxLength="225" />
+          <Property Type="String" Name="issued_bank" Nullable="true" MaxLength="225" />
+          <Property Type="String" Name="issued_branch" Nullable="true" MaxLength="225" />
+          <Property Type="DateTime" Name="banking_date" Nullable="true" Precision="16" />
+          <Property Type="Decimal" Name="payment_amount" Nullable="true" Precision="19" Scale="2" />
+          <Property Type="Decimal" Name="unallocated_amount" Nullable="true" Precision="19" Scale="2" />
+          <Property Type="String" Name="receipt_no" Nullable="true" MaxLength="225" />
+          <Property Type="DateTime" Name="receipt_date" Nullable="true" Precision="16" />
+          <Property Type="String" Name="deposited_bank" Nullable="true" MaxLength="225" />
+          <Property Type="String" Name="deposited_branch" Nullable="true" MaxLength="225" />
+          <Property Type="Int32" Name="primary_key" Nullable="true" />
+          <Property Type="String" Name="invoice_collection_no" Nullable="true" MaxLength="225" />
+          <Property Type="String" Name="invoice_payment_key" Nullable="true" MaxLength="225" />
+          <Property Type="String" Name="invoice_no" Nullable="true" MaxLength="225" />
+          <Property Type="String" Name="invoice_cutomer_id" Nullable="true" MaxLength="225" />
+          <Property Type="String" Name="invoice_sales_code" Nullable="true" MaxLength="10" />
+          <Property Type="Decimal" Name="invoice_amount" Nullable="true" Precision="19" Scale="2" />
+          <Property Type="Decimal" Name="invoice_allocated" Nullable="true" Precision="19" Scale="2" />
+          <Property Type="String" Name="payment_term" Nullable="true" MaxLength="100" />
+          <Property Type="Decimal" Name="os_balance" Nullable="true" Precision="19" Scale="2" />
+          <Property Type="Int32" Name="nod" Nullable="true" />
+          <Property Type="DateTime" Name="invoice_date" Nullable="true" Precision="16" />
+          <Property Type="String" Name="remarks" Nullable="true" MaxLength="2000" />
+          <Property Type="String" Name="CusName" Nullable="true" MaxLength="50" />
+          <Property Type="Boolean" Name="invoice_acknowledge" Nullable="true" />
+          <Property Type="Int32" Name="PAYMENTS_COUNT" Nullable="true" />
+          <Property Type="String" Name="Counted_Payment_Key" Nullable="true" MaxLength="225" />
+        </ComplexType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="Collection_SYS_ModelStoreContainer" CdmEntityContainer="Collection_SYSEntities">
+          <EntitySetMapping Name="COLLECTION_TICKETS">
+            <EntityTypeMapping TypeName="Collection_SYS_Model.COLLECTION_TICKETS">
+              <MappingFragment StoreEntitySet="COLLECTION_TICKETS">
+                <ScalarProperty Name="ticket_id" ColumnName="ticket_id" />
+                <ScalarProperty Name="collection_id" ColumnName="collection_id" />
+                <ScalarProperty Name="status" ColumnName="status" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TICKET_MSGS">
+            <EntityTypeMapping TypeName="Collection_SYS_Model.TICKET_MSGS">
+              <MappingFragment StoreEntitySet="TICKET_MSGS">
+                <ScalarProperty Name="msg_id" ColumnName="msg_id" />
+                <ScalarProperty Name="ticket_id" ColumnName="ticket_id" />
+                <ScalarProperty Name="msg" ColumnName="msg" />
+                <ScalarProperty Name="msg_from" ColumnName="msg_from" />
+                <ScalarProperty Name="date_time" ColumnName="date_time" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="COLLECTIONS">
+            <EntityTypeMapping TypeName="Collection_SYS_Model.COLLECTION">
+              <MappingFragment StoreEntitySet="COLLECTIONS">
+                <ScalarProperty Name="entered_date" ColumnName="entered_date" />
+                <ScalarProperty Name="sap_ref_no" ColumnName="sap_ref_no" />
+                <ScalarProperty Name="entered_by" ColumnName="entered_by" />
+                <ScalarProperty Name="entered_to_sap" ColumnName="entered_to_sap" />
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="collection_no" ColumnName="collection_no" />
+                <ScalarProperty Name="collection_date" ColumnName="collection_date" />
+                <ScalarProperty Name="sales_code" ColumnName="sales_code" />
+                <ScalarProperty Name="acknowledge" ColumnName="acknowledge" />
+                <ScalarProperty Name="acknowledge_by" ColumnName="acknowledge_by" />
+                <ScalarProperty Name="acknowledged_date" ColumnName="acknowledged_date" />
+                <ScalarProperty Name="created_by" ColumnName="created_by" />
+                <ScalarProperty Name="area_name" ColumnName="area_name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PAYED_INVOICES">
+            <EntityTypeMapping TypeName="Collection_SYS_Model.PAYED_INVOICES">
+              <MappingFragment StoreEntitySet="PAYED_INVOICES">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="collection_no" ColumnName="collection_no" />
+                <ScalarProperty Name="payment_key" ColumnName="payment_key" />
+                <ScalarProperty Name="invoice_no" ColumnName="invoice_no" />
+                <ScalarProperty Name="customer_id" ColumnName="customer_id" />
+                <ScalarProperty Name="sales_code" ColumnName="sales_code" />
+                <ScalarProperty Name="invoice_amount" ColumnName="invoice_amount" />
+                <ScalarProperty Name="invoice_allocated" ColumnName="invoice_allocated" />
+                <ScalarProperty Name="payment_term" ColumnName="payment_term" />
+                <ScalarProperty Name="os_balance" ColumnName="os_balance" />
+                <ScalarProperty Name="nod" ColumnName="nod" />
+                <ScalarProperty Name="invoice_date" ColumnName="invoice_date" />
+                <ScalarProperty Name="remarks" ColumnName="remarks" />
+                <ScalarProperty Name="acknowledge" ColumnName="acknowledge" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="UpdateInvoiceAcknowledge" FunctionName="Collection_SYS_Model.Store.UpdateInvoiceAcknowledge" />
+          <FunctionImportMapping FunctionImportName="FullCollectionData" FunctionName="Collection_SYS_Model.Store.FullCollectionData">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="Collection_SYS_Model.FullCollectionData_Result">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="collection_no" ColumnName="collection_no" />
+                <ScalarProperty Name="collection_date" ColumnName="collection_date" />
+                <ScalarProperty Name="sales_code" ColumnName="sales_code" />
+                <ScalarProperty Name="acknowledge" ColumnName="acknowledge" />
+                <ScalarProperty Name="acknowledge_by" ColumnName="acknowledge_by" />
+                <ScalarProperty Name="acknowledged_date" ColumnName="acknowledged_date" />
+                <ScalarProperty Name="area_name" ColumnName="area_name" />
+                <ScalarProperty Name="created_by" ColumnName="created_by" />
+                <ScalarProperty Name="entered_to_sap" ColumnName="entered_to_sap" />
+                <ScalarProperty Name="entered_by" ColumnName="entered_by" />
+                <ScalarProperty Name="sap_ref_no" ColumnName="sap_ref_no" />
+                <ScalarProperty Name="entered_date" ColumnName="entered_date" />
+                <ScalarProperty Name="payment_collection_no" ColumnName="payment_collection_no" />
+                <ScalarProperty Name="customer_code" ColumnName="customer_code" />
+                <ScalarProperty Name="cus_sales_group" ColumnName="cus_sales_group" />
+                <ScalarProperty Name="payment_key" ColumnName="payment_key" />
+                <ScalarProperty Name="payment_type" ColumnName="payment_type" />
+                <ScalarProperty Name="cheque_no" ColumnName="cheque_no" />
+                <ScalarProperty Name="cheque_type" ColumnName="cheque_type" />
+                <ScalarProperty Name="issued_bank" ColumnName="issued_bank" />
+                <ScalarProperty Name="issued_branch" ColumnName="issued_branch" />
+                <ScalarProperty Name="banking_date" ColumnName="banking_date" />
+                <ScalarProperty Name="payment_amount" ColumnName="payment_amount" />
+                <ScalarProperty Name="unallocated_amount" ColumnName="unallocated_amount" />
+                <ScalarProperty Name="receipt_no" ColumnName="receipt_no" />
+                <ScalarProperty Name="receipt_date" ColumnName="receipt_date" />
+                <ScalarProperty Name="deposited_bank" ColumnName="deposited_bank" />
+                <ScalarProperty Name="deposited_branch" ColumnName="deposited_branch" />
+                <ScalarProperty Name="primary_key" ColumnName="primary_key" />
+                <ScalarProperty Name="invoice_collection_no" ColumnName="invoice_collection_no" />
+                <ScalarProperty Name="invoice_payment_key" ColumnName="invoice_payment_key" />
+                <ScalarProperty Name="invoice_no" ColumnName="invoice_no" />
+                <ScalarProperty Name="invoice_cutomer_id" ColumnName="invoice_cutomer_id" />
+                <ScalarProperty Name="invoice_sales_code" ColumnName="invoice_sales_code" />
+                <ScalarProperty Name="invoice_amount" ColumnName="invoice_amount" />
+                <ScalarProperty Name="invoice_allocated" ColumnName="invoice_allocated" />
+                <ScalarProperty Name="payment_term" ColumnName="payment_term" />
+                <ScalarProperty Name="os_balance" ColumnName="os_balance" />
+                <ScalarProperty Name="nod" ColumnName="nod" />
+                <ScalarProperty Name="invoice_date" ColumnName="invoice_date" />
+                <ScalarProperty Name="remarks" ColumnName="remarks" />
+                <ScalarProperty Name="CusName" ColumnName="CusName" />
+                <ScalarProperty Name="invoice_acknowledge" ColumnName="invoice_acknowledge" />
+                <ScalarProperty Name="PAYMENTS_COUNT" ColumnName="PAYMENTS_COUNT" />
+                <ScalarProperty Name="Counted_Payment_Key" ColumnName="Counted_Payment_Key" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

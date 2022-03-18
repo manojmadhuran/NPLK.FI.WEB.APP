@@ -1,0 +1,1302 @@
+﻿@model FI.PORTAL.ViewModels.CollectionData
+@{
+    ViewBag.Title = "Collection View";
+
+    string CollectionNo = Model.FullCollectionData.FirstOrDefault().collection_no;
+
+    TimeSpan? TimeDifference = DateTime.Now - Model.FullCollectionData.First().acknowledged_date;
+
+    int same = 0;
+    string currentCustomerCode = "none";
+    string paymentKey = "none";
+    decimal amountTotal = 0;
+    decimal unallocatedAmountTotal = 0;
+    decimal invoiceAmountTotal = 0;
+    decimal osBalanceTotal = 0;
+    decimal settledTotal = 0;
+    string uname = (Session["uname"].ToString());
+    //string sales_area = Session["selected_area_name"].ToString();
+    string sales_area = "Sales Area";
+    bool MainAcknowledge = false;
+    bool SubAcknowledge = true;
+    bool ticketStatus = false;
+    string Sales_code = "";
+    List<String> multiplePaymentKeyList = new List<string> { };
+    List<String> multiplePaymentCheques = new List<string> { };
+    List<String> multiplePaymentInvoices = new List<string> { };
+
+    foreach (var item in Model.FullCollectionData)
+    {
+
+        if (item.invoice_acknowledge == false)
+        {
+            SubAcknowledge = false;
+        }
+
+    }
+}
+
+<style>
+    .fix-width {
+        width: auto;
+        overflow-y: hidden;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .table {
+        width: auto;
+        margin-bottom: 0;
+        max-width: none;
+    }
+
+    td, th {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    #th_customer_code, #td_customer_code {
+        position: sticky;
+        left: 0px;
+        background-color: white;
+        text-align: left;
+    }
+
+    #th_customer_name, #td_customer_name {
+        position: sticky;
+        left: 100px;
+        background-color: white;
+    }
+
+    #amounts {
+        text-align: right;
+    }
+</style>
+
+<div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Ticket View</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <input type="hidden" id="collection_id" value=@CollectionNo />
+            <input type="hidden" id="username" value=@uname />
+
+            @if (Model.Ticket != null)
+            {
+                <input type="hidden" id="ticket_id" value="@Model.Ticket.ticket_id" />
+
+                if (Model.Ticket.status == false)
+                {
+                    ticketStatus = false;
+                }
+                else
+                {
+                    ticketStatus = true;
+                }
+            }
+            else
+            {
+                <input type="hidden" id="ticket_id" value=@null />
+                ticketStatus = false;
+            }
+
+
+
+            <div class="modal-body" style="overflow-y: auto; max-height: 60vh;">
+                @if (Model.Ticket_Msgs == null)
+                {
+                    <h3>No Messages Found!</h3>
+                }
+                else
+                {
+                    foreach (var item in Model.Ticket_Msgs)
+                    {
+
+                        <div style="padding:10px;"><b>@item.date_time by @item.msg_from:</b> @item.msg</div>
+
+
+
+                    }
+                }
+            </div>
+            @if (Model.FullCollectionData.First().acknowledge == false)
+            {
+                <div class="modal-footer">
+
+                    <input type="text" id="message" class="form-control" placeholder="Enter Message..." />
+
+                    @if (Model.Ticket != null)
+
+                    {
+                        if (Model.Ticket.status == true)
+                        {
+                            <button class="btn btn-danger btn-sm text-nowrap" onclick="sendmsg('close');">Close Ticket</button>
+                        }
+
+                    }
+                    <button class="btn btn-primary btn-sm" id="submitButton" onclick="sendmsg('submit');">Submit</button>
+                </div>
+            }
+
+
+
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade sap-modal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Enter to SAP System</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <input type="hidden" id="collection_id" value=@CollectionNo />
+            <input type="hidden" id="username" value=@uname />
+
+            @if (Model.FullCollectionData.First().entered_to_sap == true)
+            {
+                <div class="modal-body" style="overflow-y: auto; max-height: 60vh;">
+                    <h4>Current SAP Ref No: @Model.FullCollectionData.First().sap_ref_no</h4>
+                </div>
+            }
+
+
+            <div class="modal-footer">
+
+                <input type="text" id="sap_ref_no" class="form-control" placeholder="Enter Reference No..." />
+
+                <button class="btn btn-primary btn-sm" id="submitButton" onclick="enterToSAP('submit');">Submit</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <div style="display:inline-block; padding:5px;">
+                    <button class="btn btn-secondary btn-sm" onclick="location.href='@Url.Action("CollectionHome", "Collection")'">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-arrow-left-circle" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8zm15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-4.5-.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5z" />
+                        </svg> Collection Home
+                    </button>
+                </div>
+                <h4 style=" float:right;">Collection Requests</h4>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <div class="row">
+                    <div class="col-md-6">
+                        Collection ID: @CollectionNo
+                    </div>
+                    <div class="col-md-6">
+                        Collection Created Date: @Model.FullCollectionData.First().collection_date
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        Rep Name: @Model.FullCollectionData.First().created_by
+                    </div>
+                    <div class="col-md-6">
+                        Area Name: @Model.FullCollectionData.First().area_name
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        Status: @if (Model.FullCollectionData.First().acknowledge == true && Model.FullCollectionData.First().entered_to_sap == true)
+                        {
+                            <span class="badge badge-primary">Closed</span>
+                        }
+                        else if (Model.FullCollectionData.First().acknowledge == true)
+                        {
+                            <span class="badge badge-success">Acknowledged</span>
+                        }
+                        else
+                        {
+                            <span class="badge badge-warning">Pending</span>
+                        }
+                    </div>
+                    @if (Model.FullCollectionData.First().acknowledge == true)
+                    {
+                        <div class="col-md-6">
+                            Acknowledged By: @Model.FullCollectionData.First().acknowledge_by
+                        </div>
+                    }
+                </div>
+
+                <div class="row">
+                    @if (Model.FullCollectionData.First().acknowledge == true)
+                    {
+                        <div class="col-md-6">
+                            Acknowledged Date: @Model.FullCollectionData.First().acknowledged_date
+                        </div>
+
+                    }
+                </div>
+
+                @if (Model.FullCollectionData.First().entered_to_sap == true)
+                {
+                    <div class="row">
+                        <div class="col-md-6">
+                            SAP Ref No: @Model.FullCollectionData.First().sap_ref_no
+                        </div>
+                        <div class="col-md-6">
+                            Entered By(SAP): @Model.FullCollectionData.First().entered_by
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            Entered Date(SAP): @Model.FullCollectionData.First().entered_date
+                        </div>
+                    </div>
+                }
+
+
+                @using (Html.BeginForm("AcknowledgeCollection", "Collection", FormMethod.Post))
+                {
+                    <div style="float:right;">
+                        @Html.HiddenFor(c => c.Collection.collection_no, new { Value = CollectionNo })
+                        @Html.HiddenFor(c => c.Collection.id, new { Value = Model.FullCollectionData.First().id })
+                        @Html.HiddenFor(c => c.Collection.collection_date, new { Value = Model.FullCollectionData.First().collection_date })
+                        @Html.HiddenFor(c => c.Collection.sales_code, new { Value = Model.FullCollectionData.First().sales_code })
+
+                        @if (Model.FullCollectionData.First().acknowledge == true)
+                        {
+                            @Html.HiddenFor(c => c.Collection.acknowledge, new { Value = false })
+                        }
+                        else
+                        {
+                            @Html.HiddenFor(c => c.Collection.acknowledge, new { Value = true })
+                        }
+
+                        @Html.HiddenFor(c => c.Collection.acknowledge_by, new { Value = uname })
+                        @Html.HiddenFor(c => c.Collection.acknowledged_date, new { Value = Model.FullCollectionData.First().acknowledged_date })
+
+                        @if (Model.FullCollectionData.First().acknowledge == false)
+                        {
+                            MainAcknowledge = false;
+                            if (SubAcknowledge && ticketStatus == false)
+                            {
+                                <button class="btn badge-success btn-sm" type="submit">Acknowledge</button>
+                            }
+                            else
+                            {
+                                <button class="btn badge-success btn-sm" type="submit" disabled>Acknowledge</button>
+                            }
+
+                        }
+                        else
+                        {
+                            MainAcknowledge = true;
+                            if (TimeDifference.Value.Days > 3)
+                            {
+                                <button class="btn badge-warning btn-sm" disabled>Reverse Acknowledge</button>
+                            }
+                            else
+                            {
+                                <button class="btn badge-warning btn-sm" type="submit">Reverse Acknowledge</button>
+                            }
+                        }
+
+
+                        <button class="btn btn-danger btn-sm" type="button" data-toggle="modal" data-target=".sap-modal" disabled="@(Model.FullCollectionData.First().acknowledge != true ? "disabled" : null)">@(Model.FullCollectionData.First().entered_to_sap == true ? "Edit SAP Ref No." : "Enter to SAP") </button>
+
+
+                        <button class="btn btn-info btn-sm" type="button" onclick="fnExcelReport(array1, array2, 'myfile.xls')">Export to Excel</button>
+
+                        <button class="btn btn-info btn-sm" formtarget="_blank" onclick="window.open('@Url.Action("GenerateReport", new {CollectionID = Model.FullCollectionData.First().collection_no})')" type="button">  Export as PDF </button>
+
+
+                        <button class="btn badge-secondary btn-sm" type="button" data-toggle="modal" data-target=".bd-example-modal-lg">Tickets</button>
+
+
+                        <iframe id="txtArea1" style="display:none"></iframe>
+                    </div>
+                }
+
+            </div>
+
+
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="center-block fix-width scroll-inner">
+
+                            <table class="table table-bordered small table-hover" style="width:auto">
+                                <thead>
+                                    <tr>
+                                        <th>Sales Code</th>
+                                        <th id="th_customer_code">Dealer Code</th>
+                                        <th id="th_customer_name">Dealer Name</th>
+                                        <th>Payment Method</th>
+                                        <th>Cheque No</th>
+                                        <th>Bank</th>
+                                        <th>Branch</th>
+                                        <th>Banking Date</th>
+                                        <th>Deposited Bank</th>
+                                        <th>Deposited Branch</th>
+                                        <th>Reciept No</th>
+                                        <th>Amount</th>
+                                        <th>Unallocated Amount</th>
+                                        <th>Invoice Date</th>
+                                        <th>Invoice No</th>
+                                        <th>Payment Term</th>
+                                        <th>Amount</th>
+                                        <th>OS Balance</th>
+                                        <th>Settled Amount</th>
+                                        <th>NOD</th>
+                                        <th>Remarks</th>
+                                        <th>Acknowledge</th>
+                                        <th></th>
+
+                                    </tr>
+                                </thead>
+                                <tbody style="overflow:auto">
+
+                                    @foreach (var item in Model.FullCollectionData)
+                                    {
+                                        if (item.PAYMENTS_COUNT > 1)
+                                        {
+                                            if (!multiplePaymentKeyList.Contains(item.payment_key))
+                                            {
+
+                                                <tr>
+                                                    <td colspan="23">MULTIPLE PAYMENT</td>
+                                                </tr>
+
+                                                if (!multiplePaymentCheques.Contains(item.cheque_no))
+                                                {
+                                                    <tr>
+                                                        <td>@item.sales_code</td>
+                                                        <td id="td_customer_code">@item.customer_code</td>
+                                                        <td id="td_customer_name">@item.CusName</td>
+                                                        <td>@item.payment_type</td>
+                                                        <td>@item.cheque_no</td>
+                                                        <td>@item.issued_bank</td>
+                                                        <td>@item.issued_branch</td>
+                                                        <td>@(item.banking_date != null ? item.banking_date.Value.ToShortDateString() : null)</td>
+                                                        <td>@item.deposited_bank</td>
+                                                        <td>@item.deposited_branch</td>
+                                                        <td>@item.receipt_no</td>
+                                                        <td id="amounts">@Convert.ToDecimal(item.payment_amount.Value).ToString("#,##0.00")</td>
+                                                        <td id="amounts">@Convert.ToDecimal(item.unallocated_amount.Value).ToString("#,##0.00")</td>
+                                                        <td>@(item.invoice_date != null ?item.invoice_date.Value.ToShortDateString() : null)</td>
+                                                        <td>@item.invoice_no</td>
+                                                        <td>@item.payment_term</td>
+                                                        <td id="amounts"> @(item.invoice_amount != null ? Convert.ToDecimal(item.invoice_amount.Value).ToString("#,##0.00") : null)</td>
+                                                        <td id="amounts">@(item.os_balance != null ? Convert.ToDecimal(item.os_balance.Value).ToString("#,##0.00") : null)</td>
+                                                        <td id="amounts">@(item.invoice_allocated != null ? Convert.ToDecimal(item.invoice_allocated.Value).ToString("#,##0.00") : null)</td>
+                                                        <td>@item.nod</td>
+                                                        <td>@item.remarks</td>
+                                                        <td>
+                                                            @if (item.invoice_acknowledge == false)
+                                                            {<h6><span class="badge badge-info ">No</span></h6> }
+                                                            else
+                                                            {<h6><span class="badge badge-success ">Yes</span></h6>}
+                                                        </td>
+                                                        @if (!MainAcknowledge)
+                                                        {
+                                                            <td>
+                                                                @if (item.invoice_acknowledge == false)
+                                                                {<input type="button" class="btn btn-secondary btn-xs" value="Acknowledge" onclick="location.href='@Url.Action("updateinvoice", "Collection", new { invid = item.primary_key, update = !item.invoice_acknowledge, collection_id = CollectionNo })'" />}
+                                                                else
+                                                                {<input type="button" class="btn btn-warning btn-xs" value="Reverse" onclick="location.href='@Url.Action("updateinvoice", "Collection", new { invid = item.primary_key, update = !item.invoice_acknowledge, collection_id = CollectionNo })'">}
+                                                            </td>
+                                                        }
+                                                    </tr>
+
+                                                    amountTotal = amountTotal + Convert.ToDecimal(item.payment_amount);
+                                                }
+                                                else
+                                                {
+                                                    <tr>
+                                                        <td></td>
+                                                        <td id="td_customer_code"></td>
+                                                        <td id="td_customer_name"></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td>@item.invoice_date.Value.ToShortDateString()</td>
+                                                        <td>@item.invoice_no</td>
+                                                        <td>@item.payment_term</td>
+                                                        <td id="amounts">@Convert.ToDecimal(item.invoice_amount.Value).ToString("#,##0.00")</td>
+                                                        <td id="amounts">@Convert.ToDecimal(item.os_balance.Value).ToString("#,##0.00")</td>
+                                                        <td id="amounts">@Convert.ToDecimal(item.invoice_allocated.Value).ToString("#,##0.00")</td>
+                                                        <td>@item.nod</td>
+                                                        <td>@item.remarks</td>
+                                                        <td>
+                                                            @if (item.invoice_acknowledge == false)
+                                                            {<h6><span class="badge badge-info ">No</span></h6> }
+                                                            else
+                                                            {<h6><span class="badge badge-success ">Yes</span></h6>}
+                                                        </td>
+                                                        @if (!MainAcknowledge)
+                                                        {
+                                                            <td>
+                                                                @if (item.invoice_acknowledge == false)
+                                                                {<input type="button" class="btn btn-secondary btn-xs" value="Acknowledge" onclick="location.href='@Url.Action("updateinvoice", "Collection", new { invid = item.primary_key, update = !item.invoice_acknowledge, collection_id = CollectionNo })'" />}
+                                                                else
+                                                                {<input type="button" class="btn btn-warning btn-xs" value="Reverse" onclick="location.href='@Url.Action("updateinvoice", "Collection", new { invid = item.primary_key, update = !item.invoice_acknowledge, collection_id = CollectionNo })'">}
+                                                            </td>
+                                                        }
+                                                    </tr>
+                                                }
+
+                                                multiplePaymentKeyList.Add(item.payment_key);
+                                                multiplePaymentCheques.Add(item.cheque_no);
+
+                                            }
+                                            else
+                                            {
+                                                if (!multiplePaymentCheques.Contains(item.cheque_no))
+                                                {
+                                                    <tr>
+                                                        <td></td>
+                                                        <td id="td_customer_code"></td>
+                                                        <td id="td_customer_name"></td>
+                                                        <td>@item.payment_type</td>
+                                                        <td>@item.cheque_no</td>
+                                                        <td>@item.issued_bank</td>
+                                                        <td>@item.issued_branch</td>
+                                                        <td>@(item.banking_date != null ? item.banking_date.Value.ToShortDateString() : null)</td>
+                                                        <td>@item.deposited_bank</td>
+                                                        <td>@item.deposited_branch</td>
+                                                        <td>@item.receipt_no</td>
+                                                        <td id="amounts">@Convert.ToDecimal(item.payment_amount.Value).ToString("#,##0.00")</td>
+                                                        <td id="amounts">@Convert.ToDecimal(item.unallocated_amount.Value).ToString("#,##0.00")</td>
+                                                        <td>@(item.invoice_date != null ? item.invoice_date.Value.ToShortDateString() : null)</td>
+                                                        <td>@item.invoice_no</td>
+                                                        <td>@item.payment_term</td>
+                                                        <td id="amounts">@(item.invoice_amount != null ? Convert.ToDecimal(item.invoice_amount.Value).ToString("#,##0.00") : null)</td>
+                                                        <td id="amounts">@(item.os_balance != null ? Convert.ToDecimal(item.os_balance.Value).ToString("#,##0.00") : null)</td>
+                                                        <td id="amounts">@(item.invoice_allocated != null ? Convert.ToDecimal(item.invoice_allocated.Value).ToString("#,##0.00") : null)</td>
+                                                        <td>@item.nod</td>
+                                                        <td>@item.remarks</td>
+                                                        <td>
+                                                            @if (item.invoice_acknowledge == false)
+                                                            {<h6><span class="badge badge-info ">No</span></h6> }
+                                                            else
+                                                            {<h6><span class="badge badge-success ">Yes</span></h6>}
+                                                        </td>
+                                                        @if (!MainAcknowledge)
+                                                        {
+                                                            <td>
+                                                                @if (item.invoice_acknowledge == false)
+                                                                {<input type="button" class="btn btn-secondary btn-xs" value="Acknowledge" onclick="location.href='@Url.Action("updateinvoice", "Collection", new { invid = item.primary_key, update = !item.invoice_acknowledge, collection_id = CollectionNo })'" />}
+                                                                else
+                                                                {<input type="button" class="btn btn-warning btn-xs" value="Reverse" onclick="location.href='@Url.Action("updateinvoice", "Collection", new { invid = item.primary_key, update = !item.invoice_acknowledge, collection_id = CollectionNo })'">}
+                                                            </td>
+                                                        }
+                                                    </tr>
+                                                    amountTotal = amountTotal + Convert.ToDecimal(item.payment_amount);
+                                                }
+                                                else
+                                                {
+                                                    <tr>
+                                                        <td></td>
+                                                        <td id="td_customer_code"></td>
+                                                        <td id="td_customer_name"></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td>@item.invoice_date.Value.ToShortDateString()</td>
+                                                        <td>@item.invoice_no</td>
+                                                        <td>@item.payment_term</td>
+                                                        <td id="amounts">@Convert.ToDecimal(item.invoice_amount.Value).ToString("#,##0.00")</td>
+                                                        <td id="amounts">@Convert.ToDecimal(item.os_balance.Value).ToString("#,##0.00")</td>
+                                                        <td id="amounts">@Convert.ToDecimal(item.invoice_allocated.Value).ToString("#,##0.00")</td>
+                                                        <td>@item.nod</td>
+                                                        <td>@item.remarks</td>
+                                                        <td>
+                                                            @if (item.invoice_acknowledge == false)
+                                                            {<h6><span class="badge badge-info ">No</span></h6> }
+                                                            else
+                                                            {<h6><span class="badge badge-success ">Yes</span></h6>}
+                                                        </td>
+                                                        @if (!MainAcknowledge)
+                                                        {
+                                                            <td>
+                                                                @if (item.invoice_acknowledge == false)
+                                                                {<input type="button" class="btn btn-secondary btn-xs" value="Acknowledge" onclick="location.href='@Url.Action("updateinvoice", "Collection", new { invid = item.primary_key, update = !item.invoice_acknowledge, collection_id = CollectionNo })'" />}
+                                                                else
+                                                                {<input type="button" class="btn btn-warning btn-xs" value="Reverse" onclick="location.href='@Url.Action("updateinvoice", "Collection", new { invid = item.primary_key, update = !item.invoice_acknowledge, collection_id = CollectionNo })'">}
+                                                            </td>
+                                                        }
+                                                    </tr>
+                                                }
+
+                                                multiplePaymentCheques.Add(item.cheque_no);
+                                            }
+
+                                            if (!multiplePaymentInvoices.Contains(item.invoice_no))
+                                            {
+                                                invoiceAmountTotal = invoiceAmountTotal + Convert.ToDecimal(item.invoice_amount);
+                                                osBalanceTotal = osBalanceTotal + Convert.ToDecimal(item.os_balance);
+                                                settledTotal = settledTotal + Convert.ToDecimal(item.invoice_allocated);
+                                            }
+
+                                            multiplePaymentInvoices.Add(item.invoice_no);
+                                        }
+                                        else
+                                        {
+
+                                            if (item.invoice_amount != null)
+                                            {
+                                                invoiceAmountTotal = invoiceAmountTotal + (decimal)item.invoice_amount;
+                                                osBalanceTotal = osBalanceTotal + (decimal)item.os_balance;
+                                                settledTotal = settledTotal + (decimal)item.invoice_allocated;
+                                                if (currentCustomerCode.Equals(item.customer_code) && paymentKey.Equals(item.payment_key)) { same = 1; } else { same = 0; }
+
+                                            }
+
+                                            currentCustomerCode = item.customer_code; paymentKey = item.payment_key;
+                                            Sales_code = item.sales_code;
+
+
+                                            if (item.acknowledge == false)
+                                            {
+                                                SubAcknowledge = false;
+                                            }
+
+                                            if (same == 1)
+                                            {
+                                                <tr>
+                                                    <td></td>
+                                                    <td id="td_customer_code"></td>
+                                                    <td id="td_customer_name"></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td>@item.invoice_date.Value.ToShortDateString()</td>
+                                                    <td>@item.invoice_no</td>
+                                                    <td>@item.payment_term</td>
+                                                    <td id="amounts">@Convert.ToDecimal(item.invoice_amount.Value).ToString("#,##0.00")</td>
+                                                    <td id="amounts">@Convert.ToDecimal(item.os_balance.Value).ToString("#,##0.00")</td>
+                                                    <td id="amounts">@Convert.ToDecimal(item.invoice_allocated.Value).ToString("#,##0.00")</td>
+                                                    <td>@item.nod</td>
+                                                    <td>@item.remarks</td>
+                                                    <td>
+                                                        @if (item.invoice_acknowledge == false)
+                                                        {<h6><span class="badge badge-info ">No</span></h6> }
+                                                        else
+                                                        {<h6><span class="badge badge-success ">Yes</span></h6>}
+                                                    </td>
+
+                                                    @if (!MainAcknowledge)
+                                                    {
+                                                        <td>
+                                                            @if (item.invoice_acknowledge == false)
+                                                            {<input type="button" class="btn btn-secondary btn-xs" value="Acknowledge" onclick="location.href='@Url.Action("updateinvoice", "Collection", new { invid = item.primary_key, update = !item.invoice_acknowledge, collection_id = CollectionNo })'" />}
+                                                            else
+                                                            {<input type="button" class="btn btn-warning btn-xs" value="Reverse" onclick="location.href='@Url.Action("updateinvoice", "Collection", new { invid = item.primary_key, update = !item.invoice_acknowledge, collection_id = CollectionNo })'">}
+                                                        </td>
+                                                    }
+
+                                                </tr>
+                                            }
+                                            else
+                                            {
+                                                <tr>
+                                                    <td colspan="23">SINGLE PAYMENT</td>
+                                                </tr>
+
+                                                amountTotal = amountTotal + (decimal)item.payment_amount;
+                                                unallocatedAmountTotal = unallocatedAmountTotal + (decimal)item.unallocated_amount;
+                                                <tr>
+                                                    <td>@item.sales_code</td>
+                                                    <td id="td_customer_code">@item.customer_code</td>
+                                                    <td id="td_customer_name">@item.CusName</td>
+                                                    <td>@item.payment_type</td>
+                                                    <td>@item.cheque_no</td>
+                                                    <td>@item.issued_bank</td>
+                                                    <td>@item.issued_branch</td>
+                                                    <td>@(item.banking_date != null ? item.banking_date.Value.ToShortDateString() : null)</td>
+                                                    <td>@item.deposited_bank</td>
+                                                    <td>@item.deposited_branch</td>
+                                                    <td>@item.receipt_no</td>
+                                                    <td id="amounts">@Convert.ToDecimal(item.payment_amount.Value).ToString("#,##0.00")</td>
+                                                    <td id="amounts">@Convert.ToDecimal(item.unallocated_amount.Value).ToString("#,##0.00")</td>
+                                                    <td>@(item.invoice_date != null ? item.invoice_date.Value.ToShortDateString() : null)</td>
+                                                    <td>@item.invoice_no</td>
+                                                    <td>@item.payment_term</td>
+                                                    <td id="amounts">@(item.invoice_amount != null ? Convert.ToDecimal(item.invoice_amount.Value).ToString("#,##0.00") : null)</td>
+                                                    <td id="amounts">@(item.os_balance != null ? Convert.ToDecimal(item.os_balance.Value).ToString("#,##0.00") : null)</td>
+                                                    <td id="amounts">@(item.invoice_allocated != null ? Convert.ToDecimal(item.invoice_allocated.Value).ToString("#,##0.00") : null)</td>
+                                                    <td>@item.nod</td>
+                                                    <td>@item.remarks</td>
+                                                    <td>
+                                                        @if (item.invoice_acknowledge == false)
+                                                        {<h6><span class="badge badge-info ">No</span></h6> }
+                                                        else
+                                                        {<h6><span class="badge badge-success ">Yes</span></h6>}
+                                                    </td>
+                                                    @if (!MainAcknowledge)
+                                                    {
+                                                        <td>
+                                                            @if (item.invoice_acknowledge == false)
+                                                            {<input type="button" class="btn btn-secondary btn-xs" onclick="location.href='@Url.Action("updateinvoice", "Collection", new { invid = item.primary_key, update = !item.invoice_acknowledge, collection_id = CollectionNo })'" )'" value="Acknowledge" />}
+                                                            else
+                                                            {<input type="button" class="btn btn-warning btn-xs" onclick="location.href='@Url.Action("updateinvoice", "Collection", new { invid = item.primary_key, update = !item.invoice_acknowledge, collection_id = CollectionNo })'" )'" value="Reverse" />}
+                                                        </td>
+                                                    }
+                                                </tr>
+
+                                            }
+
+                                        }
+
+                                    }
+
+                                    @{ unallocatedAmountTotal = amountTotal - settledTotal;
+                                    }
+
+                                    <tr style="background:beige; font-weight:700; font-size:15px;">
+                                        <td colspan="3">Total</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td id="amounts">@Convert.ToDecimal(amountTotal).ToString("#,##0.00")</td>
+                                        <td id="amounts">@Convert.ToDecimal(unallocatedAmountTotal).ToString("#,##0.00")</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td id="amounts">@Convert.ToDecimal(invoiceAmountTotal).ToString("#,##0.00")</td>
+                                        <td id="amounts">@Convert.ToDecimal(osBalanceTotal).ToString("#,##0.00")</td>
+                                        <td id="amounts">@Convert.ToDecimal(settledTotal).ToString("#,##0.00")</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+
+                            @{
+                                same = 0;
+                                currentCustomerCode = "none";
+                                paymentKey = "none";
+                                amountTotal = 0;
+                                unallocatedAmountTotal = 0;
+                                invoiceAmountTotal = 0;
+                                osBalanceTotal = 0;
+                                settledTotal = 0;
+                                multiplePaymentKeyList = new List<string> { };
+                                multiplePaymentCheques = new List<string> { };
+                                multiplePaymentInvoices = new List<string> { };
+                            }
+
+                            @*Table for Excel sheet*@
+                            <table id="2" class="table table-bordered small table-hover" style="width:auto; display:none">
+                                <thead>
+                                    <tr>
+                                        <th>Dealer Code</th>
+                                        <th>Dealer Name</th>
+                                        <th>Payment Method</th>
+                                        <th>Cheque No</th>
+                                        <th>Bank</th>
+                                        <th>Branch</th>
+                                        <th>Banking Date</th>
+                                        <th>Deposited Bank</th>
+                                        <th>Deposited Branch</th>
+                                        <th>Reciept No</th>
+                                        <th>Amount</th>
+                                        <th>Unallocated Amount</th>
+                                        <th>Invoice Date</th>
+                                        <th>Invoice No</th>
+                                        <th>Payment Term</th>
+                                        <th>Amount</th>
+                                        <th>OS Balance</th>
+                                        <th>Settled Amount</th>
+                                        <th>NOD</th>
+                                        <th>Remarks</th>
+                                        <th>Acknowledge</th>
+                                        <th>System Reference</th>
+                                        <th></th>
+
+                                    </tr>
+                                </thead>
+                                <tbody style="overflow:auto">
+
+                                    @foreach (var item in Model.FullCollectionData)
+                                    {
+
+                                        if (item.PAYMENTS_COUNT > 1)
+                                        {
+                                            if (!multiplePaymentKeyList.Contains(item.payment_key))
+                                            {
+
+                                                <tr>
+                                                    <td colspan="23">MULTIPLE PAYMENT</td>
+                                                </tr>
+
+                                                if (!multiplePaymentCheques.Contains(item.cheque_no))
+                                                {
+                                                    <tr>
+                                                        <td>@item.sales_code</td>
+                                                        <td id="td_customer_code">@item.customer_code</td>
+                                                        <td id="td_customer_name">@item.CusName</td>
+                                                        <td>@item.payment_type</td>
+                                                        <td>@item.cheque_no</td>
+                                                        <td>@item.issued_bank</td>
+                                                        <td>@item.issued_branch</td>
+                                                        <td>@(item.banking_date != null ? item.banking_date.Value.ToShortDateString() : null)</td>
+                                                        <td>@item.deposited_bank</td>
+                                                        <td>@item.deposited_branch</td>
+                                                        <td>@item.receipt_no</td>
+                                                        <td id="amounts">@Convert.ToDecimal(item.payment_amount.Value).ToString("#,##0.00")</td>
+                                                        <td id="amounts">@Convert.ToDecimal(item.unallocated_amount.Value).ToString("#,##0.00")</td>
+                                                        <td>@(item.invoice_date != null ?item.invoice_date.Value.ToShortDateString() : null)</td>
+                                                        <td>@item.invoice_no</td>
+                                                        <td>@item.payment_term</td>
+                                                        <td id="amounts"> @(item.invoice_amount != null ? Convert.ToDecimal(item.invoice_amount.Value).ToString("#,##0.00") : null)</td>
+                                                        <td id="amounts">@(item.os_balance != null ? Convert.ToDecimal(item.os_balance.Value).ToString("#,##0.00") : null)</td>
+                                                        <td id="amounts">@(item.invoice_allocated != null ? Convert.ToDecimal(item.invoice_allocated.Value).ToString("#,##0.00") : null)</td>
+                                                        <td>@item.nod</td>
+                                                        <td>@item.remarks</td>
+                                                        <td>
+                                                            @if (item.invoice_acknowledge == false)
+                                                            {<h6><span class="badge badge-info ">No</span></h6> }
+                                                            else
+                                                            {<h6><span class="badge badge-success ">Yes</span></h6>}
+                                                        </td>
+                                                        @if (!MainAcknowledge)
+                                                        {
+                                                            <td>
+                                                                @if (item.invoice_acknowledge == false)
+                                                                {<input type="button" class="btn btn-secondary btn-xs" value="Acknowledge" onclick="location.href='@Url.Action("updateinvoice", "Collection", new { invid = item.primary_key, update = !item.invoice_acknowledge, collection_id = CollectionNo })'" />}
+                                                                else
+                                                                {<input type="button" class="btn btn-warning btn-xs" value="Reverse" onclick="location.href='@Url.Action("updateinvoice", "Collection", new { invid = item.primary_key, update = !item.invoice_acknowledge, collection_id = CollectionNo })'">}
+                                                            </td>
+                                                        }
+                                                    </tr>
+
+                                                    amountTotal = amountTotal + Convert.ToDecimal(item.payment_amount);
+                                                }
+                                                else
+                                                {
+                                                    <tr>
+                                                        <td></td>
+                                                        <td id="td_customer_code"></td>
+                                                        <td id="td_customer_name"></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td>@item.invoice_date.Value.ToShortDateString()</td>
+                                                        <td>@item.invoice_no</td>
+                                                        <td>@item.payment_term</td>
+                                                        <td id="amounts">@Convert.ToDecimal(item.invoice_amount.Value).ToString("#,##0.00")</td>
+                                                        <td id="amounts">@Convert.ToDecimal(item.os_balance.Value).ToString("#,##0.00")</td>
+                                                        <td id="amounts">@Convert.ToDecimal(item.invoice_allocated.Value).ToString("#,##0.00")</td>
+                                                        <td>@item.nod</td>
+                                                        <td>@item.remarks</td>
+                                                        <td>
+                                                            @if (item.invoice_acknowledge == false)
+                                                            {<h6><span class="badge badge-info ">No</span></h6> }
+                                                            else
+                                                            {<h6><span class="badge badge-success ">Yes</span></h6>}
+                                                        </td>
+                                                        @if (!MainAcknowledge)
+                                                        {
+                                                            <td>
+                                                                @if (item.invoice_acknowledge == false)
+                                                                {<input type="button" class="btn btn-secondary btn-xs" value="Acknowledge" onclick="location.href='@Url.Action("updateinvoice", "Collection", new { invid = item.primary_key, update = !item.invoice_acknowledge, collection_id = CollectionNo })'" />}
+                                                                else
+                                                                {<input type="button" class="btn btn-warning btn-xs" value="Reverse" onclick="location.href='@Url.Action("updateinvoice", "Collection", new { invid = item.primary_key, update = !item.invoice_acknowledge, collection_id = CollectionNo })'">}
+                                                            </td>
+                                                        }
+                                                    </tr>
+                                                }
+
+                                                multiplePaymentKeyList.Add(item.payment_key);
+                                                multiplePaymentCheques.Add(item.cheque_no);
+
+                                            }
+                                            else
+                                            {
+                                                if (!multiplePaymentCheques.Contains(item.cheque_no))
+                                                {
+                                                    <tr>
+                                                        <td></td>
+                                                        <td id="td_customer_code"></td>
+                                                        <td id="td_customer_name"></td>
+                                                        <td>@item.payment_type</td>
+                                                        <td>@item.cheque_no</td>
+                                                        <td>@item.issued_bank</td>
+                                                        <td>@item.issued_branch</td>
+                                                        <td>@(item.banking_date != null ? item.banking_date.Value.ToShortDateString() : null)</td>
+                                                        <td>@item.deposited_bank</td>
+                                                        <td>@item.deposited_branch</td>
+                                                        <td>@item.receipt_no</td>
+                                                        <td id="amounts">@Convert.ToDecimal(item.payment_amount.Value).ToString("#,##0.00")</td>
+                                                        <td id="amounts">@Convert.ToDecimal(item.unallocated_amount.Value).ToString("#,##0.00")</td>
+                                                        <td>@(item.invoice_date != null ? item.invoice_date.Value.ToShortDateString() : null)</td>
+                                                        <td>@item.invoice_no</td>
+                                                        <td>@item.payment_term</td>
+                                                        <td id="amounts">@(item.invoice_amount != null ? Convert.ToDecimal(item.invoice_amount.Value).ToString("#,##0.00") : null)</td>
+                                                        <td id="amounts">@(item.os_balance != null ? Convert.ToDecimal(item.os_balance.Value).ToString("#,##0.00") : null)</td>
+                                                        <td id="amounts">@(item.invoice_allocated != null ? Convert.ToDecimal(item.invoice_allocated.Value).ToString("#,##0.00") : null)</td>
+                                                        <td>@item.nod</td>
+                                                        <td>@item.remarks</td>
+                                                        <td>
+                                                            @if (item.invoice_acknowledge == false)
+                                                            {<h6><span class="badge badge-info ">No</span></h6> }
+                                                            else
+                                                            {<h6><span class="badge badge-success ">Yes</span></h6>}
+                                                        </td>
+                                                        @if (!MainAcknowledge)
+                                                        {
+                                                            <td>
+                                                                @if (item.invoice_acknowledge == false)
+                                                                {<input type="button" class="btn btn-secondary btn-xs" value="Acknowledge" onclick="location.href='@Url.Action("updateinvoice", "Collection", new { invid = item.primary_key, update = !item.invoice_acknowledge, collection_id = CollectionNo })'" />}
+                                                                else
+                                                                {<input type="button" class="btn btn-warning btn-xs" value="Reverse" onclick="location.href='@Url.Action("updateinvoice", "Collection", new { invid = item.primary_key, update = !item.invoice_acknowledge, collection_id = CollectionNo })'">}
+                                                            </td>
+                                                        }
+                                                    </tr>
+                                                    amountTotal = amountTotal + Convert.ToDecimal(item.payment_amount);
+                                                }
+                                                else
+                                                {
+                                                    <tr>
+                                                        <td></td>
+                                                        <td id="td_customer_code"></td>
+                                                        <td id="td_customer_name"></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td>@item.invoice_date.Value.ToShortDateString()</td>
+                                                        <td>@item.invoice_no</td>
+                                                        <td>@item.payment_term</td>
+                                                        <td id="amounts">@Convert.ToDecimal(item.invoice_amount.Value).ToString("#,##0.00")</td>
+                                                        <td id="amounts">@Convert.ToDecimal(item.os_balance.Value).ToString("#,##0.00")</td>
+                                                        <td id="amounts">@Convert.ToDecimal(item.invoice_allocated.Value).ToString("#,##0.00")</td>
+                                                        <td>@item.nod</td>
+                                                        <td>@item.remarks</td>
+                                                        <td>
+                                                            @if (item.invoice_acknowledge == false)
+                                                            {<h6><span class="badge badge-info ">No</span></h6> }
+                                                            else
+                                                            {<h6><span class="badge badge-success ">Yes</span></h6>}
+                                                        </td>
+                                                        @if (!MainAcknowledge)
+                                                        {
+                                                            <td>
+                                                                @if (item.invoice_acknowledge == false)
+                                                                {<input type="button" class="btn btn-secondary btn-xs" value="Acknowledge" onclick="location.href='@Url.Action("updateinvoice", "Collection", new { invid = item.primary_key, update = !item.invoice_acknowledge, collection_id = CollectionNo })'" />}
+                                                                else
+                                                                {<input type="button" class="btn btn-warning btn-xs" value="Reverse" onclick="location.href='@Url.Action("updateinvoice", "Collection", new { invid = item.primary_key, update = !item.invoice_acknowledge, collection_id = CollectionNo })'">}
+                                                            </td>
+                                                        }
+                                                    </tr>
+                                                }
+
+                                                multiplePaymentCheques.Add(item.cheque_no);
+                                            }
+
+                                            if (!multiplePaymentInvoices.Contains(item.invoice_no))
+                                            {
+                                                invoiceAmountTotal = invoiceAmountTotal + Convert.ToDecimal(item.invoice_amount);
+                                                osBalanceTotal = osBalanceTotal + Convert.ToDecimal(item.os_balance);
+                                                settledTotal = settledTotal + Convert.ToDecimal(item.invoice_allocated);
+                                            }
+
+                                            multiplePaymentInvoices.Add(item.invoice_no);
+
+
+
+
+                                        }
+                                        else
+                                        {
+
+                                            if (item.invoice_amount != null)
+                                            {
+                                                invoiceAmountTotal = invoiceAmountTotal + (decimal)item.invoice_amount;
+                                                osBalanceTotal = osBalanceTotal + (decimal)item.os_balance;
+                                                settledTotal = settledTotal + (decimal)item.invoice_allocated;
+                                                if (currentCustomerCode.Equals(item.customer_code) && paymentKey.Equals(item.payment_key)) { same = 1; } else { same = 0; }
+
+                                            }
+
+                                            currentCustomerCode = item.customer_code; paymentKey = item.payment_key;
+                                            Sales_code = item.sales_code;
+
+
+                                            if (item.acknowledge == false)
+                                            {
+                                                SubAcknowledge = false;
+                                            }
+
+                                            if (same == 1)
+                                            {
+                                                <tr>
+                                                    <td></td>
+                                                    <td id="td_customer_code"></td>
+                                                    <td id="td_customer_name"></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td>@item.invoice_date.Value.ToShortDateString()</td>
+                                                    <td>@item.invoice_no</td>
+                                                    <td>@item.payment_term</td>
+                                                    <td id="amounts">@Convert.ToDecimal(item.invoice_amount.Value).ToString("#,##0.00")</td>
+                                                    <td id="amounts">@Convert.ToDecimal(item.os_balance.Value).ToString("#,##0.00")</td>
+                                                    <td id="amounts">@Convert.ToDecimal(item.invoice_allocated.Value).ToString("#,##0.00")</td>
+                                                    <td>@item.nod</td>
+                                                    <td>@item.remarks</td>
+                                                    <td>
+                                                        @if (item.invoice_acknowledge == false)
+                                                        {<h6><span class="badge badge-info ">No</span></h6> }
+                                                        else
+                                                        {<h6><span class="badge badge-success ">Yes</span></h6>}
+                                                    </td>
+
+                                                    @if (!MainAcknowledge)
+                                                    {
+                                                        <td>
+                                                            @if (item.invoice_acknowledge == false)
+                                                            {<input type="button" class="btn btn-secondary btn-xs" value="Acknowledge" onclick="location.href='@Url.Action("updateinvoice", "Collection", new { invid = item.primary_key, update = !item.invoice_acknowledge, collection_id = CollectionNo })'" />}
+                                                            else
+                                                            {<input type="button" class="btn btn-warning btn-xs" value="Reverse" onclick="location.href='@Url.Action("updateinvoice", "Collection", new { invid = item.primary_key, update = !item.invoice_acknowledge, collection_id = CollectionNo })'">}
+                                                        </td>
+                                                    }
+
+                                                </tr>
+                                            }
+                                            else
+                                            {
+                                                <tr>
+                                                    <td colspan="23">SINGLE PAYMENT</td>
+                                                </tr>
+
+                                                amountTotal = amountTotal + (decimal)item.payment_amount;
+                                                unallocatedAmountTotal = unallocatedAmountTotal + (decimal)item.unallocated_amount;
+                                                <tr>
+                                                    <td>@item.sales_code</td>
+                                                    <td id="td_customer_code">@item.customer_code</td>
+                                                    <td id="td_customer_name">@item.CusName</td>
+                                                    <td>@item.payment_type</td>
+                                                    <td>@item.cheque_no</td>
+                                                    <td>@item.issued_bank</td>
+                                                    <td>@item.issued_branch</td>
+                                                    <td>@(item.banking_date != null ? item.banking_date.Value.ToShortDateString() : null)</td>
+                                                    <td>@item.deposited_bank</td>
+                                                    <td>@item.deposited_branch</td>
+                                                    <td>@item.receipt_no</td>
+                                                    <td id="amounts">@Convert.ToDecimal(item.payment_amount.Value).ToString("#,##0.00")</td>
+                                                    <td id="amounts">@Convert.ToDecimal(item.unallocated_amount.Value).ToString("#,##0.00")</td>
+                                                    <td>@(item.invoice_date != null ? item.invoice_date.Value.ToShortDateString() : null)</td>
+                                                    <td>@item.invoice_no</td>
+                                                    <td>@item.payment_term</td>
+                                                    <td id="amounts">@(item.invoice_amount != null ? Convert.ToDecimal(item.invoice_amount.Value).ToString("#,##0.00") : null)</td>
+                                                    <td id="amounts">@(item.os_balance != null ? Convert.ToDecimal(item.os_balance.Value).ToString("#,##0.00") : null)</td>
+                                                    <td id="amounts">@(item.invoice_allocated != null ? Convert.ToDecimal(item.invoice_allocated.Value).ToString("#,##0.00") : null)</td>
+                                                    <td>@item.nod</td>
+                                                    <td>@item.remarks</td>
+                                                    <td>
+                                                        @if (item.invoice_acknowledge == false)
+                                                        {<h6><span class="badge badge-info ">No</span></h6> }
+                                                        else
+                                                        {<h6><span class="badge badge-success ">Yes</span></h6>}
+                                                    </td>
+                                                    @if (!MainAcknowledge)
+                                                    {
+                                                        <td>
+                                                            @if (item.invoice_acknowledge == false)
+                                                            {<input type="button" class="btn btn-secondary btn-xs" onclick="location.href='@Url.Action("updateinvoice", "Collection", new { invid = item.primary_key, update = !item.invoice_acknowledge, collection_id = CollectionNo })'" )'" value="Acknowledge" />}
+                                                            else
+                                                            {<input type="button" class="btn btn-warning btn-xs" onclick="location.href='@Url.Action("updateinvoice", "Collection", new { invid = item.primary_key, update = !item.invoice_acknowledge, collection_id = CollectionNo })'" )'" value="Reverse" />}
+                                                        </td>
+                                                    }
+                                                </tr>
+
+                                            }
+
+                                        }
+
+                                    }
+
+                                    @{ unallocatedAmountTotal = amountTotal - settledTotal;
+                                    }
+
+                                    <tr style="background:beige; font-weight:700; font-size:15px;">
+                                        <td colspan="3">Total</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td id="amounts">@Convert.ToDecimal(amountTotal).ToString("#,##0.00")</td>
+                                        <td id="amounts">@Convert.ToDecimal(unallocatedAmountTotal).ToString("#,##0.00")</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td id="amounts">@Convert.ToDecimal(invoiceAmountTotal).ToString("#,##0.00")</td>
+                                        <td id="amounts">@Convert.ToDecimal(osBalanceTotal).ToString("#,##0.00")</td>
+                                        <td id="amounts">@Convert.ToDecimal(settledTotal).ToString("#,##0.00")</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*This table for export purpose*@
+<table id="1" style="display:none;">
+    <tr>
+        <td>Collection No.</td>
+        <td>@CollectionNo</td>
+    </tr>
+    <tr>
+        <td>Date</td>
+        <td>@DateTime.Now</td>
+    </tr>
+    <tr>
+        <td>Sales Area Code</td>
+        <td>@Sales_code</td>
+    </tr>
+    <tr>
+        <td>Sales Area Name</td>
+        <td>@Model.FullCollectionData.First().area_name</td>
+    </tr>
+    <tr>
+        <td>Rep Name</td>
+        <td>@Model.FullCollectionData.First().created_by</td>
+    </tr>
+    <tr></tr>
+    <tr></tr>
+    <tr></tr>
+</table>
+
+<script>
+
+    function sendmsg(type) {
+
+        var checkMsg = $("#message").val();
+
+        if (checkMsg == "" && type == "submit") {
+            alert("Message cannot be empty!");
+        } else {
+            var message = {
+                collection_id: $("#collection_id").val(),
+                ticket_id: $("#ticket_id").val(),
+                message: $("#message").val(),
+                status: type,
+                from: $("#username").val()
+            }
+
+            $.ajax({
+                type: 'POST',
+                url: '/Collection/TicketAction',
+                dataType: 'json',
+                data: { ticket: message },
+                success: function (result) {
+                    alert(result.msg),
+                        location.reload()
+                }
+            });
+        }
+
+    }
+
+
+
+    function enterToSAP(type) {
+
+        var checkMsg = $("#sap_ref_no").val();
+
+        if (checkMsg == "" && type == "submit") {
+            alert("Reference Number cannot be empty!");
+        } else {
+            var collectionData = {
+                collection_no: $("#collection_id").val(),
+                sap_ref_no: $("#sap_ref_no").val(),
+                entered_by: $("#username").val()
+            }
+
+            $.ajax({
+                type: 'POST',
+                url: '/Collection/SAPAction',
+                dataType: 'json',
+                data: { collection: collectionData },
+                success: function (result) {
+                    alert(result.msg);
+                    location.reload();
+                }
+            });
+        }
+
+    }
+
+
+    //function fnExcelReport() {
+
+    //    $('table').find('td:eq(23),th:eq(23)').remove();
+
+    //    var tab_text = "<table border='2px'><tr bgcolor='#87AFC6'>";
+    //    var textRange; var j = 0;
+    //    tab = document.getElementById('collection_tbl'); // id of table
+
+    //    for (j = 0; j < tab.rows.length; j++) {
+    //        tab_text = tab_text + tab.rows[j].innerHTML + "</tr>";
+    //        //tab_text=tab_text+"</tr>";
+    //    }
+
+    //    tab_text = tab_text + "</table>";
+    //    tab_text = tab_text.replace(/<A[^>]*>|<\/A>/g, "");//remove if u want links in your table
+    //    tab_text = tab_text.replace(/<img[^>]*>/gi, ""); // remove if u want images in your table
+    //    tab_text = tab_text.replace(/<input[^>]*>|<\/input>/gi, ""); // reomves input params
+
+    //    var ua = window.navigator.userAgent;
+    //    var msie = ua.indexOf("MSIE ");
+
+    //    if (msie > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./))      // If Internet Explorer
+    //    {
+    //        txtArea1.document.open("txt/html", "replace");
+    //        txtArea1.document.write(tab_text);
+    //        txtArea1.document.close();
+    //        txtArea1.focus();
+    //        sa = txtArea1.document.execCommand("SaveAs", true, "download.xls");
+    //    }
+    //    else                 //other browser not tested on IE 11
+    //        sa = window.open('data:application/vnd.ms-excel,' + encodeURIComponent(tab_text));
+
+    //    return (sa);
+    //}
+
+
+    var array1 = new Array();
+    var array2 = new Array();
+
+    var n = 2; //Total table
+    for (var x = 1; x <= n; x++) {
+        array1[x - 1] = x;
+        array2[x - 1] = x + 'th';
+    }
+
+    var fnExcelReport = (function () {
+
+
+        var uri = 'data:application/vnd.ms-excel;base64,'
+            , template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns=""><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets>'
+            , templateend = '</x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head>'
+            , body = '<body>'
+            , tablevar = '<table>{table'
+            , tablevarend = '}</table>'
+            , bodyend = '</body></html>'
+            , worksheet = '<x:ExcelWorksheet><x:Name>'
+            , worksheetend = '</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet>'
+            , worksheetvar = '{worksheet'
+            , worksheetvarend = '}'
+            , base64 = function (s) { return window.btoa(unescape(encodeURIComponent(s))) }
+            , format = function (s, c) { return s.replace(/{(\w+)}/g, function (m, p) { return c[p]; }) }
+            , wstemplate = ''
+            , tabletemplate = '';
+
+        return function (table, name, filename) {
+            var tables = table;
+
+            for (var i = 0; i < tables.length; ++i) {
+                wstemplate += worksheet + worksheetvar + i + worksheetvarend + worksheetend;
+                tabletemplate += tablevar + i + tablevarend;
+            }
+
+            var allTemplate = template + wstemplate + templateend;
+            var allWorksheet = body + tabletemplate + bodyend;
+            var allOfIt = allTemplate + allWorksheet;
+
+            var ctx = {};
+            for (var j = 0; j < tables.length; ++j) {
+                ctx['worksheet' + j] = name[j];
+            }
+
+            for (var k = 0; k < tables.length; ++k) {
+                var exceltable;
+                if (!tables[k].nodeType) exceltable = document.getElementById(tables[k]);
+                ctx['table' + k] = exceltable.innerHTML;
+            }
+
+            window.location.href = uri + base64(format(allOfIt, ctx));
+
+        }
+    })();
+
+
+</script>

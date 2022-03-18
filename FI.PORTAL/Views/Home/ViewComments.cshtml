@@ -1,0 +1,163 @@
+﻿
+@{
+    ViewBag.Title = "Comments";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<br />
+
+@{
+    int sid = Convert.ToInt16(Request.QueryString["SID"].ToString());
+    string reqstatus = Request.QueryString["TID"].ToString();
+    int role = Convert.ToInt16(Session["role"].ToString());
+
+
+    if (sid == role)
+    {
+        if (reqstatus.Equals("PENDING"))
+        {
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label class="font-weight-normal" id="lblcommHeader">Recommended Credit Limit (Rs)</label>
+                            <input id="txtreclimit" type="text" class="form-control col-md-4" />
+                            Comment
+                            <input id="txtcomment" class="form-control" spellcheck="true" maxlength="500" placeholder="Type a comment" />
+
+                            @if (sid == 1)
+                            {
+                                <br />
+                                <!-- radio -->
+                                <div class="form-group">
+                                    <div class="form-check">
+                                        <div class="row">
+                                            <div class="col-md-2">
+                                                <input class="form-check-input" type="radio" name="radioAction" value="COMPLETED">
+                                                <label class="form-check-label">Limit Enhanced</label>
+                                            </div>
+                                            <div class="col-md-1">
+                                                <input class="form-check-input" type="radio" name="radioAction" checked="" value="HOLD">
+                                                <label class="form-check-label">Hold</label>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <input class="form-check-input" type="radio" name="radioAction" checked="" value="NOT-REQUIRED">
+                                                <label class="form-check-label">Not-Required</label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            }
+
+
+                            <div class="row float-left btn">
+
+
+                                @if (sid > 4)
+                                {
+                                    <button id='btnapprove' class='btn btn-success btn-sm' style="margin-left:12px;">
+                                        <i class='far fa-mail-forward'></i>
+                                        Approve
+                                    </button>
+
+                                    <button id='btnrevert' class='btn btn-warning btn-sm' data-toggle="modal" data-target="#revertrequest">
+                                        <i class='far fa-mail-forward'></i>
+                                        Reverse
+                                    </button>
+                                }
+
+                                @if (sid < 8)
+                                {
+                                    <button id='btnforward' class='btn btn-info btn-sm'>
+                                        <i class='far fa-mail-forward'></i>
+                                        Forward
+                                    </button>
+                                }
+
+                                @if (sid == 1)
+                                {
+                                    <button id='btndone' class='btn btn-success btn-sm'>
+                                        <i class='far fa-mail-forward'></i>
+                                        Submit Request
+                                    </button>
+                                    <button id='btnrevert' class='btn btn-warning btn-sm' data-toggle="modal" data-target="#revertrequest">
+                                        <i class='far fa-mail-forward'></i>
+                                        Reverse
+                                    </button>
+                                }
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+}
+
+
+
+<div class="card" style="margin-top:5px">
+    <div class="card-header">
+
+        <div class="row">
+
+            <div class="col-md-5">
+                Customer Name: <br />
+                <label id="lblcusName" class="text-blue">N/A</label> <br />
+                <label id="lblcuscode" class="text-blue font-weight-normal">N/A</label> -
+                <label id="lblarea" class="text-blue font-weight-normal">N/A</label>
+            </div>
+            <div class="col-md-2">
+                Existing Limit:<br />
+                <label id="lblextlimit" class="font-weight-normal text-red">0.00</label>
+            </div>
+            <div class="col-md-2">
+                Credit Exposure:<br />
+                <label id="lblexposure" class="font-weight-normal text-green">0.00</label>
+            </div>
+            <div class="col-md-2">
+                <label id="lblstatus" class="font-weight-bold text-green">N/A</label>
+            </div>
+        </div>
+
+
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-12">
+
+                <table id="tblcomments" class="table table-bordered small" style="width:100%">
+                    <thead style="font-weight:bold;">
+                        <tr>
+                            <td width="14%">Commented Date</td>
+                            <td width="5%">Role</td>
+                            <td width="10%">User Name</td>
+                            <td>Comment</td>
+                            <td width="9%">Action</td>
+                            <td width="10%">Req/App Credit Limit</td>
+                            <td width="1%">Files</td>
+                        </tr>
+                    </thead>
+                    <tbody id="commentlist"></tbody>
+                </table>
+
+
+
+                <div id="commentlistx" class="post">
+
+
+
+
+                </div>
+            </div>
+            <br />
+        </div>
+    </div>
+</div>
+@Scripts.Render("~/Content/scripts")
+
+<script type="text/javascript" src="~/Scripts/ControllerScripts/comments.js"></script>
+

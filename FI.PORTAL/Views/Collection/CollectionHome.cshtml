@@ -1,0 +1,342 @@
+﻿@model FI.PORTAL.ViewModels.CollectionVM
+@using PagedList.Mvc;
+
+@{
+    ViewBag.Title = "Collection Home";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string currentSort = Session["sorting"].ToString();
+    string SearchBySession = Session["SearchBy"].ToString();
+    string SearchValueSession = Session["SearchValue"].ToString();
+}
+
+
+@Styles.Render("~/Content/PagedList.css")
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <div class="row">
+                    <div style="padding:1%">
+                        <div class="form-row align-items-center">
+                            <div class="col-auto my-1">
+                                <label for="sort_menu">Sort: </label>
+                            </div>
+                            <div class="col-auto my-1">
+                                <select id="sort_menu" class="form-control form-control-sm" name="sortby" onchange="sortChange()">
+                                    <option value="All" selected="@(currentSort == "All" ? "selected" : null)">All</option>
+                                    <option value="Pending" selected="@(currentSort == "Pending" ? "selected" : null)">Pending</option>
+                                    <option value="Acknowledged" selected="@(currentSort == "Acknowledged" ? "selected" : null)">Acknowledged</option>
+                                    <option value="Closed" selected="@(currentSort == "Closed" ? "selected" : null)">Closed</option>
+                                </select>
+                            </div>
+
+                        </div>
+                    </div>
+
+
+
+                    <div style="padding:1%">
+
+                        <div class="form-row align-items-center">
+                            <div class="col-auto my-1">
+                                <label for="search_by">Search By: </label>
+                            </div>
+                            <div class="col-auto my-1">
+                                <select id="search_by" class="form-control form-control-sm">
+                                    <option value="Any" selected="@(SearchBySession == "Any" ? "selected" : null)">Any</option>
+                                    <option value="Collection_ID" selected="@(SearchBySession == "Collection_ID" ? "selected" : null)">Collection ID</option>
+                                    <option value="Sales_Code" selected="@(SearchBySession == "Sales_Code" ? "selected" : null)">Sales Code</option>
+                                    <option value="Area" selected="@(SearchBySession == "Area" ? "selected" : null)">Area</option>
+                                    <option value="Rep_Name" selected="@(SearchBySession == "Rep_Name" ? "selected" : null)">REP Name</option>
+                                </select>
+                            </div>
+                            <div class="col-auto my-1">
+                                <input type="text" class="form-control form-control-sm" id="search_value" value="@SearchValueSession" />
+                            </div>
+                            <div class="col-auto my-1">
+                                <button type="button" class="btn btn-primary btn-sm" onclick="location.href='@Url.Action("CollectionHome", "Collection", new {type = "reset"})'">Reset</button>
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                    <div style="padding-left:1%">
+
+                        <div class="form-row align-items-center">
+                            <div class="col-auto my-1">
+                                <label for="filter_by_date">Filter By Date: </label>
+                            </div>
+
+                            <div class="col-auto my-1">
+                                <label for="filter_by_date">&nbsp; From </label>
+                            </div>
+                            <div class="col-auto my-1">
+                                <input type="date" class="form-control form-control-sm" id="from_date" value="@Session["fromDate"]" />
+                            </div>
+
+                            <div class="col-auto my-1">
+                                <label for="filter_by_date">&nbsp; To </label>
+                            </div>
+                            <div class="col-auto my-1">
+                                <input type="date" class="form-control form-control-sm" id="to_date" value="@Session["toDate"]" />
+                            </div>
+
+                            <div class="col-auto my-1">
+                                <button type="button" class="btn btn-primary btn-sm" onclick="dateFilter('')">Set Date</button>
+                            </div>
+
+                            <div class="col-auto my-1">
+                                <button type="button" class="btn btn-primary btn-sm" onclick="dateFilter('reset')">Reset Date</button>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*<div class="modal fade loadingmodal"  id="loadingModal" tabindex="-1" role="dialog" aria-labelledby="loadingmodal" aria-hidden="true">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="d-flex justify-content-center" style="padding: 5%">
+                    <strong style="margin-right: 20px">Loading...</strong>
+                    <div class="spinner-grow text-dark" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>*@
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h4>Collection Requests</h4>
+            </div>
+            <div class="card-body">
+
+                <div id="secposts" class="row">
+                    <div class="col-md-12">
+                        <table class="table table-bordered small" style="width:100%">
+                            <thead>
+                                <tr>
+                                    <th>Collection ID</th>
+                                    <th>Created Date</th>
+                                    <th>Sales Code</th>
+                                    <th>Area Name</th>
+                                    <th>Created By</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="collections_data">
+                                @if (Model.collection.Count() == 0)
+                                {
+                                    <tr>
+                                        <td colspan="7">No Records Found!</td>
+                                    </tr>
+                                }
+                                else
+                                {
+                                    foreach (var item in Model.collection)
+                                    {
+                                        <tr>
+                                            <td>@item.collection_no</td>
+                                            <td>@item.collection_date</td>
+                                            <td>@item.sales_code</td>
+                                            <td>@item.area_name</td>
+                                            <td>@item.created_by</td>
+                                            <td>
+                                                @if (item.acknowledge == true && item.entered_to_sap == true)
+                                                {<h6><span class="badge badge-primary">Closed</span></h6>}
+                                                else if (item.acknowledge == true)
+                                                { <h6><span class="badge badge-success">Acknowledged</span></h6>}
+                                                else
+                                                { <h6><span class="badge badge-warning">Pending</span></h6>}
+                                            </td>
+                                            <td>
+                                                <a href="@Url.Action("CollectionView", new { item.collection_no})" class="btn btn-success btn-sm">View</a>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+
+
+                        Page @(this.Model.collection.PageNumber) of  @this.Model.collection.PageCount
+
+                        <div style="float:right">
+                            @Html.PagedListPager(Model.collection, page => Url.Action("CollectionHome", new { page }))
+                        </div>
+
+
+
+
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/Scripts/jquery-3.3.1.min.js"></script>
+
+<script>
+
+    $(document).ready(function () {
+        var SearchBy = $("#search_by").val();
+        var SearchVal = $("#search_value").val();
+        var SetData = $("#collections_data");
+
+        if (SearchVal != "") {
+            SetData.html("");
+            $.ajax({
+                type: "post",
+                url: "/Collection/SearchData?SearchBy=" + SearchBy + "&SearchValue=" + SearchVal,
+                contentType: "html",
+                async: false,
+                success: function (result) {
+                    if (result.length == 0) {
+                        SetData.append('<tr><td colspan="7">No data found!</td></tr>')
+                    } else {
+                        $.each(result, function (index, value) {
+                            var date = new Date(parseInt(value.collection_date.substr(6)));
+                            var statusBadge;
+                            var collection_view = "<a href='CollectionView?collection_no=" + value.collection_no + "' class='btn btn-success btn-sm'>View</a>"
+
+                            if (value.acknowledge && value.entered_to_sap) {
+                                statusBadge = "<h6><span class='badge badge-primary'>Closed</span></h6>"
+                            }
+                            else if (value.acknowledge) {
+                                statusBadge = "<h6><span class='badge badge-success'>Acknowledged</span></h6>"
+                            }
+                            else {
+                                statusBadge = "<h6><span class='badge badge-warning'>Pending</span></h6>"
+                            };
+
+                            var Data = "<tr>" +
+                                "<td>" + value.collection_no + "</td>" +
+                                "<td>" + date.toLocaleString() + "</td>" +
+                                "<td>" + value.sales_code + "</td>" +
+                                "<td>" + value.area_name + "</td>" +
+                                "<td>" + value.created_by + "</td>" +
+                                "<td>" + statusBadge + "</td>" + "<td>" + collection_view + "</td>" + "</tr>"
+
+                            SetData.append(Data)
+                        })
+                    }
+                }
+            })
+        }
+
+    })
+
+    $(document).ready(function () {
+        $("#search_value").on('input', function () {
+            var SearchBy = $("#search_by").val();
+            var SearchVal = $("#search_value").val();
+            var SetData = $("#collections_data");
+            SetData.html("");
+
+            $.ajax({
+                type: "post",
+                url: "/Collection/SearchData?SearchBy=" + SearchBy + "&SearchValue=" + SearchVal,
+                contentType: "html",
+                async: false,
+                success: function (result) {
+                    if (result.length == 0) {
+                        SetData.append('<tr><td colspan="7">No data found!</td></tr>')
+                        $('#loadingModal').modal('hide');
+                    } else {
+                        $.each(result, function (index, value) {
+                            var date = new Date(parseInt(value.collection_date.substr(6)));
+                            var statusBadge;
+                            var collection_view = "<a href='CollectionView?collection_no=" + value.collection_no + "' class='btn btn-success btn-sm'>View</a>"
+
+                            if (value.acknowledge && value.entered_to_sap) {
+                                statusBadge = "<h6><span class='badge badge-primary'>Closed</span></h6>"
+                            }
+                            else if (value.acknowledge) {
+                                statusBadge = "<h6><span class='badge badge-success'>Acknowledged</span></h6>"
+                            }
+                            else {
+                                statusBadge = "<h6><span class='badge badge-warning'>Pending</span></h6>"
+                            };
+
+                            var Data = "<tr>" +
+                                "<td>" + value.collection_no + "</td>" +
+                                "<td>" + date.toLocaleString() + "</td>" +
+                                "<td>" + value.sales_code + "</td>" +
+                                "<td>" + value.area_name + "</td>" +
+                                "<td>" + value.created_by + "</td>" +
+                                "<td>" + statusBadge + "</td>" + "<td>" + collection_view + "</td>" + "</tr>"
+
+                            SetData.append(Data)
+
+
+                        })
+                    }
+                }
+            })
+        })
+    })
+
+    function sortChange() {
+        var selected = document.getElementById("sort_menu").value;
+
+        $.ajax({
+            type: 'POST',
+            url: '/Collection/sortAction',
+            dataType: 'json',
+            data: { sort: selected },
+            success: function (result) {
+                location.reload()
+            }
+        });
+    }
+
+
+    function dateFilter(type) {
+        var fromDateTime = new Date(document.getElementById("from_date").value);
+        var toDateTime = new Date(document.getElementById("to_date").value);
+
+        let fromDate = (fromDateTime.getUTCFullYear()) + "/" + (fromDateTime.getMonth() + 1) + "/" + (fromDateTime.getUTCDate());
+        let toDate = (toDateTime.getUTCFullYear()) + "/" + (toDateTime.getMonth() + 1) + "/" + (toDateTime.getUTCDate());
+
+        $.ajax({
+            type: 'POST',
+            url: '/Collection/DateFilter',
+            dataType: 'json',
+            data: { fromDate: fromDate, toDate: toDate, type: type },
+            success: function (result) {
+                location.reload()
+            }
+        });
+
+        $('#loadingModal').modal('hide');
+    }
+
+    function areaChange(sel) {
+        var selected = document.getElementById("area_menu").value;
+        var text = sel.options[sel.selectedIndex].text;
+
+        $.ajax({
+            type: 'POST',
+            url: '/Collection/areaAction',
+            dataType: 'json',
+            data: { area: selected, areaName: text },
+            success: function (result) {
+                location.reload()
+            }
+        });
+    }
+</script>
