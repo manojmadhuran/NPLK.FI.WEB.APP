@@ -1,9 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
+using System.Diagnostics;
+using System.Dynamic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using FI.PORTAL.dbconnect;
+using FI.PORTAL.Models;
 using FI.PORTAL.Report;
 using FI.PORTAL.ViewModels;
 
@@ -20,6 +25,7 @@ namespace FI.PORTAL.Controllers
         int GM_ROLE = 8;
         int ADMIN_ROLE = 100;
         int role;
+
 
         public ActionResult Index(string findby)
         {         
@@ -326,11 +332,14 @@ namespace FI.PORTAL.Controllers
             var PaintBrands = CRP_dbObj.NEW_CUS_PAINT_BRANDS.Where(r => r.CusReqID == CusReqID).ToList();
             var Images = CRP_dbObj.NEW_CUS_IMAGE.Where(r => r.CusReqID == CusReqID).ToList();
             var Evaluations = CRP_dbObj.NEW_CUS_EVAL.Where(r => r.CusReqID == CusReqID).ToList();
+            // -------------------- Get the new Evaluation datalist with the updated procedure ------------- UpdateCode - FIU02
+            var tempEval = GetEvaluationData(CusReqID.ToString());
+
             var Owners = CRP_dbObj.NEW_CUS_OWNERS.Where(r => r.CusReqID == CusReqID).ToList();
             var FinalApproval = CRP_dbObj.NEW_CUS_FINAL_APPROVAL.Where(r => r.CusReqID == CusReqID).ToList();
             var TableRequest = CRP_dbObj.NEW_CUS_HEADER.Where(r => r.CusReqID == CusReqID).FirstOrDefault();
 
-
+            
             var viewModel = new CustomerRegistrationRequestData
             {
                 RequestHeader = (viewNEW_CUS_HEADER)Request,
@@ -338,11 +347,27 @@ namespace FI.PORTAL.Controllers
                 RequestCompanies = Companies,
                 RequestPaintBrands = PaintBrands,
                 RequestImages = Images,
-                RequestEvaluations = Evaluations,
+                RequestEvaluations = Evaluations,                
                 RequestOwners = Owners,
                 RequestFinalApproval = FinalApproval
             };
-            return View(viewModel);
+
+            // Binging the view model to Model object ----------------------- UpdateCode - FIU02
+            var viewModel2 = new CustomerRegistrationRequestDataEval
+            {
+                RequestHeader = (viewNEW_CUS_HEADER)Request,
+                TableRequestHeader = TableRequest,
+                RequestCompanies = Companies,
+                RequestPaintBrands = PaintBrands,
+                RequestImages = Images,
+                //RequestEvaluations = Evaluations,
+                EvaluationList = tempEval,
+                RequestOwners = Owners,
+                RequestFinalApproval = FinalApproval
+            };
+
+            // Passed the new model object to View --------------------------- UpdateCode - FIU02
+            return View(viewModel2);
         }
 
         [HttpPost]
@@ -394,6 +419,11 @@ namespace FI.PORTAL.Controllers
         [HttpPost]
         public ActionResult ForwardRequestCO(CustomerRegistrationRequestData model)
         {
+       
+
+
+           
+
 
             NEW_CUS_FINAL_APPROVAL finalApprovalObj = new NEW_CUS_FINAL_APPROVAL();
             finalApprovalObj.ID = model.FinalApprove.ID;
@@ -431,6 +461,8 @@ namespace FI.PORTAL.Controllers
             CRP_dbObj.NEW_CUS_EVAL.Add(newEvalObj);
 
             CRP_dbObj.SaveChanges();
+
+        
 
             int role = Convert.ToInt16(Session["role"].ToString());
 
@@ -481,6 +513,59 @@ namespace FI.PORTAL.Controllers
             CustomerRequestReport customerRequestReport = new CustomerRequestReport();
             byte[] abytes = customerRequestReport.PrepareReport(viewModel);
             return File(abytes, "application/pdf", "Request_" + CusReqID.ToString() + ".pdf");
+        }
+
+        // function to load Evaluation History data ------------------------------------------- UpdateCode - FIU02
+        public List<evaluationModel> GetEvaluationData(String CusReqID) {
+
+            List<evaluationModel> evalList = new List<evaluationModel>();
+
+            try {
+
+               
+                DataTable dt = new DataTable();
+
+                String conString = System.Configuration.ConfigurationManager.ConnectionStrings["con"].ConnectionString;
+                //string ConnectionString = @"Data Source=192.168.101.145;Initial Catalog=FINANCE_GEN_SYS;User ID=nippolac-finance;Password=finance@nippon321";
+
+                SqlConnection con = new SqlConnection(conString);
+                con.Open();
+
+                SqlCommand cmd = new SqlCommand();
+                cmd.Connection = con;
+                cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                cmd.CommandText = "GetUserNameBySalesCode";
+                cmd.Parameters.Add("@cusReqID",System.Data.SqlDbType.VarChar, 200).Value = CusReqID;
+
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                da.Fill(dt);
+
+                foreach (DataRow dr in dt.Rows) {
+
+                    evaluationModel model = new evaluationModel();
+                    model.EvalID = dr["EvalID"].ToString();
+                    model.CusReqID = dr["CusReqID"].ToString();
+                    model.RecLimit = dr["RecLimit"].ToString();
+                    model.RecPeriod = dr["RecPeriod"].ToString();
+                    model.RecDiscount = dr["RecDiscount"].ToString();
+                    model.Remarks = dr["Remarks"].ToString();
+                    model.Role = dr["Role"].ToString();
+                    model.SalesCode = dr["SalesCode"].ToString();
+                    model.CreatedDate = dr["CreatedDate"].ToString();
+                    model.Status = dr["Status"].ToString();
+                    model.REPName = dr["REPName"].ToString();
+
+                    evalList.Add(model);
+
+                }
+
+                con.Close();
+
+            } catch (Exception ex) {
+                Debug.WriteLine("GetEvaluationData "+ ex.StackTrace);
+            }
+
+            return evalList;
         }
     }
 }

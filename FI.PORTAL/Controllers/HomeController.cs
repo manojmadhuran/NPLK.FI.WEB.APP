@@ -264,5 +264,41 @@ namespace FI.PORTAL.Controllers
             catch(Exception ex) { }
         }
 
+        public ActionResult AddCustomer()
+        {
+            return View();
+        }
+
+        // function to insert New Customer to CustomerOutstandingdetails table
+        [HttpGet]
+        public JsonResult CreateCustomer(string cuscode, string cusName, string crdlimit, string crdPeriod)
+        {
+            try
+            {
+               string user = Session["uname"].ToString();
+                // class which contains the database functions without using RDBMS
+               universalController universal = new universalController();
+
+               
+                // inset data
+               int temp = universal.CreateCustomer(cuscode, cusName, crdlimit, crdPeriod);
+
+
+                if (temp == 1)
+                {
+                    return Json(cuscode, JsonRequestBehavior.AllowGet);
+                }
+                else {
+                    return Json("-1", JsonRequestBehavior.AllowGet);
+                }
+                
+            }
+            catch (Exception ex)
+            {
+                ex.ToString();
+                return null;
+            }
+        }
+
     }
 }

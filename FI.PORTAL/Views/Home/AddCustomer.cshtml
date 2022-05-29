@@ -1,0 +1,104 @@
+﻿
+@{
+    ViewBag.Title = "AddCustomer";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<br />
+<!-- -->
+<div id="divheader" class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h4>Add Customer</h4>
+            </div>
+            <div class="card-body">
+
+                @*        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <input id="txtcuscode" type="text" maxlength="10" class="form-control" placeholder="Customer Code" />
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <select id="drptype" class="form-control">
+                        <option value="LE" selected="selected">Limit Enhancement</option>
+                        <option value="OR">Order releasing</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <hr />*@
+
+        @*@using (Html.BeginForm("uploadfile",
+                "Home",
+                FormMethod.Post,
+                new { enctype = "multipart/form-data" }))
+                {*@
+
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            Customer Code
+                            <input id="txtCustomerCode" type="text" class="form-control"  placeholder="Customer Code" />
+                        </div>
+
+                        <div class="form-group">
+                            Credit Limit
+                            <input id="txtcrdLimit" type="text" class="form-control" placeholder="Credit Limit" />
+                        </div>
+
+                    </div>
+                    <div class="col-md-4">
+
+                        <div class="form-group">
+                            Customer Name
+                            <input id="txtcusname" type="text" class="form-control" placeholder="Customer Name" />
+                        </div>
+
+                        <div class="form-group">
+                            Credit Period
+                            <input id="txtcrdPeriod" type="text" class="form-control" placeholder="Credit Period" />
+                        </div>
+
+                        
+
+                    </div>
+         
+                </div>
+                <div class="row">                                     
+                    <div class="col-md-2">
+                        <div>
+                            <br />
+                            <input id="btnCrtCustomer" type="button" class="btn btn-info" value="Create Customer" />
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="divupload" style="visibility:hidden;">
+    <div class="card">
+        <div class="card-header">
+            Upload evaluation form
+        </div>
+        <div class="card-body">
+            @using (Html.BeginForm("UploadFile", "Home", FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+                <div>
+                    @Html.TextBox("file", "", new { type = "file", @class = "form-control" }) <br />
+                    <input type="submit" value="Upload" />
+                </div>
+            }
+        </div>
+    </div>
+</div>
+@Scripts.Render("~/Content/scripts")
+
+<script type="text/javascript" src="~/Scripts/ControllerScripts/AddCustomer.js"></script>
+
+

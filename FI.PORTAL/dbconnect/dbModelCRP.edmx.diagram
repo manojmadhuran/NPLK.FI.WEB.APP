@@ -13,6 +13,8 @@
         <EntityTypeShape EntityType="CRP_SYSModel.NEW_CUS_OWNERS" Width="1.5" PointX="7.375" PointY="3.75" />
         <EntityTypeShape EntityType="CRP_SYSModel.NEW_CUS_HEADER" Width="1.5" PointX="3.375" PointY="4.75" />
         <EntityTypeShape EntityType="CRP_SYSModel.viewNEW_CUS_HEADER" Width="1.5" PointX="5.375" PointY="6.75" />
+        <EntityTypeShape EntityType="CRP_SYSModel.NEW_CUS_EVAL_UPDATE" Width="1.5" PointX="5" PointY="1.25" />
+        <AssociationConnector Association="CRP_SYSModel.NEW_CUS_HEADERNEW_CUS_EVAL" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

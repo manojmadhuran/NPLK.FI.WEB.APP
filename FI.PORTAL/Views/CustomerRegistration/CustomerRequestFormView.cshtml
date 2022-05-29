@@ -1,4 +1,4 @@
-﻿@model FI.PORTAL.ViewModels.CustomerRegistrationRequestData
+﻿@model FI.PORTAL.ViewModels.CustomerRegistrationRequestDataEval
 
 @{
 
@@ -984,21 +984,23 @@ else
                         <th>Requested Discount</th>
                         <th>Remarks</th>
                         <th>By</th>
+                        <th>User</th>
                         <th>Created Date</th>
                         <th>Status</th>
                     </tr>
-                    @foreach (var item in Model.RequestEvaluations)
+                    @foreach (var item in Model.EvaluationList)
                     {
-                        <tr>
-                            <td>@item.EvalID</td>
-                            <td>@item.RecLimit</td>
-                            <td>@item.RecPeriod</td>
-                            <td>@item.RecDiscount</td>
-                            <td>@item.Remarks</td>
-                            <td>@item.Role</td>
-                            <td>@item.CreatedDate</td>
-                            <td>@item.Status</td>
-                        </tr>
+                <tr>
+                    <td>@item.EvalID</td>
+                    <td>@item.RecLimit</td>
+                    <td>@item.RecPeriod</td>
+                    <td>@item.RecDiscount</td>
+                    <td>@item.Remarks</td>
+                    <td>@item.Role</td>
+                    <td>@item.REPName</td>
+                    <td>@item.CreatedDate</td>
+                    <td>@item.Status</td>
+                </tr>
                     }
                     <tr></tr>
                     <tr></tr>
