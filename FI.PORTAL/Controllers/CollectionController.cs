@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Web;
@@ -430,10 +431,34 @@ namespace FI.PORTAL.Controllers
 
         public ActionResult GenerateReport(string CollectionID)
         {
+
+            int paymentCount = 0;
             var data = COL_dbObj.FullCollectionData(CollectionID).ToList();
-            string uname = (Session["uname"].ToString());
+
+            // old report for single paymnets only
             CollectionReport collectionReport = new CollectionReport();
-            byte[] abytes = collectionReport.PrepareReport(data, uname);
+            // new report for multiple payments only
+            CollectionReportUpdate collectionReportUpdate = new CollectionReportUpdate();
+
+            string uname = (Session["uname"].ToString());
+            byte[] abytes;
+
+            paymentCount = Int32.Parse(data.FirstOrDefault().PAYMENTS_COUNT.ToString());
+            
+            // if a multiple payment detected
+            if (paymentCount > 1)
+            {
+
+                abytes = collectionReportUpdate.PrepareReport(data, uname, CollectionID);
+
+
+            }
+            else
+            {
+
+                abytes = collectionReport.PrepareReport(data, uname);
+
+            }
 
 
             AddPageNumber addPageNumber = new AddPageNumber();
